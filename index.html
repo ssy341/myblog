@@ -2,8 +2,6 @@
 layout: default
 title: 54341Code
 ---
-<h2>{{ page.title }}</h2>
-<p>文章列表</p>
 {% for post in site.posts %}
   <div class="span4">
     <h2>{{ post.title }}</h2>{{ post.date | date_to_string }}
