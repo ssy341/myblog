@@ -1,1 +1,3 @@
 baseurl: /blog
+# modify web then refresh  
+auto:true
