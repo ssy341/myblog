@@ -5,7 +5,7 @@ title: 文章列表
 {% for post in site.posts %}
   <tr>
     <td>{{ post.title }}</td>
-    <td>{{ post.date | date_to_string }}</td>
+    <td>{{ post.date | date_to_string }} {{post.date}} {{site}} </td>
     <td><a class="btn" href="{{ site.baseurl }}{{ post.url }}">查看 &raquo;</a></td>
   </tr>
 {% endfor %}
