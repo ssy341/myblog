@@ -31,8 +31,8 @@ function initTable(){
 	            { "mDataProp": "phone"},
 	            { "mDataProp": "id",
 	             	"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-				        $(nTd).html("<a href='javascript:void(0);' onclick='_editFun("+sData+")'>±à¼­</a>&nbsp;&nbsp;")
-				        .append("<a href='javascript:void(0);' onclick='_deleteFun("+sData+")'>É¾³ý</a>");
+				        $(nTd).html("<a href='javascript:void(0);' onclick='_editFun("+sData+")'>Â±Ã Â¼Â­</a>&nbsp;&nbsp;")
+				        .append("<a href='javascript:void(0);' onclick='_deleteFun("+sData+")'>Ã‰Â¾Â³Ã½</a>");
 				        
 				    }
 	         	},
@@ -40,8 +40,8 @@ function initTable(){
 	        "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
 			"sPaginationType": "bootstrap"
 			"oLanguage": {
-				"sUrl": "js/zh-CN.txt"
-			}
+				"sUrl": "zh-CN.txt"
+			},
 			/*"fnCreatedRow": function(nRow, aData, iDataIndex){
 				//add selected class
 	        	$(nRow).click(function(){
@@ -52,14 +52,10 @@ function initTable(){
 	        			$(this).addClass('row_selected');
 	        		}
 	        	});
-	        },
+	        },*/
 			"fnInitComplete": function(oSettings, json){
-				$('<a href="#myModal" class="btn btn-primary" data-toggle="modal">ÐÂÔö</a>'+'&nbsp;'+
-				'<a href="#" class="btn btn-primary" id="editFun">ÐÞ¸Ä</a> '+'&nbsp;'+
-				'<a href="#" class="btn btn-danger" id="deleteFun">É¾³ý</a>'+'&nbsp;').appendTo($('.myBtnBox'));
-				$("#deleteFun").click(_deleteList);
-				$("#editFun").click(_value);
-			} */
+				console.log("init complete");
+			} 
 	     });
 	return table;
 }
