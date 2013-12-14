@@ -40,7 +40,7 @@ function initTable(){
 	        "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
-				"sUrl": "zh-CN.txt"
+				"sUrl": "js/zh-CN.txt"
 			},
 			/*"fnCreatedRow": function(nRow, aData, iDataIndex){
 				//add selected class
