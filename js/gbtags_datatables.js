@@ -11,7 +11,7 @@ function initTable(id){
 	
 	var table =  $("#"+id).dataTable({
 	     	"iDisplayLength":5,
-	        "sAjaxSource": "src/array.txt",
+	        "sAjaxSource": "http://ssy341.github.io/myblog/src/array.txt",
 	        'bPaginate': true,  
 	        "bProcessing": true,                   
 	        "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
