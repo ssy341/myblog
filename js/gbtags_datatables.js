@@ -17,7 +17,7 @@ function initTable(id){
 	        "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
-				"sUrl": "js/zh-CN.txt"
+				"sUrl": "http://ssy341.github.io/myblog/js/zh-CN.txt"
 			},
 			"fnInitComplete": function(oSettings, json){
 				console.log("init complete");
