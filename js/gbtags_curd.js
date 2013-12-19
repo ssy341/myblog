@@ -4,7 +4,7 @@ $(document).ready(function(){
 	initModal();
 	oTable = initTable();
 	
-	//checkboxÈ«Ñ¡
+	//checkboxå…¨é€‰
 	$("#checkAll").on("click",function(){
 		if($(this).attr("checked")==="checked"){
 			$("input[name='checkList']").attr("checked",$(this).attr("checked"));
@@ -28,90 +28,90 @@ function initTable(){
 				"aaData": [
 					[
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-ÔÚÏßµ÷ÊÔ",
+					  "æå®¢æ ‡ç­¾-åœ¨çº¿è°ƒè¯•",
 					  "http://www.gbtags.com/gb/debug/new.htm",
-					  "<a href='http://www.gbtags.com/gb/debug/new.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/debug/new.htm'>è¿›å…¥</a>",
 						""
 					],
 					[
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-live¿Î³Ì",
+					  "æå®¢æ ‡ç­¾-liveè¯¾ç¨‹",
 					  "http://www.gbtags.com/gb/alltrainingcalendar.htm",
-					  "<a href='http://www.gbtags.com/gb/alltrainingcalendar.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/alltrainingcalendar.htm'>è¿›å…¥</a>",
 						""
 					],
 					[
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-×¨Ìâ½Ì³Ì",
+					  "æå®¢æ ‡ç­¾-ä¸“é¢˜æ•™ç¨‹",
 					  "http://www.gbtags.com/gb/postgroups.htm",
-					  "<a href='http://www.gbtags.com/gb/postgroups.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/postgroups.htm'>è¿›å…¥</a>",
 						""
 					],
 					 [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-×î½ü¶¯Ì¬",
+					  "æå®¢æ ‡ç­¾-æœ€è¿‘åŠ¨æ€",
 					  "http://www.gbtags.com/gb/explore.htm",
-					  "<a href='http://www.gbtags.com/gb/explore.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/explore.htm'>è¿›å…¥</a>",
 						""
 					],
 					 [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-Ô­´´ÍÆ¼ö",
+					  "æå®¢æ ‡ç­¾-åŸåˆ›æ¨è",
 					  "http://www.gbtags.com/gb/tag/1.htm",
-					  "<a href='http://www.gbtags.com/gb/tag/1.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/tag/1.htm'>è¿›å…¥</a>",
 						""
 					],
 					[
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-È«²¿±êÇ©",
+					  "æå®¢æ ‡ç­¾-å…¨éƒ¨æ ‡ç­¾",
 					  "http://www.gbtags.com/gb/tags.htm",
-					  "<a href='http://www.gbtags.com/gb/tags.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/tags.htm'>è¿›å…¥</a>",
 						""
 					],
 					[
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-¼ÓÈë¼«¿ÍÔ­´´·­ÒëĞ¡×é",
+					  "æå®¢æ ‡ç­¾-åŠ å…¥æå®¢åŸåˆ›ç¿»è¯‘å°ç»„",
 					  "http://www.gbtags.com/gb/share/2446.htm",
-					  "<a href='http://www.gbtags.com/gb/share/2446.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/share/2446.htm'>è¿›å…¥</a>",
 						""
 					],
 					 [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-¹ØÓÚÎÒÃÇ",
+					  "æå®¢æ ‡ç­¾-å…³äºæˆ‘ä»¬",
 					  "http://www.gbtags.com/gb/aboutus.htm",
-					  "<a href='http://www.gbtags.com/gb/aboutus.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/aboutus.htm'>è¿›å…¥</a>",
 						""
 					],
 					 [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-¼ÓÈë¼«¿ÍÉçÇø",
+					  "æå®¢æ ‡ç­¾-åŠ å…¥æå®¢ç¤¾åŒº",
 					  "http://www.gbtags.com/gb/requestaccount.htm",
-					  "<a href='http://www.gbtags.com/gb/requestaccount.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/requestaccount.htm'>è¿›å…¥</a>",
 						""
 					], 
 				  [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-ÉêÇë´ïÈË",
+					  "æå®¢æ ‡ç­¾-ç”³è¯·è¾¾äºº",
 					  "http://www.gbtags.com/gb/applydaren.htm",
-					  "<a href='http://www.gbtags.com/gb/applydaren.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/applydaren.htm'>è¿›å…¥</a>",
 						""
 					], [
 						"<input type='checkbox' name='checkList' value='1'>",
-					  "¼«¿Í±êÇ©-¹ã¸æºÏ×÷",
+					  "æå®¢æ ‡ç­¾-å¹¿å‘Šåˆä½œ",
 					  "http://www.gbtags.com/gb/ads.htm",
-					  "<a href='http://www.gbtags.com/gb/ads.htm'>½øÈë</a>",
+					  "<a href='http://www.gbtags.com/gb/ads.htm'>è¿›å…¥</a>",
 						""
 					]
 				  ],
 					"aoColumns": [
 						{ "sTitle": "<input type='checkbox' id='checkAll'>"},
-						{ "sTitle": "±êÌâ" },
-						{ "sTitle": "µØÖ·" },
-						{ "sTitle": "²Ù×÷" },
-						{ "sTitle": "²Ù×÷",
+						{ "sTitle": "æ ‡é¢˜" },
+						{ "sTitle": "åœ°å€" },
+						{ "sTitle": "æ“ä½œ" },
+						{ "sTitle": "æ“ä½œ",
 							"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-							$(nTd).html("<a href='javascript:void(0);' onclick='_editFun("+sData+")'>±à¼­</a>&nbsp;&nbsp;")
-							.append("<a href='javascript:void(0);' onclick='_deleteFun("+sData+")'>É¾³ı</a>");
+							$(nTd).html("<a href='javascript:void(0);' onclick='_editFun("+sData+")'>ç¼–è¾‘</a>&nbsp;&nbsp;")
+							.append("<a href='javascript:void(0);' onclick='_deleteFun("+sData+")'>åˆ é™¤</a>");
 				        
 							} 
 						}
@@ -121,7 +121,7 @@ function initTable(){
 			"sPaginationType": "bootstrap",
 			/*"oLanguage": {
 				"sUrl": "jsplugin/datatables/zh-CN.txt",
-				"sSearch": "¿ìËÙ¹ıÂË£º" 
+				"sSearch": "å¿«é€Ÿè¿‡æ»¤ï¼š" 
 			} ,*/
 			"fnCreatedRow": function(nRow, aData, iDataIndex){
 				//add selected class
@@ -135,9 +135,9 @@ function initTable(){
 	        	});
 	        },
 			"fnInitComplete": function(oSettings, json){
-				$('<a href="#myModal" class="btn btn-primary" data-toggle="modal">ĞÂÔö</a>'+'&nbsp;'+
-				'<a href="#" class="btn btn-primary" id="editFun">ĞŞ¸Ä</a> '+'&nbsp;'+
-				'<a href="#" class="btn btn-danger" id="deleteFun">É¾³ı</a>'+'&nbsp;').appendTo($('.myBtnBox'));
+				$('<a href="#myModal" class="btn btn-primary" data-toggle="modal">æ–°å¢</a>'+'&nbsp;'+
+				'<a href="#" class="btn btn-primary" id="editFun">ä¿®æ”¹</a> '+'&nbsp;'+
+				'<a href="#" class="btn btn-danger" id="deleteFun">åˆ é™¤</a>'+'&nbsp;').appendTo($('.myBtnBox'));
 				//$("#deleteFun").click(_deleteList);
 				//$("#editFun").click(_value);
 			} 
