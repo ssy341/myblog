@@ -1,7 +1,7 @@
 ---
 layout: md
 categories: [linux]
-tags: [命令]
+tags: [command]
 title:often use command
 ---
 解压：`tar xvfz jdk.tar.gz`
