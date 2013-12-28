@@ -1,3 +1,14 @@
-{{site}}
+---
+layout: default
+---
+<ul>
+{% for type in site.categories %}
+  <li>{{type}}</li>
+{% endfor %}
+</ul>
 
-{{site.posts}}
+<ul>
+{% for tag in site.tags %}
+  <li>{{tag}}</li>
+{% endfor %}
+</ul>
