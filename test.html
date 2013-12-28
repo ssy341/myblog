@@ -1,14 +1,12 @@
 ---
 layout: default
 ---
+<h4>Category</h4>
 <ul>
-{% for type in site.categories %}
-  <li>{{type}}</li>
-{% endfor %}
-</ul>
-
-<ul>
-{% for tag in site.tags %}
-  <li>{{tag}}</li>
-{% endfor %}
+ 
+    {% for category in site.categories %}
+    <li><a href="/categories/{{ category | first }}/" title="view all
+posts">{{ category | first }{{ category | last | size }}</a>
+    </li>
+    {% endfor %}
 </ul>
