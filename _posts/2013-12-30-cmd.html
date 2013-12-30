@@ -19,7 +19,6 @@ tags: [cmd]
 mysqlbackall.bat内容入下：
 </p>
 <pre class="brush: bash">
-	//省略部分代码
 	mysqldump -h192.168.1.102 -uroot -padmin database > D:\back.sql
 </pre>
 <p>
@@ -27,7 +26,14 @@ mysqlbackall.bat内容入下：
 后发现该定时任务并没有备份数据库，生成的文件都是空的。
 直接双击bat文件，又可以，想到windows设置了环境变量后，cmd下是立马生效，其他资源要使用是不是需要重启呢？
 于是我重启电脑，再试下，成功！果然是环境变量的问题
-
 </p>
+<p>如果不想重启电脑又让他应用所有的资源，有个临时解决办法，就执行bat文件之前先设置下环境变量，这样不管有没有设置，都不会出错了
+代码如下:</p>
+<pre class="brush: bash">
+	set path="d:/mysqltool"
+	mysqldump -h192.168.1.102 -uroot -padmin database > D:\back.sql
+</pre>
+<p>d:/mysqltool 文件夹下存放mysqldump执行文件</p>
+
 <h3>总结:windows设置环境变量后，其他资源需要使用，需要重启下电脑，就像linux的更新资源操作一样</h3>
 <p>ps:不知道windows下是不是也有类似的命令，先这样吧</p>
