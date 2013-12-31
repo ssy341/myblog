@@ -3,12 +3,12 @@ layout: md
 categories: [varied]
 tags: [navigation]
 ---
-笔记类：[印象](https://app.yinxiang.com/Login.action "印象")
+笔记：[印象](https://app.yinxiang.com/Login.action "印象")
 [有道](http://note.youdao.com/ "有道")
 [麦库](http://note.sdo.com/ "麦库")
 [为知](http://www.wiz.cn/index.html "为知")
 
-学习类：[百词斩](http://www.baicizhan.com/login "百词斩")
+学习：[百词斩](http://www.baicizhan.com/login "百词斩")
 [italk](http://www.italki.com/ "italk")
 [大耳朵](http://www.bigear.cn/ "大耳朵")
 
@@ -21,7 +21,7 @@ tags: [navigation]
 [56](http://www.56.com/ "56")
 [搜狐](http://tv.sohu.com/ "搜狐")
 
-搜索引擎：[Google](http://www.google.com.tw/ "Google")
+搜索：[Google](http://www.google.com.tw/ "Google")
 [百度](http://www.baidu.com/ "百度")
 [bing](http://cn.bing.com/ "bing")
 [360](http://www.so.com/ "360")
@@ -33,19 +33,20 @@ Code学习：[w3c](http://www.w3school.com.cn/ "w3c")
 [w3s](http://www.w3schools.com/ "w3s")
 [Css](http://zh.learnlayout.com/ "Css")
 
-逛Code：
+Coding：
+[gbtags]("http://www.gbtags.com/" "gbtags")
 [stackoverflow](http://stackoverflow.com/ "stackoverflow")
 [stackexchange](http://programmers.stackexchange.com/ "stackexchange")
 [infoq](http://www.infoq.com/cn/ "infoq")
 [CSDN](http://www.csdn.net/ "CSDN")
 [iteye](http://www.iteye.com/ "iteye")
-[前端工程师](http://julying.com/ "前端工程师")
 [itpub](http://www.itpub.net/ "itpub")
 [51cto](http://www.51cto.com/ "51cto")
-
 [cnblogs](http://www.cnblogs.com/ "cnblogs")
 [oschina](http://www.oschina.net/ "oschina")
 [chinaunix](http://www.chinaunix.net/ "chinaunix")
+
+[前端工程师](http://julying.com/ "前端工程师")
 [德问](http://www.dewen.org/ "德问")
 [知乎](http://www.zhihu.com/ "知乎")
 [图灵社区](http://www.ituring.com.cn/ "图灵社区")
@@ -53,6 +54,7 @@ Code学习：[w3c](http://www.w3school.com.cn/ "w3c")
 [it168](http://www.it168.com/ "it168")
 [电脑报](http://www.icpcw.com/ "电脑报")
 [RunJS](http://runjs.cn/ "RunJS")
+[ubuntu论坛](http://forum.ubuntu.org.cn/ "ubuntu")
 
 代码托管：[Google Code](https://code.google.com/intl/zh-CN/ "Google Code")
 [CSDN Code](https://code.csdn.net/ "CSDN Code")
