@@ -34,7 +34,7 @@ Code学习：[w3c](http://www.w3school.com.cn/ "w3c")
 [Css](http://zh.learnlayout.com/ "Css")
 
 Coding：
-[gbtags]("http://www.gbtags.com/" "gbtags")
+[gbtags](http://www.gbtags.com/ "gbtags")
 [stackoverflow](http://stackoverflow.com/ "stackoverflow")
 [stackexchange](http://programmers.stackexchange.com/ "stackexchange")
 [infoq](http://www.infoq.com/cn/ "infoq")
