@@ -2,6 +2,7 @@ var oTable;
 $(document).ready(function(){
 	
 	oTable = initTable("tableDemo1");
+	$("#demoTable").dataTable();
 	
 });
 
