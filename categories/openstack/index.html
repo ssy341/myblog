@@ -12,6 +12,7 @@ layout: list
                     <span>&#9830;</span>
                     <h2>Category:&nbsp;&nbsp {{ page.category }}</h2>
                 </div>
+                {{ site.categories }}
                 {% for post in site.categories.[page.category] %}
                 <div class="violet-archive fn-clear">
                 	<p class="ui-grid-2 year">{{ post.date | date: '%Y' }}</p>
