@@ -12,15 +12,7 @@ layout: list
                     <span>&#9830;</span>
                     <h2>Category:&nbsp;&nbsp {{ page.category }}</h2>
                 </div>
-                {{ site.categories }}
-
-               
-
-                {{ site.categories.[page.category] }}
-
-                 {{ site.categories.openstack }}
-                <br>
-                {% for post in site.categories.[page.category] %}
+                {% for post in site.categories.openstack %}
                 <div class="violet-archive fn-clear">
                 	<p class="ui-grid-2 year">{{ post.date | date: '%Y' }}</p>
                 	<div class="ui-grid-17 ui-grid-right ui-grid-bottom">
