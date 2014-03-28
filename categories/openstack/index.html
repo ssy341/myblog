@@ -14,9 +14,11 @@ layout: list
                 </div>
                 {{ site.categories }}
 
-                {{ site.categories.openstack }}
+               
 
-                {{ page.categories }}
+                {{ site.categories.[page.category] }}
+
+                 {{ site.categories.openstack }}
                 <br>
                 {% for post in site.categories.[page.category] %}
                 <div class="violet-archive fn-clear">
