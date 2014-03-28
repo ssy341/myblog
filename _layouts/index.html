@@ -65,7 +65,17 @@
             <p><a href="http://weibo.com/smotive" class="btn btn-primary btn-large" target="_blank">找到我 &raquo;</a></p>
           </div>
           <div class="row-fluid">
+
+
+
+
+
+
+
+
             {% for post in site.posts %}
+              {% capture title_size %}{{ page.title | size }}{% endcapture %}
+              {% if title_size < 3 %}
                <div class="span4">
                 <h2>{{ post.title }}</h2>
                 <p style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
@@ -73,6 +83,7 @@
                  </p>
                 <p><a class="btn" href="{{ site.baseurl }}{{ post.url }}">查看 &raquo;</a></p>
               </div><!--/span-->
+              {% endif %}
             {% endfor %}
           </div><!--/row-->
         </div><!--/span-->
