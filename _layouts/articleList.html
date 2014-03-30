@@ -43,9 +43,16 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-         <div class="span3">
+
+          <div class="span3" id="myTags">
+
+          {% for tag in site.tags %}
+                <a href="/path" rel="{{tag[1].size}}">{{tag[0]}}</a>
+      
+           {% endfor %}
+       </div>
         
-        </div>
+ 
         <div class="span9">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="articleTable" >
               <thead>
@@ -76,6 +83,9 @@
     <!-- Placed at the end of the document so the pages load faster -->
       <script src="jsPlugin/jquery.min.js"></script>
       <script type="text/javascript" src="jsPlugin/jquery.dataTables.min.js"></script>
+      <script type="text/javascript" src="jsPlugin/jquery.tagcloud"></script>
+      <script type="text/javascript" src="js/ {% for tag in site.tags %}
+        {% endfor %}"></script>
       <script type="text/javascript" src="js/datatables.js"></script>
       <script type="text/javascript" src="js/articleList.js"></script>
 
