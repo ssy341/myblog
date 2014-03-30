@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: article_js
 categories: [linux]
 tags: [parted,鸟哥私房菜，mkfs，ext4]
 title: linux下分区/挂载
@@ -23,7 +23,7 @@ GPT分区（GUID分区表）表：
 </p>
 <p>note:以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据</p>
 <p>不过首先要通过fdisk查看当前系统识别的硬盘</p>
-<pre class="brush: bash">
+<pre class="brush: bash" class="brush: bash">
 smotive@ubuntu-nas:~$ sudo fdisk -l
 [sudo] password for smotive: 
 
@@ -60,13 +60,10 @@ smotive@ubuntu-nas:~$ sudo parted /dev/sdb
 GNU Parted 2.3
 使用 /dev/sdb
 欢迎使用 GNU Parted! 输入 'help'可获得命令列表.
-(parted)   
-</pre>
-<pre>
- mklabel gpt 
+(parted)  mklabel gpt 
 </pre>
 <p>此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息</p>
-<pre>(parted) print
+<pre class="brush: bash">(parted) print
 Model: ATA WDC WD5000AADS-0 (scsi)
 磁盘 /dev/sdb: 500GB
 Sector size (logical/physical): 512B/512B
@@ -76,10 +73,10 @@ Sector size (logical/physical): 512B/512B
  1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了
 </pre>
 <p>接下来分区，输入如下命令</p>
-<pre>mkpart primary 0 -1</pre>
+<pre class="brush: bash">mkpart primary 0 -1</pre>
 <p>这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印
 信息</p>
-<pre>(parted) print
+<pre class="brush: bash">(parted) print
 Model: ATA WDC WD5000AADS-0 (scsi)
 磁盘 /dev/sdb: 500GB
 Sector size (logical/physical): 512B/512B
@@ -89,18 +86,18 @@ Sector size (logical/physical): 512B/512B
  1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行
 </pre>
 <p>到这里，建立分区表，分区就完成了，退出parted</p>
-<pre>(parted)quit                                                             
+<pre class="brush: bash">(parted)quit                                                             
 Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件
  </pre>
 <p>现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息</p>
-<pre>mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 </pre>
+<pre class="brush: bash">mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 </pre>
 <p>接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联</p>
 <p>我在我的主目录下创建一个文件夹</p>
-<pre>mkdir /home/smotive/wd500</pre>
+<pre class="brush: bash">mkdir /home/smotive/wd500</pre>
 <p>然后挂载硬盘</p>
-<pre>mount /dev/sdb1 /home/smotive/wd500</pre>
+<pre class="brush: bash">mount /dev/sdb1 /home/smotive/wd500</pre>
 <p>然后再查看系统挂载信息</p>
-<pre>smotive@ubuntu-nas:~$ df -h
+<pre class="brush: bash">smotive@ubuntu-nas:~$ df -h
 文件系统        容量  已用  可用 已用% 挂载点
 /dev/sda1       290G  2.3G  273G    1% /
 udev            1.8G  4.0K  1.8G    1% /dev
@@ -111,7 +108,7 @@ cgroup          1.8G     0  1.8G    0% /sys/fs/cgroup
 /dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了
 </pre>
 <p>接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件</p>
-<pre># /etc/fstab: static file system information.
+<pre class="brush: bash"># /etc/fstab: static file system information.
 #
 # Use 'blkid' to print the universally unique identifier for a
 # device; this may be used with UUID= as a more robust way to name devices
@@ -138,10 +135,10 @@ UUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw            
 
 
 <p>参考：
-<a href="http://zh.wikipedia.org/zh-cn/Ext4" target="_blanck">ext4介绍</a>
-<a href="http://www.fikker.com/isp/help/linux-fdisk.html" target="_blanck">Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）</a>
-<a href="http://www.blogjava.net/haha1903/archive/2011/12/21/366942.html" target="_blanck">parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）</a>
-<a href="http://haibusuanyun.blog.51cto.com/2701158/756949" target="_blanck">一次添加硬盘分区并修改/etc/fstab引起的故障</a>
+<a href="http://zh.wikipedia.org/zh-cn/Ext4" target="_blanck">ext4介绍</a><BR>
+<a href="http://www.fikker.com/isp/help/linux-fdisk.html" target="_blanck">Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）</a><BR>
+<a href="http://www.blogjava.net/haha1903/archive/2011/12/21/366942.html" target="_blanck">parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）</a><BR>
+<a href="http://haibusuanyun.blog.51cto.com/2701158/756949" target="_blanck">一次添加硬盘分区并修改/etc/fstab引起的故障</a><BR>
 </p>
 
 
