@@ -130,12 +130,12 @@ UUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw            
 #第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）
 </pre>
 <p>修改好后保存退出</p>
-<p>修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里<a href="#">回复模式下修改/etc/fatab文件</a></p>
+<p>修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里<a href="#">恢复模式下修改/etc/fatab文件</a></p>
 <p>大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助</p>
 
 
 <p>参考：
-<a href="http://vbird.dic.ksu.edu.tw/linux_basic/0230filesystem_4.php" target="_blanck">第八章、Linux 磁盘与文件系统管理</a>	
+<a href="http://vbird.dic.ksu.edu.tw/linux_basic/0230filesystem_4.php" target="_blanck">第八章、Linux 磁盘与文件系统管理</a><BR>
 <a href="http://zh.wikipedia.org/zh-cn/Ext4" target="_blanck">ext4介绍</a><BR>
 <a href="http://www.fikker.com/isp/help/linux-fdisk.html" target="_blanck">Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）</a><BR>
 <a href="http://www.blogjava.net/haha1903/archive/2011/12/21/366942.html" target="_blanck">parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）</a><BR>
