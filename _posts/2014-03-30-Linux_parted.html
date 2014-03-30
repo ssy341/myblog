@@ -1,0 +1,65 @@
+---
+layout: article
+categories: [linux]
+tags: [parted,鸟哥私房菜，mkfs，ext4]
+title: linux下分区/挂载
+date: 2013-12-26 16:42:14
+---
+<p>流程为：新建分区--》格式化分区--》挂载分区</p>
+
+<p>首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：</p>
+
+<p>
+MBR分区（主引导记录）表：
+支持最大卷：2T （T; terabytes,1TB=1024GB）
+分区的设限：最多4个主分区或3个主分区加一个扩展分区。</p>
+<p>
+GPT分区（GUID分区表）表：
+支持最大卷：18EB，（E：exabytes,1EB=1024TB）
+每个磁盘最多支持128个分区</p>
+<p>第一：新建分区
+在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作
+（ps：使用fdisk命令，会有下面的警告信息：<b>WARNING: GPT (GUID Partition Table) detected on '/dev/sda'! The util fdisk doesn't support GPT. Use GNU Parted.</b>)
+</p>
+
+<p>不过首先要通过fdisk查看当前系统识别的硬盘</p>
+<pre class="brush: bash">
+smotive@ubuntu-nas:~$ sudo fdisk -l
+[sudo] password for smotive: 
+
+Disk /dev/sda: 320.1 GB, 320072933376 bytes
+255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectors
+Units = 扇区 of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disk identifier: 0x000109ef
+
+   设备 启动      起点          终点     块数   Id  系统
+/dev/sda1   *        2048   617381887   308689920   83  Linux
+/dev/sda2       617383934   625141759     3878913    5  扩展
+Partition 2 does not start on physical sector boundary.
+/dev/sda5       617383936   625141759     3878912   82  Linux 交换 / Solaris
+
+WARNING: GPT (GUID Partition Table) detected on '/dev/sdb'! The util fdisk doesn't support GPT. Use GNU Parted.
+
+
+Disk /dev/sdb: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectors
+Units = 扇区 of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0xd87cd87c
+
+   设备 启动      起点          终点     块数   Id  系统
+/dev/sdb1               1   976773167   488386583+  ee  GPT	
+</pre>
+
+<p>可以看出系统识别了两个硬盘 /dev/sda & /dev/sdb,现在我要把/dev/sdb 进行分区和格式化并让系统自动挂载</p>
+<pre class="brush: bash">
+smotive@ubuntu-nas:~$ sudo parted /dev/sdb
+GNU Parted 2.3
+使用 /dev/sdb
+欢迎使用 GNU Parted! 输入 'help'可获得命令列表.
+(parted)    
+</pre>
+
