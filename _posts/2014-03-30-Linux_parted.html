@@ -2,7 +2,7 @@
 layout: article_js
 categories: [linux]
 tags: [parted,鸟哥私房菜，mkfs，ext4]
-title: linux下分区/挂载
+title: ubuntu server下建立分区表/分区/格式化/自动挂载
 date: 2014-3-30 10:34:03
 ---
 <p>流程为：新建分区--》格式化分区--》挂载分区</p>
@@ -23,7 +23,7 @@ GPT分区（GUID分区表）表：
 </p>
 <p>note:以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据</p>
 <p>不过首先要通过fdisk查看当前系统识别的硬盘</p>
-<pre class="brush: bash" class="brush: bash">
+<pre class="brush: bash">
 smotive@ubuntu-nas:~$ sudo fdisk -l
 [sudo] password for smotive: 
 
