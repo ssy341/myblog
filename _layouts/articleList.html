@@ -66,8 +66,14 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span9">
-        	<div class="row-fluid">
+         <div class="span3">
+           {% for tag in site.tags %}
+            <li>
+              <a href="categories/{{ category | first }}/" title="view allposts">{{ tag | first }} ({{ tag | last | size }})</a>
+            </li> 
+            {% endfor %}
+        </div>
+        <div class="span6">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="articleTable" >
               <thead>
                 <tr>
@@ -79,9 +85,8 @@
                  {{ content }}
               </tbody>
             </table>
-           
-        	</div>
         </div><!--/span-->
+       
         
       </div><!--/row-->
 
