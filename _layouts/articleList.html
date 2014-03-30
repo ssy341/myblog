@@ -69,7 +69,7 @@
          <div class="span3">
            {% for tag in site.tags %}
             <li>
-              <a href="categories/{{ category | first }}/" title="view allposts">{{ tag | first }} ({{ tag | last | size }})</a>
+              {{ tag }}
             </li> 
             {% endfor %}
         </div>
