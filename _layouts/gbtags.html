@@ -1,41 +1,12 @@
 <!DOCTYPE html>
 <html>
 　　<head>
-　　　　<meta charset="utf-8">
+　　　　
 	    <title>{{ page.title }}</title>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <meta name="description" content="">
-	    <meta name="author" content="">
+	    {% include head-meta.html %}
+      {% include head-link.html %}
 
-	    <!-- Le styles -->
-	    <link href="http://v2.bootcss.com/assets/css/bootstrap.css" rel="stylesheet">
-	    <style type="text/css">
-	      body {
-	        padding-top: 60px;
-	        padding-bottom: 40px;
-	      }
-	      .sidebar-nav {
-	        padding: 9px 0;
-	      }
-
-	      @media (max-width: 980px) {
-	        /* Enable use of floated navbar text */
-	        .navbar-text.pull-right {
-	          float: none;
-	          padding-left: 5px;
-	          padding-right: 5px;
-	        }
-	      }
-	    </style>
-	    <link href="http://v2.bootcss.com/assets/css/bootstrap-responsive.css" rel="stylesheet">
-	    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-	    <!--[if lt IE 9]>
-	      <script src="../assets/js/html5shiv.js"></script>
-	    <![endif]-->
-
-	    <!-- Fav and touch icons -->
-	    <link rel="shortcut icon"  type="image/ico" href="img/ico.ico">
-　　　　<!-- <title>{{ page.title }}</title> -->
+　　　
 　　</head>
 　　<body>
  <div class="navbar navbar-inverse navbar-fixed-top">
@@ -52,8 +23,8 @@
               <a href="#" class="navbar-link">注销</a>
             </p>
             <ul class="nav">
-              <li class="active"><a href="index.html">主页</a></li>
-              <li><a href="articleList.html">Blog</a></li>
+              <li class="active"><a href="{{ site.baseurl }}index.html">主页</a></li>
+              <li><a href="{{ site.baseurl }}articleList.html">Blog</a></li>
               <li><a href="#about">关于我</a></li>
               <li><a href="#contact">联系我</a></li>
             </ul>
@@ -86,10 +57,12 @@
     <!-- Placed at the end of the document so the pages load faster 
 <script src="http://v2.bootcss.com/assets/js/jquery.js"></script>
   -->
-    <script src="http://ssy341.github.io/myblog/jsPlugin/jquery.min.js"></script>
-     <script type="text/javascript" src="http://ssy341.github.io/myblog/jsPlugin/jquery.dataTables.min.js"></script>
-      <script type="text/javascript" src="http://ssy341.github.io/myblog/js/datatables.js"></script>
-      <script type="text/javascript" src="http://ssy341.github.io/myblog/js/gbtags_datatables.js"></script>
+   
+       {% include basic-jquery.html %}
+        {% include basic-bootstrap.html %}
+         {% include datatables-js.html %}
+      <script type="text/javascript" src="{{ site.baseurl }}js/datatables.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}js/gbtags_datatables.js"></script>
    
   </body>
 </html>

@@ -4,7 +4,8 @@ title: 文章列表
 ---
 {% for post in site.posts %}
   <tr>
-    <td><a target="_blank" href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a></td>
+    <td><a target="_blank" href="{{ post.url }}">{{post.title}}</a></td>
+    <!-- {{ site.baseurl }}  -->
     <td>{{post.date}}</td>
   </tr>
 {% endfor %}

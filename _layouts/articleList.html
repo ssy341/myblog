@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html>
 　　<head>
-　　　　<meta charset="utf-8">
+　　　　
 	    <title>我的Blog</title>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <meta name="description" content="java html css javascript">
-	    <meta name="author" content="keith shan">
+	    {% include head-meta.html %}
+      {% include head-link.html %}
 
-	    <!-- Le styles -->
-	    <link href="css/bootstrap.css" rel="stylesheet">
-       <link href="css/basic.css" rel="stylesheet">
-	    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="css/demo_table_jui.css">
-  
-	    <!-- Fav and touch icons -->
-	    <link rel="shortcut icon"  type="image/ico" href="img/ico.ico">
 　　</head>
 　　<body>
  <div class="navbar navbar-inverse navbar-fixed-top">
@@ -31,8 +22,8 @@
               <a href="#" class="navbar-link">注销</a>
             </p>
             <ul class="nav">
-              <li><a href="index.html">主页</a></li>
-              <li class="active"><a href="articleList.html">Blog</a></li>
+              <li><a href="{{ site.baseurl }}index.html">主页</a></li>
+              <li class="active"><a href="{{ site.baseurl }}articleList.html">Blog</a></li>
               <li><a href="#about">关于我</a></li>
               <li><a href="#contact">联系我</a></li>
             </ul>
@@ -81,12 +72,12 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-      <script src="jsPlugin/jquery.min.js"></script>
-      <script type="text/javascript" src="jsPlugin/jquery.dataTables.min.js"></script>
-      <script type="text/javascript" src="jsPlugin/jquery.tagcloud.js"></script>
-      <script type="text/javascript" src="js/cloud.js"></script>
-      <script type="text/javascript" src="js/datatables.js"></script>
-      <script type="text/javascript" src="js/articleList.js"></script>
+      <script src="{{ site.baseurl }}jsPlugin/jquery.min.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}jsPlugin/jquery.dataTables.min.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}jsPlugin/jquery.tagcloud.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}js/cloud.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}js/datatables.js"></script>
+      <script type="text/javascript" src="{{ site.baseurl }}js/articleList.js"></script>
 
   </body>
 </html>
