@@ -23,7 +23,7 @@
             <ul class="nav">
               <li class="active"><a href="{{ site.baseurl }}index.html" target="_blank">主页</a></li>
               <li><a href="{{ site.baseurl }}articleList.html" target="_blank">Blog</a></li>
-              <li><a href="#about">关于我</a></li>
+             <li><a href="{{ site.baseurl }}about.html">关于我</a></li>
               <li><a href="https://github.com/ssy341" target="_blank">GitHub</a></li>
               <li>
 				<form class="form-search" style="margin:0;padding:0" method=get action="http://www.google.com/search"  target="_blank">
@@ -147,9 +147,7 @@
 
       <hr>
 
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
+     {%include footer.html%}
 
     </div><!--/.fluid-container-->
 

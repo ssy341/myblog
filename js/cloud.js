@@ -1,5 +1,5 @@
 $.fn.tagcloud.defaults = {
-  size: {start: 34, end: 41, unit: 'px'},
+  size: {start: 13, end: 41, unit: 'px'},
   color: {start: '#cde', end: '#f52'}
 };
 

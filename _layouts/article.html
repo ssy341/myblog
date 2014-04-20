@@ -17,15 +17,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="{{ site.baseurl }}/index.html">5341Code</a>
+          <a class="brand" href="{{ site.baseurl }}index.html">5341Code</a>
           <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              <a href="#" class="navbar-link">注销</a>
-            </p>
             <ul class="nav">
               <li class="active"><a href="{{ site.baseurl }}index.html">主页</a></li>
               <li><a href="{{ site.baseurl }}articleList.html">Blog</a></li>
-              <li><a href="#about">关于我</a></li>
+              <li><a href="{{ site.baseurl }}about.html">关于我</a></li>
               <li><a href="#contact">联系我</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -43,10 +40,7 @@
 
       <hr>
 
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
-
+    {%include footer.html%}
     </div><!--/.fluid-container-->
 
     <!-- Le javascript

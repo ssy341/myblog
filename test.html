@@ -13,7 +13,11 @@ posts">{{ category | first }}{{ category | last | size }}</a>
 
 
 <hr/>
-{{ site }}
+
+ {% for tag in site.tags %}
+                <a href="#{{tag[0]}}" rel="{{tag[1].size}}">{{tag[0]}}</a>
+           {% endfor %}
+
 <hr/>
   <ul class="archive">
           {% for tag in site.tags %}

@@ -1,0 +1,36 @@
+---
+layout: article_bash
+title: cannot load such file -- wdm (LoadError)
+date: 2014-4-18
+categories: [jekyll]
+tags: [jekyll,wdm,gem]
+---
+<p>
+    好像是更新jekyll版本后，自动检测文件更新的命令不是<code>--auto</code>了，而是<code>--watch</code>，这个也好理解，观察，有变动我就更新
+</p>
+ <!--break-->
+<p>
+    之前我都是一个命令窗口执行<code>jekyll server</code>，如果代码有更新了，再到另一个窗口执行<code>jekyll build</code>，时间长了会感觉有点繁琐，于是我就是用<code>--watch</code>参数，结果并不是那么好，执行<code>jekyll server --watch </code>直接报错，如下：
+</p>
+
+<pre class="brush:bash;toolbar:false">
+	F:\xxx&gt;jekyll server --watch
+Configuration file: F:/xxx/_config.yml
+            Source: F:/xxx
+       Destination: ../deploy
+      Generating... done.
+ Auto-regeneration: enabled
+E:/tools/ruby/lib/ruby/site_ruby/2.0.0/rubygems/core_ext/kernel_require.rb:55:in
+ `require&#39;: cannot load such file -- wdm (LoadError)</pre>
+<p>
+    由于对ruby不熟悉，不知道什么意思，google查询
+</p>
+<blockquote>
+ cannot load such file -- wdm (LoadError)
+</blockquote>
+ <p>
+        我点开了排在第一个的网址，于是结果就出了，原来是缺少包，执行<code> gem install wdm</code>
+    </p>
+    <p>
+        wdm——<span style="font-family: Simsun; font-size: medium;">&quot;Windows Directory Monitor&quot; 由这个意思看来貌似是针对windows一个插件，windows文件夹监视器，是不是在linux下就不用安装这个插件就可以了呢？下会在linux下去试试</span>
+    </p>

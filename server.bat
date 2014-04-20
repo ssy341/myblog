@@ -1,2 +1,2 @@
-jekyll server
+jekyll server --watch
 pause

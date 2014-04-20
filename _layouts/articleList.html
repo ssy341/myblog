@@ -18,14 +18,11 @@
           </button>
           <a class="brand" href="index.html">5341Code</a>
           <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              <a href="#" class="navbar-link">注销</a>
-            </p>
+           
             <ul class="nav">
               <li><a href="{{ site.baseurl }}index.html">主页</a></li>
               <li class="active"><a href="{{ site.baseurl }}articleList.html">Blog</a></li>
-              <li><a href="#about">关于我</a></li>
-              <li><a href="#contact">联系我</a></li>
+              <li><a href="{{ site.baseurl }}about.html">关于我</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -34,16 +31,23 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
+<div class="span3">
 
-          <div class="span3" id="myTags">
+      <div id="myTags">
+     
+            {% for category in site.categories %}
+              <a href="{{ category | first }}/" title="{{ category | first }}" rel="{{ category | last | size }}">
+                {{ category | first }} ({{ category | last | size }})
+              </a>
+            {% endfor %}
+             <a href="categories/index.html" title="all" rel="{{site.categories | size}}">
+                All
+              </a>
 
-          {% for tag in site.tags %}
-                <a href="/path" rel="{{tag[1].size}}">{{tag[0]}}</a>
-      
-           {% endfor %}
+   
+         </div>
        </div>
-        
- 
+
         <div class="span9">
             <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="articleTable" >
               <thead>
@@ -62,10 +66,7 @@
       </div><!--/row-->
 
       <hr>
-
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
+{%include footer.html%}
 
     </div><!--/.fluid-container-->
 

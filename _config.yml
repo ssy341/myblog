@@ -1,3 +1,4 @@
 baseurl: /
 encoding: utf-8
-destination: f:/blogdeploy
+destination: ../blogdeploy
+port: 341
