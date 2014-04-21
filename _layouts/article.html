@@ -23,7 +23,6 @@
               <li class="active"><a href="{{ site.baseurl }}index.html">主页</a></li>
               <li><a href="{{ site.baseurl }}articleList.html">Blog</a></li>
               <li><a href="{{ site.baseurl }}about.html">关于我</a></li>
-              <li><a href="#contact">联系我</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -33,11 +32,13 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span9">
-        	<h3>{{ page.title }}</h3>
+        	<h3>{{ page.title }}</h3><h6>{{page.date | date: "%Y-%m-%d"}}</h6>
+          <hr size=25>
           {{ content }}
+           {% include comments.html %}
         </div><!--/span-->
       </div><!--/row-->
-
+     
       <hr>
 
     {%include footer.html%}
