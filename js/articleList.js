@@ -1,11 +1,7 @@
 var oTable;
 $(document).ready(function(){
-	
 	oTable = initTable();
-	
 });
-
-
 
 function initTable(){
 	var table =  $("#articleTable").dataTable({
@@ -14,8 +10,9 @@ function initTable(){
 	        "bDestory":true,
 	        "bRetrieve":true,
 	        "bStateSave":true,
+	        "bFilter":false,
 	        "bSort":false,
-	        "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
+	        "sDom": "<'row-fluid'r>t<'row-fluid'<'span6'i><'span6 'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
 				"sUrl": "js/zh-CN.txt"
