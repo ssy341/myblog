@@ -1,0 +1,34 @@
+---
+layout: article_bash
+title: jekyll入门之快速启动指南
+date: 2014-4-26
+category: jekyll
+---
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;这一系列的文章的目标是给大家一个全面的jekyll指南，这一些列文章包括如下内容：网站的运行和启动，创建和管理你的内容，自定义你的站点，部署到不同的环境中，并在使用jekyll时给你一些建议。<br/>
+</p>
+<!--break-->
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;那么再详细解释下jekyll是什么？<br/>
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;jekyll是一个简单的，适用于blog，静态网站生成器。通过markdown或者texttile和Liquid转换模板文件夹里不同格式的文本文件，生成一个完整可以直接发布到你的服务器的静态网站。jekyll也是github页面的引擎，意味这你可以在github上搭建免费的项目页面和博客。
+</p>
+<h3>
+    快速启动指南
+</h3>
+<p>
+    通过下面的介绍你可以知道，一个用jekyll的网站是怎么启动和运行的。<br/>
+</p>
+<pre class="brush: bash;">~ $ gem install jekyll       #安装jekyll
+~ $ jekyll new myblog        #生一个myblog站点
+~ $ cd myblog                #进入站点目录
+~/myblog $ jekyll serve      #现在你可以访问http://localhost:4000看到效果</pre>
+<p>
+    很简单吧，不过这个没什么，真正神奇的地方是使用front-matter控制模板和布局和jekyll提供的所有配置选项来创建你的博客
+</p>
+<p>
+    如果你遇到问题，请确认你的电脑已经安装了ruby环境，怎么安装，参考
+    <a href="{{site.baseurl}}jekyll/2014/04/26/jekyll-guide-ruby-install.html" 
+        target="_blanck" title="jekyll入门之ruby环境搭建">jekyll入门之ruby环境搭建</a>
+</p>

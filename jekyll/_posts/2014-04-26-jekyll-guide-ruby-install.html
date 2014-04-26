@@ -1,0 +1,115 @@
+---
+layout: article_bash
+title: jekyll入门之ruby环境搭建
+date: 2014-4-26
+category: jekyll
+---
+<p>
+    ruby安装很简单，在网站下载rubu核心包和开发包，解压后配置下环境变量即可使用，下面介绍下在windows下安装ruby
+</p>
+<!--break-->
+<p>
+    相关包下载地址：<a href="http://rubyinstaller.org/downloads/" _src="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a>
+</p>
+<p>
+    下载自己对应系统的版本即可，<span style="background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px;">我是64位的操作系统，下载的</span>
+</p>
+<ul class=" list-paddingleft-2" style="padding: 0px; margin-right: 1.5em; margin-bottom: 1.5em; margin-left: 1.5em; color: rgb(51, 51, 51); white-space: normal; border: 0px; font-size: 12px; font-family: &#39;Helvetica Neue&#39;, Arial, Helvetica, sans-serif; vertical-align: baseline; line-height: 18px; background-color: rgb(255, 255, 255);">
+    <li>
+        <p style="margin-top: 0px; margin-bottom: 10px;">
+            <a href="http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.0.0-p451-x64-mingw32.7z?direct" style="color: rgb(173, 5, 10); text-decoration: none; margin: 0px; padding: 0px; border: 0px; font-weight: inherit; font-style: inherit; font-family: inherit; vertical-align: baseline; cursor: pointer;">Ruby 2.0.0-p451 (x64)</a>
+        </p>
+    </li>
+    <li>
+        <p style="margin-top: 0px; margin-bottom: 10px;">
+            <a href="http://cdn.rubyinstaller.org/archives/devkits/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe" style="color: rgb(173, 5, 10); text-decoration: none; margin: 0px; padding: 0px; border: 0px; font-weight: inherit; font-style: inherit; font-family: inherit; vertical-align: baseline; cursor: pointer;">DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe</a>
+        </p>
+    </li>
+</ul>
+<p>
+    下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)
+</p>
+<p>
+    然后添加环境变量：<br/>
+</p>
+<p>
+    RUBY_HOME &nbsp;&nbsp;d:/tool/ruby
+</p>
+<p>
+    修改path环境，在最后追加 &nbsp; %RUBY_HOME%/bin
+</p>
+<p>
+    保存环境变量，再到命令行输入 <code>ruby --version</code>，可以看到打印出版本信息
+</p>
+<pre class="brush:bash;toolbar:false">d:\tool\ruby&gt;ruby --version
+ruby 2.0.0p451 (2014-02-24) [i386-mingw32]</pre>
+<p>
+    这里配置好后，cmd下进入到devkit目录
+</p>
+<pre class="brush:bash;toolbar:false">d:\tool&gt;cd devkit
+d:\tool\devkit&gt;ls
+bin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  share
+config.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin</pre>
+<p>
+    执行初始化命令, 执行完后可以看到有config.yml文件生成
+</p>
+<code >ruby dk.rb init</code>
+<p>
+    打开config.yml文件，配置ruby的目录
+</p>
+<pre class="brush:bash;toolbar:false">---
+- d:\tool\ruby</pre>
+<p>
+    保存退出，然后再执行
+</p>
+<code>ruby dk.rb install</code>
+<p>
+    到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本<br/>
+</p>
+<pre class="brush:bash;toolbar:false">d:\tool\devkit&gt;gem --version
+2.2.2</pre>
+<p>
+    本地安装了那些插件
+</p>
+<pre class="brush:bash;toolbar:false">E:\tools\devkit&gt;gem list --local
+
+*** LOCAL GEMS ***
+
+bigdecimal (1.2.0)
+blankslate (2.1.2.4)
+celluloid (0.15.2)
+celluloid-io (0.15.0)
+classifier (1.3.4)
+colorator (0.1)
+commander (4.1.6)
+fast-stemmer (1.0.2)
+ffi (1.9.3 x86-mingw32)
+highline (1.6.21)
+io-console (0.4.2)
+jekyll (1.5.1)
+json (1.7.7)
+liquid (2.5.5)
+listen (2.7.1, 1.3.1)
+maruku (0.7.0)
+minitest (4.3.2)
+nio4r (1.0.0)
+parslet (1.5.0)
+posix-spawn (0.3.8)
+psych (2.0.5, 2.0.0)
+pygments.rb (0.5.4)
+rake (0.9.6)
+rb-fsevent (0.9.4)
+rb-inotify (0.9.3)
+rb-kqueue (0.2.2)
+rdoc (4.0.0)
+redcarpet (2.3.0)
+rubygems-update (2.2.2)
+safe_yaml (1.0.2)
+test-unit (2.0.0.0)
+timers (1.1.0)
+toml (0.1.1)
+wdm (0.1.0)
+yajl-ruby (1.1.0 x86-mingw32)</pre>
+<p>
+    如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我
+</p>
