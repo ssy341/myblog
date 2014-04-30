@@ -4,6 +4,20 @@
   <title>Thanks Open | Blog</title>
   {% include head-meta.html %}
   {% include head-link.html %}
+  <style type="text/css">
+    #tagcloud a {
+      text-decoration: none;
+    }
+
+    #tagcloud a:hover {
+      text-decoration: underline;
+    }
+
+    #tagcloud {
+      margin: 25px auto;
+      font: 75% Arial, "MS Trebuchet", sans-serif;
+    }
+  </style>
 </head>
 <body>
  <div class="navbar navbar-inverse navbar-fixed-top">
@@ -31,7 +45,7 @@
       <div class="row-fluid">
 <div class="span3">
 
-      <div id="myTags">
+      <div id="tagcloud" style="padding:10px">
      
             {% for category in site.categories %}
               <a href="{{ category | first }}/" title="{{ category | first }}" rel="{{ category | last | size }}">

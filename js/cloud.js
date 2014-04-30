@@ -4,5 +4,5 @@ $.fn.tagcloud.defaults = {
 };
 
 $(function () {
-  $('#myTags a').tagcloud();
+  $('#tagcloud a').tagcloud();
 });
