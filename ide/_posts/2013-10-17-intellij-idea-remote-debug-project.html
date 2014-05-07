@@ -1,0 +1,77 @@
+---
+layout: article_java
+title: 在intellij idea下远程调试项目
+categories: [ide]
+tags: [intellij,远程调试,tomcat]
+date: 2013-10-17
+---
+<p>
+    1，首先发布一个和本地一模一样的代码到服务器，假设到 f:/bjhgtest（最后有说明）
+</p>
+<p>
+    2，打开服务器下tomcat安装目录conf文件夹下的catalina.bat，加入以下代码：
+</p>
+<pre class="brush:java;toolbar:false">set JAVA_OPTS=%JAVA_OPTS%  -server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=54341,server=y,suspend=n
+set JAVA_OPTS=%JAVA_OPTS%  -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false</pre>
+<p>
+    <img src="/img/post/intellij-idea-remote-debug-project1.png" />
+</p>
+<p>
+    3，配置intellij，首先为项目添加一个remote tomcat
+</p>
+<p>
+   <img src="/img/post/intellij-idea-remote-debug-project2.png" />
+</p>
+<p>
+   4,加入项目
+</p>
+<p>
+   <img src="/img/post/intellij-idea-remote-debug-project3.png" />
+</p>
+<p>
+    5,配置jvm debug监听的端口
+</p>
+<p>
+    <img src="/img/post/intellij-idea-remote-debug-project4.png" />
+</p>
+<p>
+    和上面修改的配置文件一致:
+</p>
+<pre class="brush:java;toolbar:false">set JAVA_OPTS=%JAVA_OPTS%  -server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=54341,server=y,suspend=n</pre>
+<p>
+  6,启动服务器的tomcat，可以看到以下信息
+</p>
+<p>
+   <img src="/img/post/intellij-idea-remote-debug-project5.png" />
+</p>
+<p>
+	启动本地的tomcat,开始调试
+</p>
+<p>
+  <img src="/img/post/intellij-idea-remote-debug-project6.png" />
+</p>
+<p>
+	本地tomcat会打印如下日志：
+</p>
+<p>
+    <img src="/img/post/intellij-idea-remote-debug-project7.png" />
+</p>
+<p>
+	验证是否成功：<br>
+	我在登陆这段代码上打上断点，然后我访问远程的项目，在登陆的时候，进入断点，远程调试成功~
+<br>
+    需要注意的是本地的输出class路径要和服务器的上一致。
+</p>
+<p>
+    本地的：
+</p>
+<p>
+   <img src="/img/post/intellij-idea-remote-debug-project8.png" />
+</p>
+<p>
+    服务器的：
+</p>
+<p>
+    <img src="/img/post/intellij-idea-remote-debug-project9.png" />
+</p>
+<p>这样直接调试服务器上的代码，出现问题后就容易解决，一般服务器的运行环境是很难在本地模拟的，远程调试就不会有那样的问题了，而且还很方便</p>
