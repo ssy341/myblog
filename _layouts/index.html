@@ -3,7 +3,7 @@
 <head>
   <meta name="google-site-verification" content="aLPryaYhH4oXkloIrOOwl8F9nIJy8x3Eq_k86lMxuXc" />
   {% include head-meta.html %}
-  <title>Thanks Open</title>
+  <title>单客哦朋 | thxopen.com</title>
   {% include head-link.html %}
 </head>
  
@@ -16,13 +16,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="index.html">5341Code</a>
+          <a class="brand" href="index.html">单客哦朋</a>
           <div class="nav-collapse collapse">
            
             <ul class="nav">
-              <li class="active"><a href="index.html">主页</a></li>
-              <li><a href="articleList.html" target="_blank">Blog</a></li>
-               <li><a href="{{ site.baseurl }}about.html">关于我</a></li>
+              <li class="active"><a href="{{ site.baseurl }}index.html">Home</a></li>
+              <li><a href="{{ site.baseurl }}articleList.html" target="_blank">Blog</a></li>
+               <li><a href="{{ site.baseurl }}about.html">About</a></li>
             </ul>
           </div>
         </div>
@@ -42,7 +42,7 @@
           <div class="row-fluid">
              {% for post in site.posts limit:3  %}
              <div class="span4">
-                <h2><a href="{{post.url}}" title="{{post.title}}">{{post.title}}</a></h2>
+                <h3><a href="{{post.url}}" title="{{post.title}}">{{post.title}}</a></h3>
                 {{post.date| date: "%Y-%m-%d"}}
                   <p>
                   {{post.content | | split:'<!--break-->' | first}}
