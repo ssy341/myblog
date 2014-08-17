@@ -1,4 +1,5 @@
 baseurl: /
 encoding: utf-8
-destination: ../blogdeploy
+destination: deploy
 port: 341
+exclude: ['document','.nojekyll','reload.bat','server.bat']

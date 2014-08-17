@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jekyll安装出现错误 | 单客哦朋 | thxopen.com</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="All for one,one for all">
+<meta name="keyword" content="java,jquery,html,css,openstack,linux">
+<meta name="author" content="Keith shan">
+
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+
+  <!-- Le styles basic css style-->
+<link href="/css/bootstrap.css" rel="stylesheet">	    
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/css/basic.css" rel="stylesheet">
+
+  <link href="/jsPlugin/shCore/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/jsPlugin/shCore/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+</head>
+　　<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/index.html">单客哦朋</a>
+          <div class="nav-collapse collapse">
+          
+            <ul class="nav">
+               <li><a href="/index.html">Home</a></li>
+              <li class="active"><a href="/articleList.html">Blog</a></li>
+              <li><a href="/about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        	<h3>jekyll安装出现错误</h3><h6>2014-04-17</h6>
+          <hr size=25>
+            <p>
+    在本地部署jekyll环境，不仅要安装ruby，还要安装devkit（网上都这么说，具体不知什么原因，个人觉得是ruby的开发环境？暂时不知）
+</p>
+ <!--break-->
+<p>
+    我电脑上的ruby和devkit是在这里下载<a href="http://rubyinstaller.org/downloads/" _src="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a> 
+</p>
+<p>
+    下载和电脑对应的版本，我是64位的操作系统，下载的
+</p>
+<ul style="margin-right: 1.5em; margin-bottom: 1.5em; margin-left: 1.5em; padding: 0px; border: 0px; font-size: 12px; font-family: &#39;Helvetica Neue&#39;, Arial, Helvetica, sans-serif; vertical-align: baseline; color: rgb(51, 51, 51); line-height: 18px; white-space: normal; background-color: rgb(255, 255, 255);" class=" list-paddingleft-2">
+    <li>
+        <p>
+            <a href="http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.0.0-p451-x64-mingw32.7z?direct" style="margin: 0px; padding: 0px; border: 0px; font-weight: inherit; font-style: inherit; font-family: inherit; vertical-align: baseline; color: rgb(173, 5, 10); text-decoration: none; cursor: pointer;">Ruby 2.0.0-p451 (x64)</a>
+        </p>
+    </li>
+    <li>
+        <p>
+            <a href="http://cdn.rubyinstaller.org/archives/devkits/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe" style="margin: 0px; padding: 0px; border: 0px; font-weight: inherit; font-style: inherit; font-family: inherit; vertical-align: baseline; color: rgb(173, 5, 10); text-decoration: none; cursor: pointer;">DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe</a>
+        </p>
+        <p>
+           这个我在公司的电脑里安装没有问题，但是在我笔记本上同样都是64位的操作系统，却出现问题，配置好ruby的环境后，执行
+        </p>
+  
+        <pre class="brush: bash;">
+   
+        gem install jekyll
+</pre>
+<p>会报错，我查看错误日志，gem_make.out 文件如下</p>
+        
+  
+<pre class="brush: bash;">
+E:/tools/ruby/bin/ruby.exe extconf.rb
+	creating Makefile
+
+make &quot;DESTDIR=&quot; clean
+
+make &quot;DESTDIR=&quot;
+generating stemmer-i386-mingw32.def
+compiling porter.c
+porter.c: In function &#39;step1ab&#39;:
+porter.c:233:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:234:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:234:7: warning: passing argument 2 of &#39;setto&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:196:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:237:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:238:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:238:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:240:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:240:7: warning: passing argument 2 of &#39;setto&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:196:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:241:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:241:7: warning: passing argument 2 of &#39;setto&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:196:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:242:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:242:7: warning: passing argument 2 of &#39;setto&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:196:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:249:7: warning: passing argument 2 of &#39;setto&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:196:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c: In function &#39;step1c&#39;:
+porter.c:257:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c: In function &#39;step2&#39;:
+porter.c:267:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:267:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:268:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:268:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:270:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:270:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:271:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:271:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:273:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:273:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:275:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:275:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:280:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:280:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:281:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:281:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:282:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:282:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:283:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:283:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:285:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:285:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:286:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:286:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:287:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:287:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:289:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:289:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:290:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:290:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:291:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:291:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:292:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:292:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:294:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:294:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:295:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:295:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:296:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:296:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:298:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:298:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c: In function &#39;step3&#39;:
+porter.c:308:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:308:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:309:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:309:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:310:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:310:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:312:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:312:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:314:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:314:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:315:14: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:315:14: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:317:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:317:4: warning: passing argument 2 of &#39;r&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:205:13: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c: In function &#39;step4&#39;:
+porter.c:325:4: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:326:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:327:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:328:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:329:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:330:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:331:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:332:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:333:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:334:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:335:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:336:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:337:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:339:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:340:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:341:17: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:342:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:343:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+porter.c:344:7: warning: passing argument 2 of &#39;ends&#39; discards &#39;const&#39; qualifier from pointer target type [enabled by default]
+porter.c:182:12: note: expected &#39;char *&#39; but argument is of type &#39;const char *&#39;
+compiling porter_wrap.c
+porter_wrap.c: In function &#39;stem_word&#39;:
+porter_wrap.c:20:17: warning: unused variable &#39;i&#39; [-Wunused-variable]
+linking shared-object stemmer.so
+
+make &quot;DESTDIR=&quot; install
+/usr/bin/install -c -m 0755 stemmer.so ./.gem.20140409-3484-15df381
+installing default stemmer libraries</pre>
+<p>
+    看上去是编译错误，无奈只好求助google，搜了一片，和我这个问题沾不上边，虽然都是同样的错误，不过有个说道可能是devkit版本的问题，抱着试试的心态，我下载了32位的devkit，重新安装jekyll没有出现上述错误，安装一路ok
+</p>
+<p>
+    可是公司也是这样的环境能成啊，这是什么原因呢？
+</p>
+<p>
+    附：更换ruby源，解决gem install可能安装速度慢或者失败<a href="/jekyll/2014/04/17/speed-gem-source.html">点我</a>
+
+</p>
+            
+
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyr8jjDJ2',
+    conf = 'prod_d596729bcd45c9544aac809c726ea090';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>   
+        </div><!--/span-->
+        
+          <div class="span2"></div>
+      </div><!--/row-->
+
+      <hr>
+  <footer>
+    <div>
+     <div class="span5 text-left">
+      &copy;单思义 2013-2014 with help from 
+      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
+      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
+    </div>
+    <div class="text-right span7">
+      <ul class="list-inline">
+        <li>友情链接</li>
+        <li>
+          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
+        </li>
+        <li>
+          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
+        </li>
+        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster-->
+     <script src="/jsPlugin/jquery.min.js"></script>
+
+      <script src="/jsPlugin/bootstrap.min.js"></script>
+      <script src="/jsPlugin/shCore/shCore.js"></script>
+      <script src="/jsPlugin/shCore/shBrushBash.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+	
+   
+  </body>
+</html>

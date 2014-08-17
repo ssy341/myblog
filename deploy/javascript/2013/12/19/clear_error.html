@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>方法命名尽量避开关键字 | 单客哦朋 | thxopen.com</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="All for one,one for all">
+<meta name="keyword" content="java,jquery,html,css,openstack,linux">
+<meta name="author" content="Keith shan">
+
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+
+  <!-- Le styles basic css style-->
+<link href="/css/bootstrap.css" rel="stylesheet">	    
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/css/basic.css" rel="stylesheet">
+  <link href="/jsPlugin/shCore/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/jsPlugin/shCore/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/index.html">单客哦朋</a>
+          <div class="nav-collapse collapse">
+          
+            <ul class="nav">
+              <li><a href="/index.html">Home</a></li>
+              <li class="active"><a href="/articleList.html">Blog</a></li>
+              <li><a href="/about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        	<h3>方法命名尽量避开关键字</h3><h6>2013-12-19</h6>
+          <hr size=25>
+            <p>
+我在js里定义了如下方法
+<pre class="brush: js">
+	function clear(){
+		alert(123);
+	}
+</pre>
+
+html里如下调用
+<pre class="brush: xml">
+	<button onclick="clear()">清除</button>
+</pre>
+但是死活不打印123，查看控制台后有如下提示： 
+“document.clear() is deprecated. This method doesn't do anything.”
+查阅资料后，得知clear本为浏览器的内置方法，现在已经废弃了，但是少部分浏览器还支持，如果使用这个，可能会导致程序异常
+ 更改方法名后，程序正常
+ </p>
+<p>参考:
+	<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.clear" target="_blank">Document.clear</a>
+</p>
+            
+
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyr8jjDJ2',
+    conf = 'prod_d596729bcd45c9544aac809c726ea090';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>   
+        </div><!--/span-->
+        
+          <div class="span2"></div>
+      </div><!--/row-->
+
+      <hr>
+  <footer>
+    <div>
+     <div class="span5 text-left">
+      &copy;单思义 2013-2014 with help from 
+      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
+      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
+    </div>
+    <div class="text-right span7">
+      <ul class="list-inline">
+        <li>友情链接</li>
+        <li>
+          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
+        </li>
+        <li>
+          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
+        </li>
+        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster-->
+    <script src="/jsPlugin/jquery.min.js"></script>
+
+      <script src="/jsPlugin/bootstrap.min.js"></script>
+      <script src="/jsPlugin/shCore/shCore.js"></script>
+      <script src="/jsPlugin/shCore/shBrushJScript.js"></script>
+<script src="/jsPlugin/shCore/shBrushBash.js"></script>
+<script src="/jsPlugin/shCore/shBrushJava.js"></script>
+<script src="/jsPlugin/shCore/shBrushXml.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+  </body>
+</html>
