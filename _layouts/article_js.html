@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{ page.title }} | 单客哦朋 | thxopen.com</title>
   {% include head-meta.html %}
   {% include head-link.html %}
-
   {% include shcore_css.html %}
 </head>
 <body>
@@ -34,6 +32,10 @@
         <div class="span2"></div>
         <div class="span8">
         	<h3>{{ page.title }}</h3><h6>{{page.date| date: "%Y-%m-%d"}}</h6>
+          关键字:
+          {% for tag in page.tags  %}
+          <a href="#" class="btn btn-mini">{{ tag }}</a>
+          {% endfor %}
           <hr size=25>
             {{ content }}
             {% include comments.html %}
