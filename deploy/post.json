@@ -1,5 +1,10 @@
 [
 
+  {"title":"intellij idea debug调试play framework",
+  "url":"/scala/2014/08/24/how-to-run-play-framework-in-debug-mode-in-intellij-idea.html",
+  "date":"2014-08-24",
+  "tags":["debug" ,"intellij" ,"play framework" ,"scala"]}
+  ,
   {"title":"Smart KM Link 数据拷贝利器",
   "url":"/other/2014/07/23/usb-to-usb.html",
   "date":"2014-07-23",
@@ -154,6 +159,11 @@
   "url":"/ide/2013/10/17/intellij-idea-remote-debug-project.html",
   "date":"2013-10-17",
   "tags":["intellij" ,"远程调试" ,"tomcat"]}
+  ,
+  {"title":"dos基本命令",
+  "url":"/windows/2013/08/12/dos.html",
+  "date":"2013-08-12",
+  "tags":["dos" ,"dos基本命令"]}
   ,
   {"title":"给电脑做个“健康”检查",
   "url":"/other/2013/08/04/check-pc-health.html",

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ubuntu server 恢复模式下修改/etc/fstab文件 | 单客哦朋 | thxopen.com</title>
   <meta charset="utf-8">
+<title>ubuntu server 恢复模式下修改/etc/fstab文件 | 单客哦朋 | thxopen.com</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="All for one,one for all">
-<meta name="keyword" content="java,jquery,html,css,openstack,linux">
-<meta name="author" content="Keith shan">
-
+<meta name="description" content="">
+<meta name="keywords" content="fstab">
+<meta name="author" content="">
 <link rel="shortcut icon" href="/img/favicon.ico" />
 
 
@@ -47,6 +46,10 @@
         <div class="span2"></div>
         <div class="span8">
         	<h3>ubuntu server 恢复模式下修改/etc/fstab文件</h3><h6>2014-03-30</h6>
+          关键字:
+          
+          <a href="#" class="btn btn-mini">fstab</a>
+          
           <hr size=25>
             <p>由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件</p>
 <p>首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，其中有一句 <pre>no recovery nomodeset</pre>，把它替换为<pre>rw single init=/bin/bash</pre></p>
