@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>添加</title>
+</head>
+<body>
+
+
+<form action='nav.php?action=link' method='post'>
+    <table border=0 cellpadding=0 cellspacing=0>
+        <tr><td>标题</td><td><input type='text' name='title'></td></tr>
+        <tr><td>连接</td><td> <input type=text name='href'></td></tr>
+        <tr><td>分类</td><td><select name="category" id="category">
+            <option value="">请选择</option>
+        </select><input type='submit' value="添加链接"/></td></tr>
+    </table>
+</form>
+<hr/>
+<form action='nav.php?action=category' method='post'>
+       分类名称：<input type='text' name="name"/><input type='submit' value="添加分类"/>
+</form>
+
+</body>
+</html>
+
+<!--<script src="http://www.thxopen.com/jsPlugin/jquery.min.js"></script>-->
+<script src="jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "fetchCategory.php",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    $("#category").append("<option value='" + value.id + "'>" + value.name + "</option>")
+                });
+            }
+        });
+    });
+</script>
