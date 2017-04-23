@@ -45,7 +45,7 @@
                 <h3><a href="{{post.url}}" title="{{post.title}}">{{post.title}}</a></h3>
                 {{post.date| date: "%Y-%m-%d"}}
                   <p>
-                  {{post.content | | split:'<!--break-->' | first}}
+                  {{post.excerpt}}
                  </p>
               </div>
              {% endfor %}
