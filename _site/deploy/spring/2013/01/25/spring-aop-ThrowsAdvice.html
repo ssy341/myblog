@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<title>spring之aop（ThrowsAdvice）拦截指定方法的的异常 | 单客哦朋 | thxopen.com</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="keywords" content="ThrowsAdvice,aop">
+<meta name="author" content="">
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+
+  <!-- Le styles basic css style-->
+<link href="/css/bootstrap.css" rel="stylesheet">	    
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/css/basic.css" rel="stylesheet">
+  <link href="/jsPlugin/shCore/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/jsPlugin/shCore/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/index.html">单客哦朋</a>
+          <div class="nav-collapse collapse">
+          
+            <ul class="nav">
+              <li><a href="/index.html">Home</a></li>
+              <li class="active"><a href="/articleList.html">Blog</a></li>
+              <li><a href="/about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        	<h3>spring之aop（ThrowsAdvice）拦截指定方法的的异常</h3><h6>2013-01-25</h6>
+          关键字:
+          
+          <a href="#" class="btn btn-mini">ThrowsAdvice</a>
+          
+          <a href="#" class="btn btn-mini">aop</a>
+          
+          <hr size=25>
+            <p >
+    近段时间需要对程序的异常做统一的处理，比如写日志或者发送邮件，在网上找了下aop貌似可以解决，经过不懈努力，终于完成了这个效果，异常统一发送邮件，迅速知道异常所在，下面看代码。spring的配置文件：
+</p>
+<pre class="brush: xml;">&lt;!-- 异常集中捕获--&gt;
+    &lt;!-- 自定义拦截异常通知类 --&gt;
+    &lt;bean id = &quot;aopTest&quot; class=&quot;com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest&quot;/&gt;
+    
+    &lt;!-- 自定义异常通知类 --&gt;
+    &lt;bean id=&quot;customAdvice&quot; class=&quot;com.daja.paymp.presentation.interceptor.ExceptionThrowsAdvice&quot; /&gt;
+    &lt;bean class=&quot;org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator&quot;&gt;&lt;/bean&gt; 
+    &lt;bean class=&quot;org.springframework.aop.support.RegexpMethodPointcutAdvisor&quot;&gt;
+        &lt;property name=&quot;advice&quot;&gt;
+            &lt;ref bean=&quot;customAdvice&quot;/&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;patterns&quot;&gt;
+            &lt;value&gt;com\.daja\.paymp\.infrastructure\.scheduling\.service\.AutoJobService\.work&lt;/value&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;</pre>
+<p>
+  ExceptionThrowsAdvice.java
+</p>
+<pre class="brush: java;">package com.daja.paymp.presentation.interceptor;
+ 
+import java.lang.reflect.Method;
+ 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.ThrowsAdvice;
+ 
+import com.daja.paymp.infrastructure.exception.CustomException;
+ 
+/**
+ * 异常拦截类 aop spring
+ * 
+ * @author smotive
+ * 
+ */
+ 
+public class ExceptionThrowsAdvice implements ThrowsAdvice {
+    Logger logger = LoggerFactory.getLogger(ExceptionThrowsAdvice.class);
+ 
+    // Second preference
+    public void afterThrowing(Method m, Object args[], Object target,
+            Throwable e) {
+        try {
+            throw new CustomException(e,&quot;自动任务出现异常&quot;);
+        } catch (CustomException e1) {
+            e1.printStackTrace();
+        }
+    }
+}</pre>
+<p>
+   接口类： AutoJobService.java
+</p>
+<pre class="brush: java;">package com.daja.paymp.infrastructure.scheduling.service;
+ 
+/**
+ *  自动任务公共接口
+ * @author smotive
+ *
+ */
+public interface AutoJobService  {
+    /**
+     * 自动任务公共执行方法
+     */
+    public void work()throws Exception;
+}</pre>
+<p>
+   实现类：SpringAopTest.java
+</p>
+<pre class="brush: java;">package com.daja.paymp.infrastructure.scheduling.service.impl;
+ 
+import org.springframework.stereotype.Service;
+ 
+import com.daja.paymp.infrastructure.scheduling.service.AutoJobService;
+ 
+ 
+public class SpringAopTest implements AutoJobService {
+ 
+    @Override
+    public void work(){
+        System.out.print(&quot;aop拦截测试方法进入&quot;+(1/0));
+    }
+}</pre>
+<p>
+  测试方法类：
+</p>
+<pre class="brush: java;">import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+ 
+import com.daja.paymp.infrastructure.scheduling.service.AutoJobService;
+public class AopTest {
+ 
+    public static void main(String args[])
+    {
+        ApplicationContext context = new FileSystemXmlApplicationContext(&quot;classpath:applicationContext-aop.xml&quot;);
+ 
+        AutoJobService inter =(AutoJobService)context.getBean(&quot;aopTest&quot;);
+        try {
+            inter.work();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</pre>
+<p>
+   运行结果：
+</p>
+<pre class="brush: java;">18:04:27 [main] &quot;ERROR&quot; c.d.p.i.exception.CustomException - / by zero
+com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest.work(SpringAopTest.java:12)
+com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$FastClassByCGLIB$$e20000f1.invoke(&lt;generated&gt;)
+net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)
+org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:618)
+com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$EnhancerByCGLIB$$d12593c6.work(&lt;generated&gt;)
+sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+java.lang.reflect.Method.invoke(Method.java:597)
+org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:318)
+org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:183)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+org.springframework.aop.framework.adapter.ThrowsAdviceInterceptor.invoke(ThrowsAdviceInterceptor.java:124)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:202)
+$Proxy7.work(Unknown Source)
+AopTest.main(AopTest.java:14)
+ 
+18:04:28 [main] &quot;INFO &quot; c.d.p.i.common.email.Warning - 邮件顺利送达!
+com.daja.paymp.infrastructure.exception.CustomException: 自动任务出现异常
+    at com.daja.paymp.presentation.interceptor.ExceptionThrowsAdvice.afterThrowing(ExceptionThrowsAdvice.java:25)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.springframework.aop.framework.adapter.ThrowsAdviceInterceptor.invokeHandlerMethod(ThrowsAdviceInterceptor.java:144)
+    at org.springframework.aop.framework.adapter.ThrowsAdviceInterceptor.invoke(ThrowsAdviceInterceptor.java:129)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+    at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:202)
+    at $Proxy7.work(Unknown Source)
+    at AopTest.main(AopTest.java:14)
+Caused by: java.lang.ArithmeticException: / by zero
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest.work(SpringAopTest.java:12)
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$FastClassByCGLIB$$e20000f1.invoke(&lt;generated&gt;)
+    at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)
+    at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:618)
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$EnhancerByCGLIB$$d12593c6.work(&lt;generated&gt;)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:318)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:183)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+    at org.springframework.aop.framework.adapter.ThrowsAdviceInterceptor.invoke(ThrowsAdviceInterceptor.java:124)
+    ... 4 more
+java.lang.ArithmeticException: / by zero
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest.work(SpringAopTest.java:12)
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$FastClassByCGLIB$$e20000f1.invoke(&lt;generated&gt;)
+    at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)
+    at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:618)
+    at com.daja.paymp.infrastructure.scheduling.service.impl.SpringAopTest$$EnhancerByCGLIB$$d12593c6.work(&lt;generated&gt;)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:318)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:183)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+    at org.springframework.aop.framework.adapter.ThrowsAdviceInterceptor.invoke(ThrowsAdviceInterceptor.java:124)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+    at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:202)
+    at $Proxy7.work(Unknown Source)
+    at AopTest.main(AopTest.java:14)</pre>
+<p>
+    当指定的方法抛出异常后，spring就会拦截到，做出相应的动作，系统加入这个，出现问题就可以及时察觉了，O(∩_∩)O哈哈~
+</p>
+            
+
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyr8jjDJ2',
+    conf = 'prod_d596729bcd45c9544aac809c726ea090';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>   
+        </div><!--/span-->
+        
+          <div class="span2"></div>
+      </div><!--/row-->
+
+      <hr>
+  <footer>
+    <div>
+     <div class="span5 text-left">
+      &copy;单思义 2013-2014 with help from 
+      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
+      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
+    </div>
+    <div class="text-right span7">
+      <ul class="list-inline">
+        <li>友情链接</li>
+        <li>
+          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
+        </li>
+        <li>
+          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
+        </li>
+        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
+		<li><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000392314'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000392314%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster-->
+    <script src="/jsPlugin/jquery.min.js"></script>
+
+      <script src="/jsPlugin/bootstrap.min.js"></script>
+      <script src="/jsPlugin/shCore/shCore.js"></script>
+      <script src="/jsPlugin/shCore/shBrushJScript.js"></script>
+<script src="/jsPlugin/shCore/shBrushBash.js"></script>
+<script src="/jsPlugin/shCore/shBrushJava.js"></script>
+<script src="/jsPlugin/shCore/shBrushXml.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+  </body>
+</html>

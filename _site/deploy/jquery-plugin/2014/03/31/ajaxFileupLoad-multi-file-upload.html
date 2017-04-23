@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<title>ajaxFileupLoad多文件上传 | 单客哦朋 | thxopen.com</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="keywords" content="ajaxFileupload">
+<meta name="author" content="">
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+
+  <!-- Le styles basic css style-->
+<link href="/css/bootstrap.css" rel="stylesheet">	    
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/css/basic.css" rel="stylesheet">
+  <link href="/jsPlugin/shCore/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/jsPlugin/shCore/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/index.html">单客哦朋</a>
+          <div class="nav-collapse collapse">
+          
+            <ul class="nav">
+              <li><a href="/index.html">Home</a></li>
+              <li class="active"><a href="/articleList.html">Blog</a></li>
+              <li><a href="/about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        	<h3>ajaxFileupLoad多文件上传</h3><h6>2014-03-31</h6>
+          关键字:
+          
+          <a href="#" class="btn btn-mini">ajaxFileupload</a>
+          
+          <hr size=25>
+            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    一个是<span style="line-height: 1.5;">对之前大神的贡献表示感谢</span><span style="line-height: 1.5;">；二个是</span><span style="line-height: 18px;">自己知识的总结</span><span style="line-height: 1.5;">；三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。</span>
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="line-height: 1.5;">用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。</span>
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="line-height: 1.5;">我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。</span>
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="line-height: 1.5;">引用网上的做法：</span>
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="line-height: 1.5;">1，看没有修改前的代码</span>
+</p>
+<pre class="brush:js;toolbar:false">var oldElement = jQuery(&#39;#&#39; + fileElementId);  
+var newElement = jQuery(oldElement).clone();  
+jQuery(oldElement).attr(&#39;id&#39;, fileId);  
+jQuery(oldElement).before(newElement);  
+jQuery(oldElement).appendTo(form);</pre>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="line-height: 1.5;"></span><span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">很容易看出，这个就是把id为什么的input加到from里去，那么要实现多个文件上传，就改成下面的样子：</span>
+</p>
+<pre class="brush:js;toolbar:false">if(typeof(fileElementId) == &#39;string&#39;){  
+    fileElementId = [fileElementId];  
+}  
+for(var i in fileElementId){  
+    var oldElement = jQuery(&#39;#&#39; + fileElementId[i]);  
+    var newElement = jQuery(oldElement).clone();  
+    jQuery(oldElement).attr(&#39;id&#39;, fileId);  
+    jQuery(oldElement).before(newElement);  
+    jQuery(oldElement).appendTo(form);  
+}</pre>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);"></span><span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">这样改之后，初始化的代码就要这么写：</span>
+</p>
+<pre class="brush:js;toolbar:false">$.ajaxFileUpload({  
+    url:&#39;/ajax.php&#39;,  
+    fileElementId:[&#39;id1&#39;,&#39;id2&#39;]//原先是fileElementId:’id’ 只能上传一个  
+});</pre>
+<p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; white-space: normal; background-color: rgb(255, 255, 255);">
+    <span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);"></span><span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，为什么不取name呢？然后把以上代码改为如下：</span>
+</p>
+<pre class="brush:js;toolbar:false">if(typeof(fileElementId) == &#39;string&#39;){  
+           fileElementId = [fileElementId];  
+       }  
+       for(var i in fileElementId){  
+           //按name取值  
+           var oldElement = jQuery(&quot;input[name=&quot;+fileElementId[i]+&quot;]&quot;);  
+           oldElement.each(function() {  
+               var newElement = jQuery($(this)).clone();  
+               jQuery(oldElement).attr(&#39;id&#39;, fileId);  
+               jQuery(oldElement).before(newElement);  
+               jQuery(oldElement).appendTo(form);  
+           });  
+       }</pre>
+<p>
+    <span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。</span>
+</p>
+<pre class="brush:html;toolbar:false">&lt;div&gt;  
+              &lt;img id=&quot;loading&quot; src=&quot;scripts/ajaxFileUploader/loading.gif&quot; style=&quot;display:none;&quot;&gt;  
+             
+                  &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;tableForm&quot; id=&quot;calculation_model&quot;&gt;  
+                      &lt;thead&gt;  
+                      &lt;tr&gt;  
+                          &lt;th&gt;多组多个文件&lt;/th&gt;  
+                      &lt;/tr&gt;  
+                      &lt;/thead&gt;  
+                      &lt;tbody&gt;  
+                      &lt;tr&gt;  
+                          &lt;td&gt;第一组&lt;/td&gt;  
+                          &lt;td&gt;第二组&lt;/td&gt;  
+                      &lt;/tr&gt;  
+                      &lt;tr&gt;  
+                          &lt;td&gt;&lt;input type=&quot;file&quot;  name=&quot;gridDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;  
+                          &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;caseDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;  
+                      &lt;/tr&gt;  
+                      &lt;/tbody&gt;  
+                      &lt;tfoot&gt;  
+                      &lt;tr&gt;  
+                          &lt;td&gt;&lt;button class=&quot;button&quot; id=&quot;up1&quot;&gt;Upload&lt;/button&gt;&lt;/td&gt;  
+                          &lt;td&gt;&lt;button class=&quot;button&quot; id=&quot;addInput&quot; &gt;添加一组&lt;/button&gt;&lt;/td&gt;  
+                      &lt;/tr&gt;  
+                      &lt;/tfoot&gt;  
+                  &lt;/table&gt;  
+          &lt;/div&gt;</pre>
+<pre class="brush:js;toolbar:false">/** 
+ * Created with IntelliJ IDEA. 
+ * User: Administrator 
+ * Date: 13-7-3 
+ * Time: 上午9:20 
+ * To change this template use File | Settings | File Templates. 
+ */  
+$(document).ready(function () {  
+    $(&quot;#up1&quot;).click(function(){  
+        var temp = [&quot;gridDoc&quot;,&quot;caseDoc&quot;];  
+        ajaxFileUpload(temp);  
+    });  
+  
+    $(&quot;#addInput&quot;).click(function(){  
+        addInputFile();  
+    });  
+  
+});  
+  
+//动态添加一组文件  
+function addInputFile(){  
+    $(&quot;#calculation_model&quot;).append(&quot; &lt;tr&gt;&quot;+  
+        &quot;&lt;td&gt;&lt;input type=&#39;file&#39;  name=&#39;gridDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt;   &quot;+  
+        &quot;&lt;td&gt;&lt;input type=&#39;file&#39; name=&#39;caseDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt; &quot;+  
+        &quot;&lt;/tr&gt;&quot;);  
+}  
+  
+  
+//直接使用下载下来的文件里的demo代码  
+function ajaxFileUpload(id)  
+{  
+    //starting setting some animation when the ajax starts and completes  
+    $(&quot;#loading&quot;).ajaxStart(function(){  
+            $(this).show();  
+        }).ajaxComplete(function(){  
+            $(this).hide();  
+        });  
+  
+    /* 
+     prepareing ajax file upload 
+     url: the url of script file handling the uploaded files 
+     fileElementId: the file type of input element id and it will be the index of  $_FILES Array() 
+     dataType: it support json, xml 
+     secureuri:use secure protocol 
+     success: call back function when the ajax complete 
+     error: callback function when the ajax failed 
+ 
+     */  
+    $.ajaxFileUpload({  
+            url:&#39;upload.action&#39;,  
+            //secureuri:false,  
+            fileElementId:id,  
+            dataType: &#39;json&#39;  
+        }  
+    )  
+  
+    return false;  
+  
+}</pre>
+<p>
+    <span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">我action是用的struts2，strtus2的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：</span>
+</p>
+<pre class="brush:java;toolbar:false">package com.ssy.action;  
+  
+import com.opensymphony.xwork2.ActionSupport;  
+import org.apache.commons.io.FileUtils;  
+import org.apache.struts2.util.ServletContextAware;  
+  
+import javax.servlet.ServletContext;  
+import java.io.*;  
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
+import java.util.Random;  
+  
+/** 
+ * Created with IntelliJ IDEA. 
+ * User: Administrator 
+ * Date: 13-7-2 
+ * Time: 下午4:08 
+ * To change this template use File | Settings | File Templates. 
+ */  
+public class Fileupload extends ActionSupport implements ServletContextAware {  
+    private File[] gridDoc,caseDoc;  
+    private String[] gridDocFileName,caseDocFileName;  
+  
+    private ServletContext context;  
+  
+     
+  
+    public String execute(){  
+        for (int i = 0;i&lt;gridDocFileName.length;i++)    {  
+            System.out.println(gridDocFileName[i]);  
+        }  
+        for (int i = 0;i&lt;caseDocFileName.length;i++)    {  
+            System.out.println(caseDocFileName[i]);  
+        }  
+  
+  
+        //System.out.println(doc1FileName);  
+        //System.out.println(doc2FileName);  
+        String targetDirectory = context.getRealPath(&quot;/uploadFile&quot;);  
+  
+       /* 
+         *这里我只取得  第一组的文件进行上传，第二组的类似 
+        */  
+ try{  
+            for (int i = 0; i &lt; gridDoc.length; i++) {  
+                String targetFileName = generateFileName(gridDocFileName[i]);  
+                File target = new File(targetDirectory, targetFileName);  
+                FileUtils.copyFile(gridDoc[i], target);  
+            }  
+        }catch (Exception e){  
+            e.printStackTrace();  
+        }     
+  
+        return SUCCESS;  
+    }  
+  
+    public File[] getGridDoc() {  
+        return gridDoc;  
+    }  
+  
+    public void setGridDoc(File[] gridDoc) {  
+        this.gridDoc = gridDoc;  
+    }  
+  
+    public File[] getCaseDoc() {  
+        return caseDoc;  
+    }  
+  
+    public void setCaseDoc(File[] caseDoc) {  
+        this.caseDoc = caseDoc;  
+    }  
+  
+    public String[] getGridDocFileName() {  
+        return gridDocFileName;  
+    }  
+  
+    public void setGridDocFileName(String[] gridDocFileName) {  
+        this.gridDocFileName = gridDocFileName;  
+    }  
+  
+    public String[] getCaseDocFileName() {  
+        return caseDocFileName;  
+    }  
+  
+    public void setCaseDocFileName(String[] caseDocFileName) {  
+        this.caseDocFileName = caseDocFileName;  
+    }  
+  
+    /** 
+     * 用日期和随机数格式化文件名避免冲突 
+     * @param fileName 
+     * @return 
+     */  
+    private String generateFileName(String fileName) {  
+        System.out.println(fileName);  
+        SimpleDateFormat sf = new SimpleDateFormat(&quot;yyMMddHHmmss&quot;);  
+        String formatDate = sf.format(new Date());  
+        int random = new Random().nextInt(10000);  
+        int position = fileName.lastIndexOf(&quot;.&quot;);  
+        String extension = fileName.substring(position);  
+        return formatDate + random + extension;  
+    }  
+  
+}</pre>
+<p>
+    <span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);"></span><span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 14px; line-height: 25.200000762939453px; background-color: rgb(255, 255, 255);">写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？这个还有待考验，如果看出问题，请指出，共同学习</span>
+</p>
+<p>
+修改后的js文件:<a href="/attachment/ajaxfileupload.zip">ajaxfileupload.zip</a>
+</p>
+            
+
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyr8jjDJ2',
+    conf = 'prod_d596729bcd45c9544aac809c726ea090';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>   
+        </div><!--/span-->
+        
+          <div class="span2"></div>
+      </div><!--/row-->
+
+      <hr>
+  <footer>
+    <div>
+     <div class="span5 text-left">
+      &copy;单思义 2013-2014 with help from 
+      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
+      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
+    </div>
+    <div class="text-right span7">
+      <ul class="list-inline">
+        <li>友情链接</li>
+        <li>
+          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
+        </li>
+        <li>
+          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
+        </li>
+        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
+		<li><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000392314'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000392314%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster-->
+    <script src="/jsPlugin/jquery.min.js"></script>
+
+      <script src="/jsPlugin/bootstrap.min.js"></script>
+      <script src="/jsPlugin/shCore/shCore.js"></script>
+      <script src="/jsPlugin/shCore/shBrushJScript.js"></script>
+<script src="/jsPlugin/shCore/shBrushBash.js"></script>
+<script src="/jsPlugin/shCore/shBrushJava.js"></script>
+<script src="/jsPlugin/shCore/shBrushXml.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+	"sProcessing": "急末子...  :)",
+	"sLengthMenu": "显示_MENU_条 ",
+	"sZeroRecords": "没有找到你要的，重新搜",
+	"sInfo": "_START_ 到 _END_ 条记录——总记录: _TOTAL_ 条",
+	"sInfoEmpty": "记录数为0",
+	"sInfoFiltered": "(全部记录数 _MAX_  条)",
+	"sInfoPostFix": "",
+	"sSearch": "找你想要的" ,
+	"oPaginate": {
+		"sFirst":    "第一页",
+		"sPrevious": "上一页",
+		"sNext":     "下一页",
+		"sLast":     "最末页"
+	}
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<title>freenas启动过程中屏幕不断提示ata status error | 单客哦朋 | thxopen.com</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="keywords" content="freenas">
+<meta name="author" content="">
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+
+  <!-- Le styles basic css style-->
+<link href="/css/bootstrap.css" rel="stylesheet">	    
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/css/basic.css" rel="stylesheet">　　　
+</head>
+　　<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/index.html">单客哦朋</a>
+          <div class="nav-collapse collapse">
+          
+            <ul class="nav">
+             <li><a href="/index.html">Home</a></li>
+              <li class="active"><a href="/articleList.html">Blog</a></li>
+              <li><a href="/about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        	<h3>freenas启动过程中屏幕不断提示ata status error</h3><h6>2014-05-29</h6>
+          关键字:
+          
+          <a href="#" class="btn btn-mini">freenas</a>
+          
+          <hr size=25>
+          <p style="font-size:15px;text-indent: 2em;">
+在这之前我有一个疑问，自己没弄懂，如果你知道，请求你在下面留下你的见解，非常感谢！
+</p>
+<p style="font-size:15px;text-indent: 2em;">
+问题就是freenas有必要安装在硬盘上么？官方提供了三种安装方法，一个是iso-刻录在光盘上然后安装在其他介质上面，比如硬盘、闪存；二是img，直接用工具写入到u盘上，u盘插上主机，从u盘启动即可运行freenas；三是虚拟机安装文件，下载后，直接用虚拟机软件读取即可。
+</p>
+<!--more-->
+<p style="font-size:15px;text-indent: 2em;">
+如果freenas要用阵列，那么freenas不能安装在属于阵列的磁盘中，我的主板支持阵列，一共四个sata接口，如果接4个硬盘组成阵列，那freenas只能安装在其他存储设备上，比如u盘，移动硬盘。这么弄我感觉有点别扭，系统的运行肯定不会那么流畅，现在给我的感觉就是要么用阵列，要么不用阵列，好矛盾啊，谁能解答我这个疑问？
+</p>
+<p style="font-size:15px;text-indent: 2em;">
+言归正传，下面我要说的就是我在实验把freenas安装在一个单独的硬盘上遇到的问题和思考
+</p>
+<p style="font-size:15px;text-indent: 2em;">
+我先把从官方下载好的iso镜像刻录在光盘上（文章下面有下载地址），然后设置从光盘启动，电脑有一个80G的硬盘，安装过程很简单，光盘启动后，最后会停留在一个界面，一共四个选项：第一是安装/升级，第二是进入shell，第三是重启，第四是关闭。选择第一项后，直接提示当前识别到的硬盘，一路ok下来(此操作会格式化硬盘数据，操作前请备份好数据)。根据提示信息，最后确定安装freenas到该硬盘，当我点ok的时候，报错，安装失败。这时候我想起在光盘启动freenas的时候，屏幕一直不停的提示"ATA STATUS ERROR"，从提示来看和硬盘有关系，但是不知是什么问题，google一番，还是找到问题解决办法(原文在文章下方)，其中有一楼网友说道是AHCI的问题，要把硬盘模式切换为IDE模式。我切换硬盘模式后，freenas安装成功。帖子中还有其他说法，我没有仔细查看。这个时候通过浏览器访问freenas地址，既可以看到freenas的web GUI界面。
+</p>
+<p style="font-size:15px;text-indent: 2em;">
+之前只接用u盘启动，使用比较起来，感觉安装在硬盘的freenas操作起来要比u盘上的快一些，不知道是错觉还是真的有提升？但是这个时候80g的硬盘就全部用来安装freenas了，如果需要安装插件或者开启共享，需要再挂载其他硬盘，感觉装硬盘有点浪费空间啊，在安装的时候也没有相关操作是划分分区的，或者是我还没找到方法。
+</p>
+<p style="font-size:15px;text-indent: 2em;">
+这样看来把freenas装在u盘上是目前对于我来说最佳办法，不知道大家是不是也是这么做的呢？
+</p>
+
+<p>
+参考:<br>
+<a href="http://forums.freenas.org/index.php?threads/cam-status-ata-status-error.16833/" 
+	target="_blanck" title="ata status error">CAM status: ATA Status Error</a> <br>
+<a href="http://download.freenas.org/9.2.1.5/RELEASE/x64/FreeNAS-9.2.1.5-RELEASE-x64.iso" target="_blanck" title="FreeNAS-9.2.1.5-RELEASE-x64.iso">FreeNAS-9.2.1.5-RELEASE-x64.iso</a>
+</p>
+          
+
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyr8jjDJ2',
+    conf = 'prod_d596729bcd45c9544aac809c726ea090';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>   
+        </div><!--/span-->
+          <div class="span2"></div>
+      </div><!--/row-->
+
+      <hr>
+
+     <footer>
+    <div>
+     <div class="span5 text-left">
+      &copy;单思义 2013-2014 with help from 
+      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
+      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
+    </div>
+    <div class="text-right span7">
+      <ul class="list-inline">
+        <li>友情链接</li>
+        <li>
+          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
+        </li>
+        <li>
+          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
+        </li>
+        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
+		<li><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000392314'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000392314%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster 
+<script src="http://v2.bootcss.com/assets/js/jquery.js"></script>
+  -->
+    <script src="/jsPlugin/jquery.min.js"></script>
+    
+   
+  </body>
+</html>
