@@ -1,6 +1,6 @@
 ---
 categories: linux
-tags: [fstab]
+tags: [fstab,鸟哥私房菜]
 title: ubuntu server 恢复模式下修改/etc/fstab文件
 date: 2014-3-30
 ---

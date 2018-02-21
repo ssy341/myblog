@@ -1,7 +1,7 @@
 ---
 categories: linux
-tags: [linux命令]
-title: linux 文件操作命令
+tags: [linux命令,鸟哥私房菜]
+title: linux 文件操作命令 rmdir mkdir rm 
 date: 2014-3-26
 ---
 
@@ -21,13 +21,3 @@ rm -rf filename 删除文件/目录
 
 cp -r  a.txt /home 复制文件或目录
 语法：cp [参数] 源文件目录 目标文件或目录 
-
-
-tar/zip 解压
-tar xvfz jdk.tar.gz
-zip -r 1.zip a.txt rule
-unzip yasuo.zip
-unzip abc\?.zip` ?表示一个字符，如果用*表示任意多个字符
-unzip -v large.zip
-unzip -t large.zip
-unzip -j music.zip

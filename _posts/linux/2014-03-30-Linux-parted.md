@@ -161,7 +161,7 @@ UUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw            
 修改好后保存退出
 修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，
 则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，
-具体看这里[恢复模式下修改/etc/fatab文件]({{site.baseurl}}linux/2014/03/30/Linux_recover_etc_fstab.html)
+具体看这里[恢复模式下修改/etc/fatab文件]({{ site.baseurl }}{% post_url linux/2014-03-30-Linux-recover-etc-fstab %})
 大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助
 
 

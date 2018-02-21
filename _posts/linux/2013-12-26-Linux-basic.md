@@ -1,7 +1,7 @@
 ---
 categories: linux
-tags: [linux命令]
-title: linux基本操作命令
+tags: [linux命令,鸟哥私房菜]
+title: linux查看文件基本命令 ls pwd
 date: 2013-12-26
 ---
 
