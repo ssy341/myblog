@@ -7,7 +7,7 @@ date: 2013-10-17
 ---
 
 - 1，首先发布一个和本地一模一样的代码到服务器，假设到 f:/bjhgtest（最后有说明）
-- 2，打开服务器下tomcat安装目录conf文件夹下的catalina.bat，加入以下代码：
+- 2，打开服务器下tomcat安装目录bin文件夹下的catalina.bat，加入以下代码：
 
 <!--more-->
 ```bash
