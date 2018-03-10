@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-02-25T11:02:53+08:00</updated><id>http://localhost:4000/</id><title type="html">单客欧朋</title><subtitle>An amazing website.</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">初探oss-事件通知（http endpoint）</title><link href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" rel="alternate" type="text/html" title="初探oss-事件通知（http endpoint）" /><published>2018-02-22T00:00:00+08:00</published><updated>2018-02-22T00:00:00+08:00</updated><id>http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint</id><content type="html" xml:base="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html">&lt;h2 id=&quot;初识oss&quot;&gt;初识oss&lt;/h2&gt;
+
+&lt;p&gt;it技术更新换代太快了，我们的思想也必须跟上才行。&lt;/p&gt;
+
+&lt;p&gt;最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。&lt;/p&gt;
+
+&lt;p&gt;好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批量，
+又在web端，感觉再好的插件也拯救不了我了。于是问问公司的前辈，才刚说上几句，前辈就说怎么不用oss？&lt;/p&gt;
+
+&lt;p&gt;啥？oss是什么？oss（Object Storage Service）即对象存储服务。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。
+使用RESTful API 可以在互联网任何位置存储和访问，容量和处理能力弹性扩展，多种存储类型供选择全面优化存储成本。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;了解到这里，我感觉这个就是能拯救我的方案了，立马查阅文档开始试试。&lt;/p&gt;
+
+&lt;h2 id=&quot;确定使用场景&quot;&gt;确定使用场景&lt;/h2&gt;
+
+&lt;p&gt;根据之前的需求，用户通过网站上传图片到服务器上，然后对图片进行识别处理。&lt;/p&gt;
+
+&lt;p&gt;改用oss方案后，用户通过使用&lt;a href=&quot;https://market.aliyun.com/products/53690006/cmgj000281.html&quot;&gt;oss控制台客户端&lt;/a&gt;上传文件,项目监听到文件上传完成，再获取资源进行识别处理。&lt;/p&gt;
+
+&lt;p&gt;使用oss之后逻辑稍有改变，由于文件存放不在同一个地方，这里需要使用oss提供的&lt;a href=&quot;https://help.aliyun.com/document_detail/52656.html&quot;&gt;事件通知&lt;/a&gt;来完成。&lt;/p&gt;
+
+&lt;p&gt;oss事件通知整体架构图如下（借用图一张）
+&lt;img src=&quot;/assets/images/post/oss-first/first-meet-oss1.png&quot; alt=&quot;oss事件通知整体架构&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;由图中可以看到，oss事件通知提供了两种方式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HttpServer http的方式，即配置一个自己项目的访问地址（公网），当匹配规则匹配到时，往该地址推送数据&lt;/li&gt;
+  &lt;li&gt;MNS Queue 队列的方式，即在项目中订阅oss提供的主题，获取匹配规则推送的数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这里要介绍的是Http方式，后面如果需要再使用队列方式试试。&lt;/p&gt;
+
+&lt;h2 id=&quot;小试牛刀&quot;&gt;小试牛刀&lt;/h2&gt;
+
+&lt;p&gt;关于oss事件通知的配置，阿里云已经提供了一篇文档 &lt;a href=&quot;https://yq.aliyun.com/articles/71881&quot;&gt;如何使用OSS事件通知功能？&lt;/a&gt;，
+虽然讲的很清楚了（事后才觉得清楚，在没会之前是蒙圈的），但我觉得有必要把一些要点再提一下，少踩坑！&lt;/p&gt;
+
+&lt;h3 id=&quot;第一步配置事件通知&quot;&gt;第一步：配置事件通知&lt;/h3&gt;
+
+&lt;p&gt;简单理解，就是当bucket有文件变化（上传，覆盖，删除，追加……）时给予通知&lt;/p&gt;
+
+&lt;p&gt;帮助文档提供的截图和截止文章当前时间已经有所不同，下面带大家一步一步配置&lt;/p&gt;
+
+&lt;p&gt;首先进入&lt;a href=&quot;https://oss.console.aliyun.com/overview&quot;&gt;oss管理控制台&lt;/a&gt;如下图：
+&lt;img src=&quot;/assets/images/post/oss-first/oss-console.png&quot; alt=&quot;oss-console&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选中bucket，右侧页面进入到该bucket的相关信息，然后点击【事件通知】，由于我已经创建了一条规则，所以这里
+能看到有一条规则
+&lt;img src=&quot;/assets/images/post/oss-first/create-rule.png&quot; alt=&quot;create-rule&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击【创建规则】,在右侧会弹出界面，如下图所示，需要填写规则名称，事件类型，资源描述，接受终端
+&lt;img src=&quot;/assets/images/post/oss-first/creating-rule.png&quot; alt=&quot;creating-rule&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;规则名称
+    &lt;ul&gt;
+      &lt;li&gt;规则的唯一标识，同一账号同一 Region 同一产品下规则名称不能重名。字符必须是英文，数字，横划线，长度不超过 128 个&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;事件类型
+    &lt;ul&gt;
+      &lt;li&gt;选择您想要触发通知的事件，可以选择多个。同样的事件不可以多次配置在同一资源上&lt;/li&gt;
+      &lt;li&gt;PutObject ，创建/覆盖文件：简单上传&lt;/li&gt;
+      &lt;li&gt;这里我只举一个例子，更多其他的事件类型参考&lt;a href=&quot;https://help.aliyun.com/document_detail/52656.html#sjtz&quot;&gt;事件类型列表&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;资源描述
+    &lt;ul&gt;
+      &lt;li&gt;资源描述可以是全名、前缀、后缀以及前后缀，不同资源描述不能有交集。&lt;/li&gt;
+      &lt;li&gt;在本次实例中，我配置了全名，前后缀
+        &lt;ul&gt;
+          &lt;li&gt;第一行代表固定文件名（movie.zip）上传，就会触发事件&lt;/li&gt;
+          &lt;li&gt;第二行代表以m开头的文件上传，就会触发事件&lt;/li&gt;
+          &lt;li&gt;第三行代表.jpg格式的文件上传，就会触发事件&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;在我第一次使用时这个地方没有理解资源描述是什么意思，我上传文件怎么都不触发，直到发送工单，才得知是这里的问题&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;接受终端
+    &lt;ul&gt;
+      &lt;li&gt;有两种可以选择，一个是http，一个是队列，本篇讲的是http方式，这里我选择http&lt;/li&gt;
+      &lt;li&gt;http://domain.com:8080/oss/listener 地址是公网能够访问到的&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;填写完毕后，点击底部的【确认】按钮确认添加该规则，确认之后就会像之前看到的，出现一条规则。&lt;/p&gt;
+
+&lt;p&gt;这里需要注意的是，每添加一条规则会自动创建一条对应的主题，可以在&lt;a href=&quot;https://mns.console.aliyun.com/#/topics&quot;&gt;消息服务控制台&lt;/a&gt;查看到该主题，如下图：
+&lt;img src=&quot;/assets/images/post/oss-first/oss-topic.png&quot; alt=&quot;oss-topic&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;还需要注意的是图中指出的&lt;a href=&quot;https://www.aliyun.com/price/product#/mns/detail&quot;&gt;温馨提示&lt;/a&gt;,主题实例是会产生费用的&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;到这里，在阿里云控制台配置的工作就已经完成了，接下来要做的就是实现接受消息&lt;/p&gt;
+
+&lt;h3 id=&quot;第二步接受消息通知&quot;&gt;第二步：接受消息通知&lt;/h3&gt;
+
+&lt;p&gt;在上一步接受终端操作中我配置了一个可以公网访问的地址&lt;code class=&quot;highlighter-rouge&quot;&gt;http://domain.com:8080/oss/listener&lt;/code&gt;，他的作用就是当规则匹配之后
+oss会向该地址发送消息。根据oss技术人员提供的信息，我们可以从 &lt;a href=&quot;https://help.aliyun.com/document_detail/27508.html&quot;&gt;MNS Java SDK&lt;/a&gt; 
+这个页面下载&lt;a href=&quot;http://docs-aliyun.cn-hangzhou.oss.aliyun-inc.com/assets/attach/27508/cn_zh/1491978276754/aliyun-sdk-mns-samples-1.1.8.zip?spm=a2c4g.11186623.2.5.KVAOlJ&amp;amp;file=aliyun-sdk-mns-samples-1.1.8.zip&quot;&gt;示例代码&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;解压下载后的文件，我们需要关注的是 &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpEndpoint.java&lt;/code&gt; 这个文件，这里对该文件代码不做详细的解释，根据自己项目的环境，做相应改动即可&lt;/p&gt;
+
+&lt;p&gt;我的项目环境是spring mvc，下面贴出我已经调试好的代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.alibaba.fastjson.JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.alibaba.fastjson.JSONArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.alibaba.fastjson.JSONObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;lombok.extern.slf4j.Slf4j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.commons.codec.binary.Base64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.commons.collections4.CollectionUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.commons.lang3.StringUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.http.HttpEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.http.entity.InputStreamEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.stereotype.Controller&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.web.bind.annotation.PostMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.web.bind.annotation.RequestBody&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.web.bind.annotation.ResponseBody&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;javax.servlet.http.HttpServletRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.io.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.net.HttpURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.net.URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.security.PublicKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.security.cert.Certificate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.security.cert.CertificateFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * oss文件上传成功
+ *
+ * @return
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@PostMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/oss/listener&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ResponseBody&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ossfileuploadsuccess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;oss客户端上传文件&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;HttpEntity&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InputStreamEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInputStream&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getContentLength&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMethod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toUpperCase&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Locale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ENGLISH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getRequestURI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+
+        &lt;span class=&quot;n&quot;&gt;Enumeration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headerNames&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHeaderNames&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headerNames&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hasMoreElements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headerNames&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextElement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;hm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;//verify request&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;certHeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;x-mns-signing-cert-url&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;certHeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SigningCerURL Header not found&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;SigningCerURL Header not found&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;certHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SigningCertURL empty&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;SigningCertURL empty&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Base64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;decodeBase64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SigningCertURL:\t&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;authenticate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;authenticate fail&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;authenticate fail&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;//parser content of simplified notification&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;InputStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getContent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;BufferedReader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BufferedReader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InputStreamReader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;StringBuffer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StringBuffer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;readLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;content&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;messageBodyAsBytes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;messageBodyAsBytes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Base64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;decodeBase64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;messageBodyAsBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;UTF-8&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UnsupportedEncodingException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;RuntimeException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Not support encoding: UTF-8&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//这里的result就是文件的信息&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Simplified Notification: \n {}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;JSONObject&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;JSONArray&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;events&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jsonObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getJSONArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;events&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nonNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CollectionUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNotEmpty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;JSONObject&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eventEntity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JSONObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;JSONObject&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userIdentity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eventEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getJSONObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;userIdentity&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//用户uuid  根据uuid查询本系统对应的用户信息&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principalId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;userIdentity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;principalId&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;错误&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ajaxJson&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * check if this request comes from MNS Server
+ *
+ * @param method,  http method
+ * @param uri,     http uri
+ * @param headers, http headers
+ * @param cert,    cert url
+ * @return true if verify pass
+ */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;authenticate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str2sign&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getSignStr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//System.out.println(str2sign);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//这里需要注意大小写，官方给出的代码这里是大写A，在我实际操作中为小写，到底是什么，需要结合实际情况&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;authorization&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decodedSign&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Base64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;decodeBase64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;signature&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//get cert, and verify this request with this cert&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//String cert = &quot;http://mnstest.oss-cn-hangzhou.aliyuncs.com/x509_public_certificate.pem&quot;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;URL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;HttpURLConnection&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpURLConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;openConnection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;DataInputStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DataInputStream&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInputStream&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;CertificateFactory&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CertificateFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;X.509&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Certificate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;generateCertificate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;PublicKey&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getPublicKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Signature&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signetcheck&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Signature&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SHA1withRSA&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;signetcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;initVerify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;signetcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str2sign&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signetcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decodedSign&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;authenticate fail, &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * build string for sign
+ *
+ * @param method,  http method
+ * @param uri,     http uri
+ * @param headers, http headers
+ * @return String fro sign
+ */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getSignStr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;StringBuilder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StringBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//注意大小写&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;safeGetHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;content-md5&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//注意大小写&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;safeGetHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;content-type&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//注意大小写&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;safeGetHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;date&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Entry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;entrySet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;startsWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;x-mns-&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getValue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Collections&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;safeGetHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;containsKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;代码虽然很多，但是不复杂，其实就是对request进行解析，进行验证，把oss包含信息取出来，最终获取到base64编码的文件信息。&lt;/p&gt;
+
+&lt;h3 id=&quot;第三步检验成果&quot;&gt;第三步：检验成果&lt;/h3&gt;
+
+&lt;p&gt;把项目启动，然后使用&lt;a href=&quot;https://help.aliyun.com/document_detail/61872.html&quot;&gt;oss控制台客户端&lt;/a&gt;上传文件
+&lt;img src=&quot;/assets/images/post/oss-first/oss-upload-success.png&quot; alt=&quot;oss-upload-success&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当文件上传完毕后，在java控制台打印出如下数据：&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;events&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventName&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ObjectCreated:PutObject&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventSource&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;acs:oss&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventTime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2018-02-22T08:32:21.000Z&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventVersion&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;oss&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;bucket&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;arn&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;acs:oss:cn-beijing:1234346345345345:display-sjf-event-notification-test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;display-sjf-event-notification-test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ownerIdentity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1234346345345345&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;virtualBucket&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;object&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;deltaSize&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;312148&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eTag&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;D9703079D307A57C4967B30AC36FCA81&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;20170731095417740.png&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;size&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;312148&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ossSchemaVersion&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ruleId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;oss-upload-success-img-http&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;region&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ch-china&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;requestParameters&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sourceIPAddress&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;10.0.0.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;responseElements&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;requestId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;5A815115776D389D9FE118C1&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;userIdentity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;principalId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;12345678934534534&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//参数解释&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;events&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventName&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//事件通知类型&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventSource&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//消息源，固定为&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;acs:oss&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventTime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//事件事件，格式为ISO&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;-8601&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eventVersion&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//版本号，目前为&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;oss&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;bucket&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;arn&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//bucket的唯一标识符，格式为&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;acs:oss:region:uid:bucket&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//bucket名称&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ownerIdentity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//bucket的owner&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;object&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;deltaSize&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//object大小的变化量，比如新增一个文件，这个值就是文件大小，如果是覆盖一个文件，这个值就是新文件与旧文件的差值，因此可能为负数&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eTag&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//object的etag，与GetObject()请求返回的ETag头的内容相同&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//object名称&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;position&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//可变项，只有在ObjectCreated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;AppendObject事件中才有，表示此次请求开始append的位置，注意是从&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;开始&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;readFrom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//可变项，只有在ObjectDownloaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;GetObject事件中才有，表示文件开始读取的位置，如果不是Range请求，则此项为&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，否则则是Range请求的开始字节，注意是从&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;开始&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;readTo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//可变项，只有在ObjectDownloaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;GetObject事件中才有，表示文件最后读取的位置，如果不是Range请求，则此项为文件的大小，否则则是Range请求的结束字节增&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;size&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//object大小&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ossSchemaVersion&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//此字段域的版本号，目前为&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ruleId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;GetObject&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//此事件匹配的规则ID&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;region&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//bucket所在的region&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;requestParameters&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sourceIPAddress&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//请求的源IP&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;responseElements&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;requestId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//请求对应的requestid&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;userIdentity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;principalId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//请求发起者的uid&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;xVars&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//oss的callback功能中的自定义参数&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x:callback-var1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x:vallback-var2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value2&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;结语&quot;&gt;结语&lt;/h2&gt;
+
+&lt;p&gt;在信息化时代，我们需要跟上时代的步伐，与时俱进。本篇关于oss事件通知的介绍到此结束，希望对家有所帮助。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="oss" /><category term="阿里云" /><summary type="html">初识oss it技术更新换代太快了，我们的思想也必须跟上才行。 最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。 好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批量， 又在web端，感觉再好的插件也拯救不了我了。于是问问公司的前辈，才刚说上几句，前辈就说怎么不用oss？ 啥？oss是什么？oss（Object Storage Service）即对象存储服务。 海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。 使用RESTful API 可以在互联网任何位置存储和访问，容量和处理能力弹性扩展，多种存储类型供选择全面优化存储成本。 了解到这里，我感觉这个就是能拯救我的方案了，立马查阅文档开始试试。 确定使用场景 根据之前的需求，用户通过网站上传图片到服务器上，然后对图片进行识别处理。 改用oss方案后，用户通过使用oss控制台客户端上传文件,项目监听到文件上传完成，再获取资源进行识别处理。 使用oss之后逻辑稍有改变，由于文件存放不在同一个地方，这里需要使用oss提供的事件通知来完成。 oss事件通知整体架构图如下（借用图一张） 由图中可以看到，oss事件通知提供了两种方式： HttpServer http的方式，即配置一个自己项目的访问地址（公网），当匹配规则匹配到时，往该地址推送数据 MNS Queue 队列的方式，即在项目中订阅oss提供的主题，获取匹配规则推送的数据 这里要介绍的是Http方式，后面如果需要再使用队列方式试试。 小试牛刀 关于oss事件通知的配置，阿里云已经提供了一篇文档 如何使用OSS事件通知功能？， 虽然讲的很清楚了（事后才觉得清楚，在没会之前是蒙圈的），但我觉得有必要把一些要点再提一下，少踩坑！ 第一步：配置事件通知 简单理解，就是当bucket有文件变化（上传，覆盖，删除，追加……）时给予通知 帮助文档提供的截图和截止文章当前时间已经有所不同，下面带大家一步一步配置 首先进入oss管理控制台如下图： 选中bucket，右侧页面进入到该bucket的相关信息，然后点击【事件通知】，由于我已经创建了一条规则，所以这里 能看到有一条规则 点击【创建规则】,在右侧会弹出界面，如下图所示，需要填写规则名称，事件类型，资源描述，接受终端 规则名称 规则的唯一标识，同一账号同一 Region 同一产品下规则名称不能重名。字符必须是英文，数字，横划线，长度不超过 128 个 事件类型 选择您想要触发通知的事件，可以选择多个。同样的事件不可以多次配置在同一资源上 PutObject ，创建/覆盖文件：简单上传 这里我只举一个例子，更多其他的事件类型参考事件类型列表 资源描述 资源描述可以是全名、前缀、后缀以及前后缀，不同资源描述不能有交集。 在本次实例中，我配置了全名，前后缀 第一行代表固定文件名（movie.zip）上传，就会触发事件 第二行代表以m开头的文件上传，就会触发事件 第三行代表.jpg格式的文件上传，就会触发事件 在我第一次使用时这个地方没有理解资源描述是什么意思，我上传文件怎么都不触发，直到发送工单，才得知是这里的问题 接受终端 有两种可以选择，一个是http，一个是队列，本篇讲的是http方式，这里我选择http http://domain.com:8080/oss/listener 地址是公网能够访问到的 填写完毕后，点击底部的【确认】按钮确认添加该规则，确认之后就会像之前看到的，出现一条规则。 这里需要注意的是，每添加一条规则会自动创建一条对应的主题，可以在消息服务控制台查看到该主题，如下图： 还需要注意的是图中指出的温馨提示,主题实例是会产生费用的 到这里，在阿里云控制台配置的工作就已经完成了，接下来要做的就是实现接受消息 第二步：接受消息通知 在上一步接受终端操作中我配置了一个可以公网访问的地址http://domain.com:8080/oss/listener，他的作用就是当规则匹配之后 oss会向该地址发送消息。根据oss技术人员提供的信息，我们可以从 MNS Java SDK 这个页面下载示例代码 解压下载后的文件，我们需要关注的是 HttpEndpoint.java 这个文件，这里对该文件代码不做详细的解释，根据自己项目的环境，做相应改动即可 我的项目环境是spring mvc，下面贴出我已经调试好的代码： import com.alibaba.fastjson.JSON; import com.alibaba.fastjson.JSONArray; import com.alibaba.fastjson.JSONObject; import lombok.extern.slf4j.Slf4j; import org.apache.commons.codec.binary.Base64; import org.apache.commons.collections4.CollectionUtils; import org.apache.commons.lang3.StringUtils; import org.apache.http.HttpEntity; import org.apache.http.entity.InputStreamEntity; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.stereotype.Controller; import org.springframework.web.bind.annotation.PostMapping; import org.springframework.web.bind.annotation.RequestBody; import org.springframework.web.bind.annotation.ResponseBody; import javax.servlet.http.HttpServletRequest; import java.io.*; import java.net.HttpURLConnection; import java.net.URL; import java.security.PublicKey; import java.security.cert.Certificate; import java.security.cert.CertificateFactory; import java.util.*; /** * oss文件上传成功 * * @return */ @PostMapping(value = &quot;/oss/listener&quot;) @ResponseBody public String ossfileuploadsuccess(HttpServletRequest request) { log.info(&quot;oss客户端上传文件&quot;); try { HttpEntity entity = new InputStreamEntity(request.getInputStream(), request.getContentLength()); String method = request.getMethod().toUpperCase(Locale.ENGLISH); String target = request.getRequestURI(); Enumeration&amp;lt;String&amp;gt; headerNames = request.getHeaderNames(); Map&amp;lt;String, String&amp;gt; hm = new HashMap&amp;lt;&amp;gt;(); while (headerNames.hasMoreElements()) { String name = headerNames.nextElement(); String value = request.getHeader(name); System.out.println(name + &quot;:&quot; + value); hm.put(name, value); } //verify request String certHeader = request.getHeader(&quot;x-mns-signing-cert-url&quot;); if (certHeader == null) { log.info(&quot;SigningCerURL Header not found&quot;); return &quot;SigningCerURL Header not found&quot;; } String cert = certHeader; if (cert.isEmpty()) { log.info(&quot;SigningCertURL empty&quot;); return &quot;SigningCertURL empty&quot;; } cert = new String(Base64.decodeBase64(cert)); log.info(&quot;SigningCertURL:\t&quot; + cert); if (!authenticate(method, target, hm, cert)) { log.info(&quot;authenticate fail&quot;); return &quot;authenticate fail&quot;; } //parser content of simplified notification InputStream is = entity.getContent(); BufferedReader reader = new BufferedReader(new InputStreamReader(is)); StringBuffer buffer = new StringBuffer(); String line = &quot;&quot;; while ((line = reader.readLine()) != null) { buffer.append(line); } String content = buffer.toString(); String result = null; byte[] messageBodyAsBytes = content.getBytes(); if (messageBodyAsBytes != null) { try { result = new String(Base64.decodeBase64(messageBodyAsBytes), &quot;UTF-8&quot;); } catch (UnsupportedEncodingException var4) { throw new RuntimeException(&quot;Not support encoding: UTF-8&quot;); } } //这里的result就是文件的信息 log.info(&quot;Simplified Notification: \n {}&quot;, result); JSONObject jsonObject = JSON.parseObject(result); JSONArray events = jsonObject.getJSONArray(&quot;events&quot;); if(Objects.nonNull(events) &amp;amp;&amp;amp; CollectionUtils.isNotEmpty(events)){ JSONObject eventEntity = (JSONObject) events.get(0); JSONObject userIdentity = eventEntity.getJSONObject(&quot;userIdentity&quot;); //用户uuid 根据uuid查询本系统对应的用户信息 String principalId =userIdentity.getString(&quot;principalId&quot;); } } catch (Exception e) { log.error(&quot;错误&quot;, e); } return ajaxJson; } /** * check if this request comes from MNS Server * * @param method, http method * @param uri, http uri * @param headers, http headers * @param cert, cert url * @return true if verify pass */ private Boolean authenticate(String method, String uri, Map&amp;lt;String, String&amp;gt; headers, String cert) { String str2sign = getSignStr(method, uri, headers); //System.out.println(str2sign); //这里需要注意大小写，官方给出的代码这里是大写A，在我实际操作中为小写，到底是什么，需要结合实际情况 String signature = headers.get(&quot;authorization&quot;); byte[] decodedSign = Base64.decodeBase64(signature); //get cert, and verify this request with this cert try { //String cert = &quot;http://mnstest.oss-cn-hangzhou.aliyuncs.com/x509_public_certificate.pem&quot;; URL url = new URL(cert); HttpURLConnection conn = (HttpURLConnection) url.openConnection(); DataInputStream in = new DataInputStream(conn.getInputStream()); CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;); Certificate c = cf.generateCertificate(in); PublicKey pk = c.getPublicKey(); java.security.Signature signetcheck = java.security.Signature.getInstance(&quot;SHA1withRSA&quot;); signetcheck.initVerify(pk); signetcheck.update(str2sign.getBytes()); Boolean res = signetcheck.verify(decodedSign); return res; } catch (Exception e) { e.printStackTrace(); log.warn(&quot;authenticate fail, &quot; + e.getMessage()); return false; } } /** * build string for sign * * @param method, http method * @param uri, http uri * @param headers, http headers * @return String fro sign */ private String getSignStr(String method, String uri, Map&amp;lt;String, String&amp;gt; headers) { StringBuilder sb = new StringBuilder(); sb.append(method); sb.append(&quot;\n&quot;); //注意大小写 sb.append(safeGetHeader(headers, &quot;content-md5&quot;)); sb.append(&quot;\n&quot;); //注意大小写 sb.append(safeGetHeader(headers, &quot;content-type&quot;)); sb.append(&quot;\n&quot;); //注意大小写 sb.append(safeGetHeader(headers, &quot;date&quot;)); sb.append(&quot;\n&quot;); List&amp;lt;String&amp;gt; tmp = new ArrayList&amp;lt;String&amp;gt;(); for (Map.Entry&amp;lt;String, String&amp;gt; entry : headers.entrySet()) { if (entry.getKey().startsWith(&quot;x-mns-&quot;)){ tmp.add(entry.getKey() + &quot;:&quot; + entry.getValue()); } } Collections.sort(tmp); for (String kv : tmp) { sb.append(kv); sb.append(&quot;\n&quot;); } sb.append(uri); return sb.toString(); } private String safeGetHeader(Map&amp;lt;String, String&amp;gt; headers, String name) { if (headers.containsKey(name)) { return headers.get(name); } else { return &quot;&quot;; } } 代码虽然很多，但是不复杂，其实就是对request进行解析，进行验证，把oss包含信息取出来，最终获取到base64编码的文件信息。 第三步：检验成果 把项目启动，然后使用oss控制台客户端上传文件 当文件上传完毕后，在java控制台打印出如下数据： { &quot;events&quot;: [ { &quot;eventName&quot;: &quot;ObjectCreated:PutObject&quot;, &quot;eventSource&quot;: &quot;acs:oss&quot;, &quot;eventTime&quot;: &quot;2018-02-22T08:32:21.000Z&quot;, &quot;eventVersion&quot;: &quot;1.0&quot;, &quot;oss&quot;: { &quot;bucket&quot;: { &quot;arn&quot;: &quot;acs:oss:cn-beijing:1234346345345345:display-sjf-event-notification-test&quot;, &quot;name&quot;: &quot;display-sjf-event-notification-test&quot;, &quot;ownerIdentity&quot;: &quot;1234346345345345&quot;, &quot;virtualBucket&quot;: &quot;&quot; }, &quot;object&quot;: { &quot;deltaSize&quot;: 312148, &quot;eTag&quot;: &quot;D9703079D307A57C4967B30AC36FCA81&quot;, &quot;key&quot;: &quot;20170731095417740.png&quot;, &quot;size&quot;: 312148 }, &quot;ossSchemaVersion&quot;: &quot;1.0&quot;, &quot;ruleId&quot;: &quot;oss-upload-success-img-http&quot; }, &quot;region&quot;: &quot;ch-china&quot;, &quot;requestParameters&quot;: { &quot;sourceIPAddress&quot;: &quot;10.0.0.0&quot; }, &quot;responseElements&quot;: { &quot;requestId&quot;: &quot;5A815115776D389D9FE118C1&quot; }, &quot;userIdentity&quot;: { &quot;principalId&quot;: &quot;12345678934534534&quot; } } ] } //参数解释 { &quot;events&quot;: [ { &quot;eventName&quot;: &quot;&quot;, //事件通知类型 &quot;eventSource&quot;: &quot;&quot;, //消息源，固定为&quot;acs:oss&quot; &quot;eventTime&quot;: &quot;&quot;, //事件事件，格式为ISO-8601 &quot;eventVersion&quot;: &quot;&quot;, //版本号，目前为&quot;1.0&quot; &quot;oss&quot;: { &quot;bucket&quot;: { &quot;arn&quot;: &quot;&quot;, //bucket的唯一标识符，格式为&quot;acs:oss:region:uid:bucket&quot; &quot;name&quot;: &quot;&quot;, //bucket名称 &quot;ownerIdentity&quot;: &quot;&quot; //bucket的owner }, &quot;object&quot;: { &quot;deltaSize&quot;:, //object大小的变化量，比如新增一个文件，这个值就是文件大小，如果是覆盖一个文件，这个值就是新文件与旧文件的差值，因此可能为负数 &quot;eTag&quot;: &quot;&quot;, //object的etag，与GetObject()请求返回的ETag头的内容相同 &quot;key&quot;: &quot;&quot;, //object名称 &quot;position&quot;:, //可变项，只有在ObjectCreated:AppendObject事件中才有，表示此次请求开始append的位置，注意是从0开始 &quot;readFrom&quot;:, //可变项，只有在ObjectDownloaded:GetObject事件中才有，表示文件开始读取的位置，如果不是Range请求，则此项为0，否则则是Range请求的开始字节，注意是从0开始 &quot;readTo&quot;:,//可变项，只有在ObjectDownloaded:GetObject事件中才有，表示文件最后读取的位置，如果不是Range请求，则此项为文件的大小，否则则是Range请求的结束字节增1 &quot;size&quot;://object大小 } &quot;ossSchemaVersion&quot;: &quot;&quot;, //此字段域的版本号，目前为&quot;1.0&quot; &quot;ruleId&quot;: &quot;GetObject&quot; //此事件匹配的规则ID }, &quot;region&quot;: &quot;&quot;, //bucket所在的region &quot;requestParameters&quot;: { &quot;sourceIPAddress&quot;: &quot;&quot; //请求的源IP }, &quot;responseElements&quot;: { &quot;requestId&quot;: &quot;&quot; //请求对应的requestid }, &quot;userIdentity&quot;: { &quot;principalId&quot;: &quot;&quot; //请求发起者的uid }, &quot;xVars&quot;: { //oss的callback功能中的自定义参数 &quot;x:callback-var1&quot;: &quot;value1&quot;, &quot;x:vallback-var2&quot;: &quot;value2&quot; } } ] } 结语 在信息化时代，我们需要跟上时代的步伐，与时俱进。本篇关于oss事件通知的介绍到此结束，希望对家有所帮助。</summary></entry><entry><title type="html">用Intellij IDEA断点调试远程服务器部署的tomcat项目</title><link href="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html" rel="alternate" type="text/html" title="用Intellij IDEA断点调试远程服务器部署的tomcat项目" /><published>2018-02-04T00:00:00+08:00</published><updated>2018-02-04T00:00:00+08:00</updated><id>http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij</id><content type="html" xml:base="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html">&lt;h2 id=&quot;回顾&quot;&gt;回顾&lt;/h2&gt;
+
+&lt;p&gt;在很早之前我已经写过一篇关于 &lt;a href=&quot;/ide/2013/10/17/intellij-idea-remote-debug-project.html&quot;&gt;在intellij idea下远程调试项目&lt;/a&gt; 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;之前没有写清楚&lt;/li&gt;
+  &lt;li&gt;时隔久远，已经更新了，不再适用当前&lt;/li&gt;
+  &lt;li&gt;没有完全理解，草率就记了，知其然不知其所以然&lt;/li&gt;
+  &lt;li&gt;……&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;发现疑点一相同的目录下&quot;&gt;发现疑点一：相同的目录下&lt;/h2&gt;
+&lt;p&gt;写上一篇文章的时候环境都是windows，所以可以把代码放在相同的目录下，但是这次环境不一样了一个是windows一个是linux，
+怎么放到相同的目录下呢？&lt;/p&gt;
+
+&lt;h2 id=&quot;发现疑点二配置remote-tomcat&quot;&gt;发现疑点二：配置remote tomcat&lt;/h2&gt;
+&lt;p&gt;由于第一步已经发生了变化，导致第二步不知道该怎么配置了&lt;/p&gt;
+
+&lt;p&gt;为了搞清楚这两个疑点，我开始在网上重新查找了相关文章，看了几篇，在其中简书的一篇&lt;a href=&quot;https://www.jianshu.com/p/f902ac5d29e4&quot;&gt;IDEA远程调试Tomcat&lt;/a&gt;文章解决了我的两个疑点&lt;/p&gt;
+
+&lt;h2 id=&quot;拨开云雾见青天&quot;&gt;拨开云雾见青天&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;原来并不需要相同的目录，服务器代码位置和本地代码位置没有关系&lt;/li&gt;
+  &lt;li&gt;应该是配置Remote而不是Tomcat Server Remote&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;但不知为什么在上篇文章中我使用Tomcat Server Remote的方式也达到效果，对这个功能的理解应该有误差，后面再说吧。&lt;/p&gt;
+
+&lt;h2 id=&quot;如何使用intellij-idea如何远程调试&quot;&gt;如何使用intellij idea如何远程调试？&lt;/h2&gt;
+
+&lt;p&gt;搞清楚我的疑点，那我就可以进入正题了，如何使用intellij idea如何远程调试？一共分为2步&lt;/p&gt;
+
+&lt;h3 id=&quot;在intellij-idea里添加remote配置&quot;&gt;在intellij idea里添加remote配置&lt;/h3&gt;
+
+&lt;p&gt;这一步是配置你要调试的目标，服务器的地址和调试端口&lt;/p&gt;
+
+&lt;p&gt;选择 【Select Run/Debug configuration】,【Edit Configurations…】点击左上角绿色加号，选择Remote，
+这里需要填写的就是host和port，然后在【Search sources using module‘s classpath】选择自己的项目
+&lt;img src=&quot;/assets/images/post/config-remote.png&quot; alt=&quot;配置Remote&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;复制remote JVM参数，后面需要用到&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-agentlib&lt;/span&gt;:jdwp&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;transport&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dt_socket,server&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y,suspend&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n,address&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;编辑远程服务器tomcat-catalinash-文件&quot;&gt;编辑远程服务器tomcat catalina.sh 文件&lt;/h3&gt;
+
+&lt;p&gt;第二步需要打开tomcat远程调试的功能，找到tomcat目录下的bin目录的catalina.sh文件&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;
+/home/apache-tomcat-8.5.23/bin
+ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls
+&lt;/span&gt;bootstrap.jar  catalina-tasks.xml            configtest.bat  digest.bat        setclasspath.sh  startup.bat      tomcat-native.tar.gz  version.bat
+catalina.bat   commons-daemon.jar            configtest.sh   digest.sh         shutdown.bat     startup.sh       tool-wrapper.bat      version.sh
+catalina.sh    commons-daemon-native.tar.gz  daemon.sh       setclasspath.bat  shutdown.sh      tomcat-juli.jar  tool-wrapper.sh
+ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi catalina.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在catalina.sh文件里添加上面复制的jvm参数&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#   UMASK           (Optional) Override Tomcat's default UMASK of 0027&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#   USE_NOHUP       (Optional) If set to the string true the start command will&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#                   use nohup so that the Tomcat process will ignore any hangup&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#                   signals. Default is &quot;false&quot; unless running on HP-UX in which&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#                   case the default is &quot;true&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -----------------------------------------------------------------------------&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000'&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# OS specific support.  $var _must_ be set to either true or false.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;大概在文件头部注释结束的地方加入，如上所示，保存并退出。&lt;/p&gt;
+
+&lt;p&gt;ps：需要注意的是address配置的端口8000是能够外网访问的，在后面idea的配置中需要用到的&lt;/p&gt;
+
+&lt;p&gt;两步配置完毕后，确保远程的tomcat是启动的，然后以Debug方式启动本机的Remote，当IDEA控制台打印如下语句表示成功&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Connected to the target VM, address: &lt;span class=&quot;s1&quot;&gt;'192.168.0.3:8000'&lt;/span&gt;, transport: &lt;span class=&quot;s1&quot;&gt;'socket'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这个时候就可以远程调试代码了&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="intellij idea" /><category term="远程调试" /><category term="tomcat" /><summary type="html">回顾 在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况， 再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题 之前没有写清楚 时隔久远，已经更新了，不再适用当前 没有完全理解，草率就记了，知其然不知其所以然 …… 发现疑点一：相同的目录下 写上一篇文章的时候环境都是windows，所以可以把代码放在相同的目录下，但是这次环境不一样了一个是windows一个是linux， 怎么放到相同的目录下呢？ 发现疑点二：配置remote tomcat 由于第一步已经发生了变化，导致第二步不知道该怎么配置了 为了搞清楚这两个疑点，我开始在网上重新查找了相关文章，看了几篇，在其中简书的一篇IDEA远程调试Tomcat文章解决了我的两个疑点 拨开云雾见青天 原来并不需要相同的目录，服务器代码位置和本地代码位置没有关系 应该是配置Remote而不是Tomcat Server Remote 但不知为什么在上篇文章中我使用Tomcat Server Remote的方式也达到效果，对这个功能的理解应该有误差，后面再说吧。 如何使用intellij idea如何远程调试？ 搞清楚我的疑点，那我就可以进入正题了，如何使用intellij idea如何远程调试？一共分为2步 在intellij idea里添加remote配置 这一步是配置你要调试的目标，服务器的地址和调试端口 选择 【Select Run/Debug configuration】,【Edit Configurations…】点击左上角绿色加号，选择Remote， 这里需要填写的就是host和port，然后在【Search sources using module‘s classpath】选择自己的项目 复制remote JVM参数，后面需要用到 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 编辑远程服务器tomcat catalina.sh 文件 第二步需要打开tomcat远程调试的功能，找到tomcat目录下的bin目录的catalina.sh文件 ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin$ pwd /home/apache-tomcat-8.5.23/bin ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin$ ls bootstrap.jar catalina-tasks.xml configtest.bat digest.bat setclasspath.sh startup.bat tomcat-native.tar.gz version.bat catalina.bat commons-daemon.jar configtest.sh digest.sh shutdown.bat startup.sh tool-wrapper.bat version.sh catalina.sh commons-daemon-native.tar.gz daemon.sh setclasspath.bat shutdown.sh tomcat-juli.jar tool-wrapper.sh ubuntu@VM-179-90:/home/apache-tomcat-8.5.23/bin$ vi catalina.sh 在catalina.sh文件里添加上面复制的jvm参数 export JAVA_OPTS='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000' # UMASK (Optional) Override Tomcat's default UMASK of 0027 # # USE_NOHUP (Optional) If set to the string true the start command will # use nohup so that the Tomcat process will ignore any hangup # signals. Default is &quot;false&quot; unless running on HP-UX in which # case the default is &quot;true&quot; # ----------------------------------------------------------------------------- export JAVA_OPTS='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000' # OS specific support. $var _must_ be set to either true or false. 大概在文件头部注释结束的地方加入，如上所示，保存并退出。 ps：需要注意的是address配置的端口8000是能够外网访问的，在后面idea的配置中需要用到的 两步配置完毕后，确保远程的tomcat是启动的，然后以Debug方式启动本机的Remote，当IDEA控制台打印如下语句表示成功 Connected to the target VM, address: '192.168.0.3:8000', transport: 'socket' 这个时候就可以远程调试代码了</summary></entry><entry><title type="html">如何查看磁盘使用情况 du df</title><link href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="alternate" type="text/html" title="如何查看磁盘使用情况 du df" /><published>2017-12-26T00:00:00+08:00</published><updated>2017-12-26T00:00:00+08:00</updated><id>http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df</id><content type="html" xml:base="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html">&lt;p&gt;查看某目录占用空间情况&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;du&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-smh&lt;/span&gt; folder_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;查看磁盘占用&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-hT&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;列出某目录下文件占用空间情况&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;du&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-smh&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="linux命令" /><category term="鸟哥私房菜" /><summary type="html">查看某目录占用空间情况 du -smh folder_name 查看磁盘占用 df -hT 列出某目录下文件占用空间情况 du -smh *</summary></entry><entry><title type="html">如果从一个主机复制文件到另一个主机：scp</title><link href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="alternate" type="text/html" title="如果从一个主机复制文件到另一个主机：scp" /><published>2017-12-26T00:00:00+08:00</published><updated>2017-12-26T00:00:00+08:00</updated><id>http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp</id><content type="html" xml:base="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html">&lt;p&gt;在linux下复制文件通常使用&lt;code class=&quot;highlighter-rouge&quot;&gt;cp&lt;/code&gt;命令完成，今天介绍另外两个命令&lt;code class=&quot;highlighter-rouge&quot;&gt;scp&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个命令，在两台主机上直接进行复制操作，有一种”山重水复疑无路，柳暗花明又一村”的感觉，我马上试试，果然好用。
+下面分享下这两个命令的用法：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-pr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; 速率] file &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;账号@]主机:目录名  &amp;lt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 上传
+scp &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-pr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; 速率] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;账号@]主机:file 目录名   &amp;lt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 下载
+&lt;span class=&quot;c&quot;&gt;# 选项与参数：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -p 保留文件原有的权限信息&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -r 复制来源为目录时，可以复制整个目录（包含子目录）&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -l 可以限制传输的速率，单位为 Kbits/s ，例如 [-l 800] 代表传输速率 100KKbytes/s &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例一：从远程服务器复制单个文件到本地目录&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp ubuntua@hostname:/home/ubuntua/images/1.jpg /home/ubuntub/images/ 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： 从hostname机器上的/home/ubuntua/images/的目录中下载 1.jpg 文件到本地/home/ubuntub/images/ 目录中&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例二：从远程复制目录到本地目录&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; ubuntua@hostname:/home/ubuntua/images /home/ubuntub/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： 从hostname机器上的/home/ubuntua/中下载images目录到本地的/home/ubuntub/目录来。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例三：复制本地文件到远程机器指定目录&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp /home/ubuntub/images/1.jpg ubuntua@hostname:/home/ubuntua/images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： 复制本地/home/ubuntub/images/目录下的文件1.jpg 到远程机器hostname的/home/ubuntua/images目录&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例四：复制本地目录到远程机器指定目录&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; /home/ubuntub/images ubuntua@hostname:/home/ubuntua
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： 上传本地目录 /home/ubuntub/images到远程机器hostname上/home/ubuntua的目录中&lt;/p&gt;
+
+&lt;p&gt;rsync的使用参考&lt;a href=&quot;/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;参考：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://cn.linux.vbird.org/linux_server/0310telnetssh.php#scp&quot;&gt;鸟哥私房菜：scp&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/scp.html&quot;&gt;scp命令使用&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="linux命令" /><category term="鸟哥私房菜" /><summary type="html">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync 在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后 上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要 讲的这两个命令，在两台主机上直接进行复制操作，有一种”山重水复疑无路，柳暗花明又一村”的感觉，我马上试试，果然好用。 下面分享下这两个命令的用法： scp [-pr] [-l 速率] file [账号@]主机:目录名 &amp;lt;== 上传 scp [-pr] [-l 速率] [账号@]主机:file 目录名 &amp;lt;== 下载 # 选项与参数： # -p 保留文件原有的权限信息 # -r 复制来源为目录时，可以复制整个目录（包含子目录） # -l 可以限制传输的速率，单位为 Kbits/s ，例如 [-l 800] 代表传输速率 100KKbytes/s 示例一：从远程服务器复制单个文件到本地目录 scp ubuntua@hostname:/home/ubuntua/images/1.jpg /home/ubuntub/images/ 说明： 从hostname机器上的/home/ubuntua/images/的目录中下载 1.jpg 文件到本地/home/ubuntub/images/ 目录中 示例二：从远程复制目录到本地目录 scp -r ubuntua@hostname:/home/ubuntua/images /home/ubuntub/ 说明： 从hostname机器上的/home/ubuntua/中下载images目录到本地的/home/ubuntub/目录来。 示例三：复制本地文件到远程机器指定目录 scp /home/ubuntub/images/1.jpg ubuntua@hostname:/home/ubuntua/images 说明： 复制本地/home/ubuntub/images/目录下的文件1.jpg 到远程机器hostname的/home/ubuntua/images目录 示例四：复制本地目录到远程机器指定目录 scp -r /home/ubuntub/images ubuntua@hostname:/home/ubuntua 说明： 上传本地目录 /home/ubuntub/images到远程机器hostname上/home/ubuntua的目录中 rsync的使用参考这里 参考： 鸟哥私房菜：scp scp命令使用</summary></entry><entry><title type="html">如果从一个主机复制文件到另一个主机：rsync</title><link href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html" rel="alternate" type="text/html" title="如果从一个主机复制文件到另一个主机：rsync" /><published>2017-12-26T00:00:00+08:00</published><updated>2017-12-26T00:00:00+08:00</updated><id>http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync</id><content type="html" xml:base="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt;这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt; 可以作为一个相当棒的异地备援系统的备份指令！ 因为 &lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt; 可以达到类似『镜相 (mirror) 』的功能！
+&lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt; 最早是想要取代 &lt;code class=&quot;highlighter-rouge&quot;&gt;rcp&lt;/code&gt; 这个指令的，因为 &lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt; 不但传输的速度快，而且他在传输时， 
+可以比对本地端与远程主机欲复制的档案内容，而仅复制两端有差异的档案而已，所以传输的时间就相对的降低很多！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;虽然我没有去查，但根据上面的描述，我觉得rsync就是remote synchronization的简写，远程同步。没想到让我知道一个这么抢到的命令。&lt;/p&gt;
+
+&lt;p&gt;先来看看它的语法吧：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rsync &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-avrlptgoD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; ssh] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;user@host:/dir] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/local/path]
+选项与参数：
+&lt;span class=&quot;c&quot;&gt;# -v ：观察模式，可以列出更多的信息，包括镜像时的档案档名等；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -q ：与 -v  相反，安静模式，略过正常信息，仅显示错误讯息；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -r ：递归复制！可以针对『目录』来处理！很重要！&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -u ：仅更新 (update)，若目标档案较新，则保留新档案不会覆盖；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -l ：复制链接文件的属性，而非链接的目标源文件内容；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -p ：复制时，连同属性 (permission) 也保存不变！&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -g ：保存源文件的拥有群组；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -o ：保存源文件的拥有人；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -D ：保存源文件的装置属性 (device)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -t ：保存源文件的时间参数；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -I ：忽略更新时间 (mtime) 的属性，档案比对上会比较快速；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -z ：在数据传输时，加上压缩的参数！&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -e ：使用的信道协议，例如使用 ssh 通道，则 -e ssh&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -a ：相当于 -rlptgoD ，所以这个 -a 是最常用的参数了！ &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例一：将 /etc 的数据备份到 /tmp 底下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rsync &lt;span class=&quot;nt&quot;&gt;-av&lt;/span&gt; /etc /tmp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： 第一次运作时会花比较久的时间，因为首次建立嘛！如果再次备份呢？&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;示例二：利用 ubuntu 的身份登入 hostname 将home目录复制到本机 /tmp&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rsync &lt;span class=&quot;nt&quot;&gt;-av&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; ssh ubuntu@hostname:~ /tmp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;说明： ~和home是一个意思&lt;/p&gt;
+
+&lt;p&gt;scp的使用参考&lt;a href=&quot;/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;参考：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://cn.linux.vbird.org/linux_server/0310telnetssh.php#rsync&quot;&gt;鸟哥私房菜：rsync&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="linux命令" /><category term="鸟哥私房菜" /><summary type="html">rsync这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。 rsync 可以作为一个相当棒的异地备援系统的备份指令！ 因为 rsync 可以达到类似『镜相 (mirror) 』的功能！ rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的速度快，而且他在传输时， 可以比对本地端与远程主机欲复制的档案内容，而仅复制两端有差异的档案而已，所以传输的时间就相对的降低很多！ 虽然我没有去查，但根据上面的描述，我觉得rsync就是remote synchronization的简写，远程同步。没想到让我知道一个这么抢到的命令。 先来看看它的语法吧： rsync [-avrlptgoD] [-e ssh] [user@host:/dir] [/local/path] 选项与参数： # -v ：观察模式，可以列出更多的信息，包括镜像时的档案档名等； # -q ：与 -v 相反，安静模式，略过正常信息，仅显示错误讯息； # -r ：递归复制！可以针对『目录』来处理！很重要！ # -u ：仅更新 (update)，若目标档案较新，则保留新档案不会覆盖； # -l ：复制链接文件的属性，而非链接的目标源文件内容； # -p ：复制时，连同属性 (permission) 也保存不变！ # -g ：保存源文件的拥有群组； # -o ：保存源文件的拥有人； # -D ：保存源文件的装置属性 (device) # -t ：保存源文件的时间参数； # -I ：忽略更新时间 (mtime) 的属性，档案比对上会比较快速； # -z ：在数据传输时，加上压缩的参数！ # -e ：使用的信道协议，例如使用 ssh 通道，则 -e ssh # -a ：相当于 -rlptgoD ，所以这个 -a 是最常用的参数了！ 示例一：将 /etc 的数据备份到 /tmp 底下： rsync -av /etc /tmp 说明： 第一次运作时会花比较久的时间，因为首次建立嘛！如果再次备份呢？ 示例二：利用 ubuntu 的身份登入 hostname 将home目录复制到本机 /tmp rsync -av -e ssh ubuntu@hostname:~ /tmp 说明： ~和home是一个意思 scp的使用参考这里 参考： 鸟哥私房菜：rsync</summary></entry><entry><title type="html">mysql以utf-8字符集创建数据库</title><link href="http://localhost:4000/database/2016/09/22/create-mysql-database-by-utf-8.html" rel="alternate" type="text/html" title="mysql以utf-8字符集创建数据库" /><published>2016-09-22T00:00:00+08:00</published><updated>2016-09-22T00:00:00+08:00</updated><id>http://localhost:4000/database/2016/09/22/create-mysql-database-by-utf-8</id><content type="html" xml:base="http://localhost:4000/database/2016/09/22/create-mysql-database-by-utf-8.html">&lt;p&gt;创建utf-8字符集数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对已有的数据库更改字符编码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CREATE DATABASE 的语法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+[create_specification [, create_specification] ...]
+create_specification:
+[DEFAULT] CHARACTER SET charset_name
+| [DEFAULT] COLLATE collation_name
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mysql" /><category term="database" /><summary type="html">创建utf-8字符集数据库 CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; 对已有的数据库更改字符编码 ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci CREATE DATABASE 的语法： CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name [create_specification [, create_specification] ...] create_specification: [DEFAULT] CHARACTER SET charset_name | [DEFAULT] COLLATE collation_name</summary></entry><entry><title type="html">freenas启动过程中屏幕不断提示ata status error</title><link href="http://localhost:4000/nas/2014/05/29/ata-status-error.html" rel="alternate" type="text/html" title="freenas启动过程中屏幕不断提示ata status error" /><published>2014-05-29T00:00:00+08:00</published><updated>2014-05-29T00:00:00+08:00</updated><id>http://localhost:4000/nas/2014/05/29/ata-status-error</id><content type="html" xml:base="http://localhost:4000/nas/2014/05/29/ata-status-error.html">&lt;p&gt;在这之前我有一个疑问，自己没弄懂，如果你知道，请求你在下面留下你的见解，非常感谢！&lt;/p&gt;
+
+&lt;p&gt;问题就是freenas有必要安装在硬盘上么？官方提供了三种安装方法:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;iso-刻录在光盘上然后安装在其他介质上面，比如硬盘、闪存；&lt;/li&gt;
+  &lt;li&gt;img，直接用工具写入到u盘上，u盘插上主机，从u盘启动即可运行freenas；&lt;/li&gt;
+  &lt;li&gt;虚拟机安装文件，下载后，直接用虚拟机软件读取即可。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果freenas要用阵列，那么freenas不能安装在属于阵列的磁盘中，我的主板支持阵列，一共四个sata接口，如果接4个硬盘组成阵列，
+那freenas只能安装在其他存储设备上，比如u盘，移动硬盘。这么弄我感觉有点别扭，系统的运行肯定不会那么流畅，现在给我的感觉就是要么用阵列，
+要么不用阵列，好矛盾啊，谁能解答我这个疑问？&lt;/p&gt;
+
+&lt;p&gt;言归正传，下面我要说的就是我在实验把freenas安装在一个单独的硬盘上遇到的问题和思考&lt;/p&gt;
+
+&lt;p&gt;我先把从官方下载好的iso镜像刻录在光盘上（文章下面有下载地址），然后设置从光盘启动，电脑有一个80G的硬盘，安装过程很简单，光盘启动后，
+最后会停留在一个界面，一共四个选项：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一是安装/升级&lt;/li&gt;
+  &lt;li&gt;第二是进入shell&lt;/li&gt;
+  &lt;li&gt;第三是重启&lt;/li&gt;
+  &lt;li&gt;第四是关闭&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;选择第一项后，直接提示当前识别到的硬盘，
+一路ok下来(此操作会格式化硬盘数据，操作前请备份好数据)。根据提示信息，最后确定安装freenas到该硬盘，当我点ok的时候，报错，安装失败。
+这时候我想起在光盘启动freenas的时候，屏幕一直不停的提示”ATA STATUS ERROR”，从提示来看和硬盘有关系，但是不知是什么问题，google一番，
+还是找到问题解决办法(原文在文章下方)，其中有一楼网友说道是AHCI的问题，要把硬盘模式切换为IDE模式。我切换硬盘模式后，freenas安装成功。
+帖子中还有其他说法，我没有仔细查看。这个时候通过浏览器访问freenas地址，既可以看到freenas的web GUI界面。&lt;/p&gt;
+
+&lt;p&gt;之前只接用u盘启动，使用比较起来，感觉安装在硬盘的freenas操作起来要比u盘上的快一些，不知道是错觉还是真的有提升？
+但是这个时候80g的硬盘就全部用来安装freenas了，如果需要安装插件或者开启共享，需要再挂载其他硬盘，感觉装硬盘有点浪费空间啊，
+在安装的时候也没有相关操作是划分分区的，或者是我还没找到方法。&lt;/p&gt;
+
+&lt;p&gt;这样看来把freenas装在u盘上是目前对于我来说最佳办法，不知道大家是不是也是这么做的呢？&lt;/p&gt;
+
+&lt;p&gt;参考:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://forums.freenas.org/index.php?threads/cam-status-ata-status-error.16833/&quot;&gt;CAM status: ATA Status Error&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://download.freenas.org/9.2.1.5/RELEASE/x64/FreeNAS-9.2.1.5-RELEASE-x64.iso&quot;&gt;FreeNAS-9.2.1.5-RELEASE-x64.iso&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="freenas" /><summary type="html">在这之前我有一个疑问，自己没弄懂，如果你知道，请求你在下面留下你的见解，非常感谢！ 问题就是freenas有必要安装在硬盘上么？官方提供了三种安装方法: iso-刻录在光盘上然后安装在其他介质上面，比如硬盘、闪存； img，直接用工具写入到u盘上，u盘插上主机，从u盘启动即可运行freenas； 虚拟机安装文件，下载后，直接用虚拟机软件读取即可。 如果freenas要用阵列，那么freenas不能安装在属于阵列的磁盘中，我的主板支持阵列，一共四个sata接口，如果接4个硬盘组成阵列， 那freenas只能安装在其他存储设备上，比如u盘，移动硬盘。这么弄我感觉有点别扭，系统的运行肯定不会那么流畅，现在给我的感觉就是要么用阵列， 要么不用阵列，好矛盾啊，谁能解答我这个疑问？ 言归正传，下面我要说的就是我在实验把freenas安装在一个单独的硬盘上遇到的问题和思考 我先把从官方下载好的iso镜像刻录在光盘上（文章下面有下载地址），然后设置从光盘启动，电脑有一个80G的硬盘，安装过程很简单，光盘启动后， 最后会停留在一个界面，一共四个选项： 第一是安装/升级 第二是进入shell 第三是重启 第四是关闭 选择第一项后，直接提示当前识别到的硬盘， 一路ok下来(此操作会格式化硬盘数据，操作前请备份好数据)。根据提示信息，最后确定安装freenas到该硬盘，当我点ok的时候，报错，安装失败。 这时候我想起在光盘启动freenas的时候，屏幕一直不停的提示”ATA STATUS ERROR”，从提示来看和硬盘有关系，但是不知是什么问题，google一番， 还是找到问题解决办法(原文在文章下方)，其中有一楼网友说道是AHCI的问题，要把硬盘模式切换为IDE模式。我切换硬盘模式后，freenas安装成功。 帖子中还有其他说法，我没有仔细查看。这个时候通过浏览器访问freenas地址，既可以看到freenas的web GUI界面。 之前只接用u盘启动，使用比较起来，感觉安装在硬盘的freenas操作起来要比u盘上的快一些，不知道是错觉还是真的有提升？ 但是这个时候80g的硬盘就全部用来安装freenas了，如果需要安装插件或者开启共享，需要再挂载其他硬盘，感觉装硬盘有点浪费空间啊， 在安装的时候也没有相关操作是划分分区的，或者是我还没找到方法。 这样看来把freenas装在u盘上是目前对于我来说最佳办法，不知道大家是不是也是这么做的呢？ 参考: CAM status: ATA Status Error FreeNAS-9.2.1.5-RELEASE-x64.iso</summary></entry><entry><title type="html">jekyll初级入门-jekyll安装运行</title><link href="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html" rel="alternate" type="text/html" title="jekyll初级入门-jekyll安装运行" /><published>2014-04-25T00:00:00+08:00</published><updated>2014-04-25T00:00:00+08:00</updated><id>http://localhost:4000/jekyll/2014/04/25/i-and-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html">&lt;p&gt;&lt;img src=&quot;/assets/images/logo-2x.png&quot; alt=&quot;jekyll-logo&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。
+说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。
+从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。&lt;/p&gt;
+
+&lt;p&gt;github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。
+jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）
+基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c&lt;em&gt;*n,博客&lt;/em&gt;等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。&lt;/p&gt;
+
+&lt;p&gt;本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。
+之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。&lt;/p&gt;
+
+&lt;p&gt;说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.
+我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。&lt;/p&gt;
+
+&lt;p&gt;安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby&lt;/p&gt;
+
+&lt;p&gt;相关包下载地址：&lt;a href=&quot;http://rubyinstaller.org/downloads/&quot;&gt;http://rubyinstaller.org/downloads/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下载自己对应系统的版本即可，我是64位的操作系统，下载的&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.0.0-p451-x64-mingw32.7z?direct&quot;&gt;Ruby 2.0.0-p451 (x64)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cdn.rubyinstaller.org/archives/devkits/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe&quot;&gt;DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)&lt;/p&gt;
+
+&lt;p&gt;然后添加环境变量：&lt;/p&gt;
+
+&lt;p&gt;RUBY_HOME  d:/tool/ruby&lt;/p&gt;
+
+&lt;p&gt;修改path环境，在最后追加 %RUBY_HOME%/bin&lt;/p&gt;
+
+&lt;p&gt;保存环境变量，再到命令行输入 &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby --version&lt;/code&gt;，可以看到打印出版本信息&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;uby&amp;gt;ruby &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;
+ruby 2.0.0p451 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2014-02-24&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;i386-mingw32]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这里配置好后，cmd下进入到devkit目录&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&amp;gt;cd devkit
+d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evkit&amp;gt;ls
+bin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  share
+devkitvars.ps1  etc    lib      mingw  msys.ico  sbin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;执行初始化命令, 执行完后可以看到有config.yml文件生成&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evkit&amp;gt;ruby dk.rb init
+d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evkit&amp;gt;ls
+bin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  share
+config.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;打开config.yml文件，配置ruby的目录&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt;
+- d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;uby
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;保存退出，然后再执行
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby dk.rb install&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;d:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ool&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evkit&amp;gt;gem &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;
+2.2.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;本地安装了那些插件&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;E:&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ools&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evkit&amp;gt;gem list &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; LOCAL GEMS &lt;span class=&quot;k&quot;&gt;***&lt;/span&gt;
+
+bigdecimal &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+blankslate &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.2.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+celluloid &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.15.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+celluloid-io &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.15.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+classifier &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.3.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+colorator &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+commander &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4.1.6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+fast-stemmer &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ffi &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.9.3 x86-mingw32&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+highline &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.6.21&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+io-console &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.4.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+jekyll &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.5.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+json &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.7.7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+liquid &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.5.5&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+listen &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.7.1, 1.3.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+maruku &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.7.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+minitest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4.3.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+nio4r &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+parslet &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.5.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+posix-spawn &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.3.8&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+psych &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.0.5, 2.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+pygments.rb &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.5.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rake &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.9.6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rb-fsevent &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.9.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rb-inotify &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.9.3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rb-kqueue &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.2.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rdoc &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+redcarpet &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rubygems-update &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.2.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+safe_yaml &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+test-unit &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.0.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+timers &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.1.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+toml &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.1.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+wdm &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.1.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+yajl-ruby &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.1.0 x86-mingw32&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以上步骤安装完后，在命令行输入&lt;code class=&quot;highlighter-rouge&quot;&gt;gem install jekyll&lt;/code&gt;，等待自动安装完成，成功之后，再输入&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll --version&lt;/code&gt;查看版本&lt;/p&gt;
+
+&lt;p&gt;接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new myblog&lt;/code&gt;，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录&lt;code class=&quot;highlighter-rouge&quot;&gt;cd myblog&lt;/code&gt;，再输入&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve &lt;/code&gt;,这个时候打开浏览器访问&lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:4000&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it&lt;/p&gt;
+
+&lt;p&gt;如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我&lt;/p&gt;
+
+&lt;p&gt;附：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/git/2013/12/18/git.html&quot;&gt;git基本操作&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jekyllrb.com/docs/home/&quot;&gt;jekyll英文官方文档&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jekyllcn.com/docs/home/&quot;&gt;jekyll中文官方文档&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="jekyll" /><category term="jekyll" /><category term="jekyll入门" /><summary type="html">jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。 说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。 说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。 从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。 github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。 jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出） 基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c*n,博客等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。 本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。 之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。 说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去. 我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。 安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby 相关包下载地址：http://rubyinstaller.org/downloads/ 下载自己对应系统的版本即可，我是64位的操作系统，下载的 Ruby 2.0.0-p451 (x64) DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe 下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd) 然后添加环境变量： RUBY_HOME d:/tool/ruby 修改path环境，在最后追加 %RUBY_HOME%/bin 保存环境变量，再到命令行输入 ruby --version，可以看到打印出版本信息 d:\tool\ruby&amp;gt;ruby --version ruby 2.0.0p451 (2014-02-24) [i386-mingw32] 这里配置好后，cmd下进入到devkit目录 d:\tool&amp;gt;cd devkit d:\tool\devkit&amp;gt;ls bin devkitvars.bat dk.rb include m.ico msys.bat postinstall share devkitvars.ps1 etc lib mingw msys.ico sbin 执行初始化命令, 执行完后可以看到有config.yml文件生成 d:\tool\devkit&amp;gt;ruby dk.rb init d:\tool\devkit&amp;gt;ls bin devkitvars.bat dk.rb include m.ico msys.bat postinstall share config.yml devkitvars.ps1 etc lib mingw msys.ico sbin 打开config.yml文件，配置ruby的目录 --- - d:\tool\ruby 保存退出，然后再执行 ruby dk.rb install 到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本 d:\tool\devkit&amp;gt;gem --version 2.2.2 本地安装了那些插件 E:\tools\devkit&amp;gt;gem list --local *** LOCAL GEMS *** bigdecimal (1.2.0) blankslate (2.1.2.4) celluloid (0.15.2) celluloid-io (0.15.0) classifier (1.3.4) colorator (0.1) commander (4.1.6) fast-stemmer (1.0.2) ffi (1.9.3 x86-mingw32) highline (1.6.21) io-console (0.4.2) jekyll (1.5.1) json (1.7.7) liquid (2.5.5) listen (2.7.1, 1.3.1) maruku (0.7.0) minitest (4.3.2) nio4r (1.0.0) parslet (1.5.0) posix-spawn (0.3.8) psych (2.0.5, 2.0.0) pygments.rb (0.5.4) rake (0.9.6) rb-fsevent (0.9.4) rb-inotify (0.9.3) rb-kqueue (0.2.2) rdoc (4.0.0) redcarpet (2.3.0) rubygems-update (2.2.2) safe_yaml (1.0.2) test-unit (2.0.0.0) timers (1.1.0) toml (0.1.1) wdm (0.1.0) yajl-ruby (1.1.0 x86-mingw32) 以上步骤安装完后，在命令行输入gem install jekyll，等待自动安装完成，成功之后，再输入jekyll --version查看版本 接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入jekyll new myblog，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录cd myblog，再输入jekyll serve ,这个时候打开浏览器访问http://localhost:4000 怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it 如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我 附： git基本操作 jekyll英文官方文档 jekyll中文官方文档</summary></entry><entry><title type="html">cannot load such file – wdm (LoadError)</title><link href="http://localhost:4000/jekyll/2014/04/18/jekyll-server-watch-error.html" rel="alternate" type="text/html" title="cannot load such file -- wdm (LoadError)" /><published>2014-04-18T00:00:00+08:00</published><updated>2014-04-18T00:00:00+08:00</updated><id>http://localhost:4000/jekyll/2014/04/18/jekyll-server-watch-error</id><content type="html" xml:base="http://localhost:4000/jekyll/2014/04/18/jekyll-server-watch-error.html">&lt;p&gt;好像是更新jekyll版本后，自动检测文件更新的命令不是&lt;code class=&quot;highlighter-rouge&quot;&gt;--auto&lt;/code&gt;了，而是&lt;code class=&quot;highlighter-rouge&quot;&gt;--watch&lt;/code&gt;，这个也好理解，观察，有变动我就更新&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;在之前我都是一个命令窗口执行&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll server&lt;/code&gt;，如果代码有更新了，再到另一个窗口执行&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll build&lt;/code&gt;，时间长了会感觉有点繁琐，于是我就是用&lt;code class=&quot;highlighter-rouge&quot;&gt;--watch&lt;/code&gt;参数，结果并不是那么好，执行&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll server --watch &lt;/code&gt;直接报错，如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	F:/xxx&amp;gt;jekyll server &lt;span class=&quot;nt&quot;&gt;--watch&lt;/span&gt;
+Configuration file: F:/xxx/_config.yml
+            Source: F:/xxx
+       Destination: ../deploy
+      Generating... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+ Auto-regeneration: enabled
+E:/tools/ruby/lib/ruby/site_ruby/2.0.0/rubygems/core_ext/kernel_require.rb:55:in
+ &lt;span class=&quot;s1&quot;&gt;'require'&lt;/span&gt;: cannot load such file &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; wdm &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;LoadError&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;由于对ruby不熟悉，不知道什么意思，google查询&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;cannot load such file – wdm (LoadError)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;我点开了排在第一个的网址，于是结果就出了，原来是缺少包，执行&lt;code class=&quot;highlighter-rouge&quot;&gt;gem install wdm&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;wdm – “Windows Directory Monitor” 由这个意思看来貌似是针对windows一个插件，windows文件夹监视器，是不是在linux下就不用安装这个插件就可以了呢？下会在linux下去试试&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="jekyll" /><category term="wdm" /><category term="gem" /><summary type="html">好像是更新jekyll版本后，自动检测文件更新的命令不是--auto了，而是--watch，这个也好理解，观察，有变动我就更新 在之前我都是一个命令窗口执行jekyll server，如果代码有更新了，再到另一个窗口执行jekyll build，时间长了会感觉有点繁琐，于是我就是用--watch参数，结果并不是那么好，执行jekyll server --watch 直接报错，如下： F:/xxx&amp;gt;jekyll server --watch Configuration file: F:/xxx/_config.yml Source: F:/xxx Destination: ../deploy Generating... done. Auto-regeneration: enabled E:/tools/ruby/lib/ruby/site_ruby/2.0.0/rubygems/core_ext/kernel_require.rb:55:in 'require': cannot load such file -- wdm (LoadError) 由于对ruby不熟悉，不知道什么意思，google查询 cannot load such file – wdm (LoadError) 我点开了排在第一个的网址，于是结果就出了，原来是缺少包，执行gem install wdm wdm – “Windows Directory Monitor” 由这个意思看来貌似是针对windows一个插件，windows文件夹监视器，是不是在linux下就不用安装这个插件就可以了呢？下会在linux下去试试</summary></entry><entry><title type="html">更换ruby源，解决gem install可能安装速度慢或者失败</title><link href="http://localhost:4000/jekyll/2014/04/17/speed-gem-source.html" rel="alternate" type="text/html" title="更换ruby源，解决gem install可能安装速度慢或者失败" /><published>2014-04-17T00:00:00+08:00</published><updated>2014-04-17T00:00:00+08:00</updated><id>http://localhost:4000/jekyll/2014/04/17/speed-gem-source</id><content type="html" xml:base="http://localhost:4000/jekyll/2014/04/17/speed-gem-source.html">&lt;p&gt;首先移除默认源&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem sources &lt;span class=&quot;nt&quot;&gt;--remove&lt;/span&gt; https://rubygems.org/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;再添加淘宝ruby源&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem sources &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; http://ruby.taobao.org/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;然后检查是否添加成功&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem sources &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; CURRENT SOURCES &lt;span class=&quot;k&quot;&gt;***&lt;/span&gt;
+
+http://ruby.taobao.org &lt;span class=&quot;c&quot;&gt;# 请确保只有 ruby.taobao.org&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;参考：&lt;a href=&quot;http://ruby.taobao.org/&quot;&gt;http://ruby.taobao.org/&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="jekyll" /><category term="gem sources" /><summary type="html">首先移除默认源 $ gem sources --remove https://rubygems.org/ 再添加淘宝ruby源 gem sources -a http://ruby.taobao.org/ 然后检查是否添加成功 gem sources -l *** CURRENT SOURCES *** http://ruby.taobao.org # 请确保只有 ruby.taobao.org 参考：http://ruby.taobao.org/</summary></entry></feed>

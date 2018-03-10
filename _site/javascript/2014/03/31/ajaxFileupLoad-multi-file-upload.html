@@ -1,0 +1,832 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ajaxFileupLoad多文件上传 - 单客欧朋</title>
+<meta name="description" content="打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？  一个是对之前大神的贡献表示感谢；  二个是自己知识的总结；  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。引用网上的做法：  1，看没有修改前的代码var oldElement = jQuery(&#39;#&#39; + fileElementId);  var newElement = jQuery(oldElement).clone();  jQuery(oldElement).attr(&#39;id&#39;, fileId);  jQuery(oldElement).before(newElement);  jQuery(oldElement).appendTo(form);很容易看出，这个就是根据id把input加到from里去，那么要实现多个文件上传，就改成下面的样子：if(typeof(fileElementId) == &#39;string&#39;){      fileElementId = [fileElementId];  }  for(var i in fileElementId){      var oldElement = jQuery(&#39;#&#39; + fileElementId[i]);      var newElement = jQuery(oldElement).clone();      jQuery(oldElement).attr(&#39;id&#39;, fileId);      jQuery(oldElement).before(newElement);      jQuery(oldElement).appendTo(form);  }这样改之后，初始化的代码就要这么写：$.ajaxFileUpload({      url:&#39;/ajax.php&#39;,      fileElementId:[&#39;id1&#39;,&#39;id2&#39;]//原先是fileElementId:’id’ 只能上传一个  });到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，为什么不取name呢？然后把以上代码改为如下：if (typeof(fileElementId) == &#39;string&#39;) {    fileElementId = [fileElementId];}for (var i in fileElementId) {    //按name取值      var oldElement = jQuery(&quot;input[name=&quot; + fileElementId[i] + &quot;]&quot;);    oldElement.each(function () {        var newElement = jQuery($(this)).clone();        jQuery(oldElement).attr(&#39;id&#39;, fileId);        jQuery(oldElement).before(newElement);        jQuery(oldElement).appendTo(form);    });}这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。&lt;div&gt;    &lt;img id=&quot;loading&quot; src=&quot;scripts/ajaxFileUploader/loading.gif&quot; style=&quot;display:none;&quot;&gt;    &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;tableForm&quot; id=&quot;calculation_model&quot;&gt;        &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;多组多个文件&lt;/th&gt;        &lt;/tr&gt;        &lt;/thead&gt;        &lt;tbody&gt;        &lt;tr&gt;            &lt;td&gt;第一组&lt;/td&gt;            &lt;td&gt;第二组&lt;/td&gt;        &lt;/tr&gt;        &lt;tr&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;gridDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;caseDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;        &lt;/tr&gt;        &lt;/tbody&gt;        &lt;tfoot&gt;        &lt;tr&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;up1&quot;&gt;Upload&lt;/button&gt;            &lt;/td&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;addInput&quot;&gt;添加一组&lt;/button&gt;            &lt;/td&gt;        &lt;/tr&gt;        &lt;/tfoot&gt;    &lt;/table&gt;&lt;/div&gt;          /**  * Created with IntelliJ IDEA.  * User: Administrator  * Date: 13-7-3  * Time: 上午9:20  * To change this template use File | Settings | File Templates.  */  $(document).ready(function () {      $(&quot;#up1&quot;).click(function(){          var temp = [&quot;gridDoc&quot;,&quot;caseDoc&quot;];          ajaxFileUpload(temp);      });        $(&quot;#addInput&quot;).click(function(){          addInputFile();      });    });    //动态添加一组文件  function addInputFile(){      $(&quot;#calculation_model&quot;).append(&quot; &lt;tr&gt;&quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39;  name=&#39;gridDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt;   &quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39; name=&#39;caseDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt; &quot;+          &quot;&lt;/tr&gt;&quot;);  }      //直接使用下载下来的文件里的demo代码  function ajaxFileUpload(id){      //starting setting some animation when the ajax starts and completes      $(&quot;#loading&quot;).ajaxStart(function(){              $(this).show();          }).ajaxComplete(function(){              $(this).hide();          });        /*      prepareing ajax file upload      url: the url of script file handling the uploaded files      fileElementId: the file type of input element id and it will be the index of  $_FILES Array()      dataType: it support json, xml      secureuri:use secure protocol      success: call back function when the ajax complete      error: callback function when the ajax failed       */      $.ajaxFileUpload({              url:&#39;upload.action&#39;,              //secureuri:false,              fileElementId:id,              dataType: &#39;json&#39;          }      )        return false;    }我action是用的struts2，它的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：package com.ssy.action;import com.opensymphony.xwork2.ActionSupport;import org.apache.commons.io.FileUtils;import org.apache.struts2.util.ServletContextAware;import javax.servlet.ServletContext;import java.io.*;import java.text.SimpleDateFormat;import java.util.Date;import java.util.Random;/** * Created with IntelliJ IDEA. * User: Administrator * Date: 13-7-2 * Time: 下午4:08 * To change this template use File | Settings | File Templates. */public class Fileupload extends ActionSupport implements ServletContextAware {    private File[] gridDoc, caseDoc;    private String[] gridDocFileName, caseDocFileName;    private ServletContext context;    public String execute() {        for (int i = 0; i &lt; gridDocFileName.length; i++) {            System.out.println(gridDocFileName[i]);        }        for (int i = 0; i &lt; caseDocFileName.length; i++) {            System.out.println(caseDocFileName[i]);        }        //System.out.println(doc1FileName);          //System.out.println(doc2FileName);          String targetDirectory = context.getRealPath(&quot;/uploadFile&quot;);        /*         *这里我只取得  第一组的文件进行上传，第二组的类似         */        try {            for (int i = 0; i &lt; gridDoc.length; i++) {                String targetFileName = generateFileName(gridDocFileName[i]);                File target = new File(targetDirectory, targetFileName);                FileUtils.copyFile(gridDoc[i], target);            }        } catch (Exception e) {            e.printStackTrace();        }        return SUCCESS;    }    public File[] getGridDoc() {        return gridDoc;    }    public void setGridDoc(File[] gridDoc) {        this.gridDoc = gridDoc;    }    public File[] getCaseDoc() {        return caseDoc;    }    public void setCaseDoc(File[] caseDoc) {        this.caseDoc = caseDoc;    }    public String[] getGridDocFileName() {        return gridDocFileName;    }    public void setGridDocFileName(String[] gridDocFileName) {        this.gridDocFileName = gridDocFileName;    }    public String[] getCaseDocFileName() {        return caseDocFileName;    }    public void setCaseDocFileName(String[] caseDocFileName) {        this.caseDocFileName = caseDocFileName;    }    /**     * 用日期和随机数格式化文件名避免冲突     *     * @param fileName     * @return     */    private String generateFileName(String fileName) {        System.out.println(fileName);        SimpleDateFormat sf = new SimpleDateFormat(&quot;yyMMddHHmmss&quot;);        String formatDate = sf.format(new Date());        int random = new Random().nextInt(10000);        int position = fileName.lastIndexOf(&quot;.&quot;);        String extension = fileName.substring(position);        return formatDate + random + extension;    }}写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？这个还有待考验，如果看出问题，请指出，共同学习修改后的js文件:ajaxfileupload.zip">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="ajaxFileupLoad多文件上传">
+<meta property="og:url" content="http://localhost:4000/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
+
+
+  <meta property="og:description" content="打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？  一个是对之前大神的贡献表示感谢；  二个是自己知识的总结；  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。引用网上的做法：  1，看没有修改前的代码var oldElement = jQuery(&#39;#&#39; + fileElementId);  var newElement = jQuery(oldElement).clone();  jQuery(oldElement).attr(&#39;id&#39;, fileId);  jQuery(oldElement).before(newElement);  jQuery(oldElement).appendTo(form);很容易看出，这个就是根据id把input加到from里去，那么要实现多个文件上传，就改成下面的样子：if(typeof(fileElementId) == &#39;string&#39;){      fileElementId = [fileElementId];  }  for(var i in fileElementId){      var oldElement = jQuery(&#39;#&#39; + fileElementId[i]);      var newElement = jQuery(oldElement).clone();      jQuery(oldElement).attr(&#39;id&#39;, fileId);      jQuery(oldElement).before(newElement);      jQuery(oldElement).appendTo(form);  }这样改之后，初始化的代码就要这么写：$.ajaxFileUpload({      url:&#39;/ajax.php&#39;,      fileElementId:[&#39;id1&#39;,&#39;id2&#39;]//原先是fileElementId:’id’ 只能上传一个  });到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，为什么不取name呢？然后把以上代码改为如下：if (typeof(fileElementId) == &#39;string&#39;) {    fileElementId = [fileElementId];}for (var i in fileElementId) {    //按name取值      var oldElement = jQuery(&quot;input[name=&quot; + fileElementId[i] + &quot;]&quot;);    oldElement.each(function () {        var newElement = jQuery($(this)).clone();        jQuery(oldElement).attr(&#39;id&#39;, fileId);        jQuery(oldElement).before(newElement);        jQuery(oldElement).appendTo(form);    });}这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。&lt;div&gt;    &lt;img id=&quot;loading&quot; src=&quot;scripts/ajaxFileUploader/loading.gif&quot; style=&quot;display:none;&quot;&gt;    &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;tableForm&quot; id=&quot;calculation_model&quot;&gt;        &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;多组多个文件&lt;/th&gt;        &lt;/tr&gt;        &lt;/thead&gt;        &lt;tbody&gt;        &lt;tr&gt;            &lt;td&gt;第一组&lt;/td&gt;            &lt;td&gt;第二组&lt;/td&gt;        &lt;/tr&gt;        &lt;tr&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;gridDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;caseDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;        &lt;/tr&gt;        &lt;/tbody&gt;        &lt;tfoot&gt;        &lt;tr&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;up1&quot;&gt;Upload&lt;/button&gt;            &lt;/td&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;addInput&quot;&gt;添加一组&lt;/button&gt;            &lt;/td&gt;        &lt;/tr&gt;        &lt;/tfoot&gt;    &lt;/table&gt;&lt;/div&gt;          /**  * Created with IntelliJ IDEA.  * User: Administrator  * Date: 13-7-3  * Time: 上午9:20  * To change this template use File | Settings | File Templates.  */  $(document).ready(function () {      $(&quot;#up1&quot;).click(function(){          var temp = [&quot;gridDoc&quot;,&quot;caseDoc&quot;];          ajaxFileUpload(temp);      });        $(&quot;#addInput&quot;).click(function(){          addInputFile();      });    });    //动态添加一组文件  function addInputFile(){      $(&quot;#calculation_model&quot;).append(&quot; &lt;tr&gt;&quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39;  name=&#39;gridDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt;   &quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39; name=&#39;caseDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt; &quot;+          &quot;&lt;/tr&gt;&quot;);  }      //直接使用下载下来的文件里的demo代码  function ajaxFileUpload(id){      //starting setting some animation when the ajax starts and completes      $(&quot;#loading&quot;).ajaxStart(function(){              $(this).show();          }).ajaxComplete(function(){              $(this).hide();          });        /*      prepareing ajax file upload      url: the url of script file handling the uploaded files      fileElementId: the file type of input element id and it will be the index of  $_FILES Array()      dataType: it support json, xml      secureuri:use secure protocol      success: call back function when the ajax complete      error: callback function when the ajax failed       */      $.ajaxFileUpload({              url:&#39;upload.action&#39;,              //secureuri:false,              fileElementId:id,              dataType: &#39;json&#39;          }      )        return false;    }我action是用的struts2，它的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：package com.ssy.action;import com.opensymphony.xwork2.ActionSupport;import org.apache.commons.io.FileUtils;import org.apache.struts2.util.ServletContextAware;import javax.servlet.ServletContext;import java.io.*;import java.text.SimpleDateFormat;import java.util.Date;import java.util.Random;/** * Created with IntelliJ IDEA. * User: Administrator * Date: 13-7-2 * Time: 下午4:08 * To change this template use File | Settings | File Templates. */public class Fileupload extends ActionSupport implements ServletContextAware {    private File[] gridDoc, caseDoc;    private String[] gridDocFileName, caseDocFileName;    private ServletContext context;    public String execute() {        for (int i = 0; i &lt; gridDocFileName.length; i++) {            System.out.println(gridDocFileName[i]);        }        for (int i = 0; i &lt; caseDocFileName.length; i++) {            System.out.println(caseDocFileName[i]);        }        //System.out.println(doc1FileName);          //System.out.println(doc2FileName);          String targetDirectory = context.getRealPath(&quot;/uploadFile&quot;);        /*         *这里我只取得  第一组的文件进行上传，第二组的类似         */        try {            for (int i = 0; i &lt; gridDoc.length; i++) {                String targetFileName = generateFileName(gridDocFileName[i]);                File target = new File(targetDirectory, targetFileName);                FileUtils.copyFile(gridDoc[i], target);            }        } catch (Exception e) {            e.printStackTrace();        }        return SUCCESS;    }    public File[] getGridDoc() {        return gridDoc;    }    public void setGridDoc(File[] gridDoc) {        this.gridDoc = gridDoc;    }    public File[] getCaseDoc() {        return caseDoc;    }    public void setCaseDoc(File[] caseDoc) {        this.caseDoc = caseDoc;    }    public String[] getGridDocFileName() {        return gridDocFileName;    }    public void setGridDocFileName(String[] gridDocFileName) {        this.gridDocFileName = gridDocFileName;    }    public String[] getCaseDocFileName() {        return caseDocFileName;    }    public void setCaseDocFileName(String[] caseDocFileName) {        this.caseDocFileName = caseDocFileName;    }    /**     * 用日期和随机数格式化文件名避免冲突     *     * @param fileName     * @return     */    private String generateFileName(String fileName) {        System.out.println(fileName);        SimpleDateFormat sf = new SimpleDateFormat(&quot;yyMMddHHmmss&quot;);        String formatDate = sf.format(new Date());        int random = new Random().nextInt(10000);        int position = fileName.lastIndexOf(&quot;.&quot;);        String extension = fileName.substring(position);        return formatDate + random + extension;    }}写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？这个还有待考验，如果看出问题，请指出，共同学习修改后的js文件:ajaxfileupload.zip">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2014-03-31T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        空
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 高新区 天府2街 蜀都中心</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ajaxFileupLoad多文件上传">
+    <meta itemprop="description" content="打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？  一个是对之前大神的贡献表示感谢；  二个是自己知识的总结；  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。引用网上的做法：  1，看没有修改前的代码var oldElement = jQuery(&#39;#&#39; + fileElementId);  var newElement = jQuery(oldElement).clone();  jQuery(oldElement).attr(&#39;id&#39;, fileId);  jQuery(oldElement).before(newElement);  jQuery(oldElement).appendTo(form);很容易看出，这个就是根据id把input加到from里去，那么要实现多个文件上传，就改成下面的样子：if(typeof(fileElementId) == &#39;string&#39;){      fileElementId = [fileElementId];  }  for(var i in fileElementId){      var oldElement = jQuery(&#39;#&#39; + fileElementId[i]);      var newElement = jQuery(oldElement).clone();      jQuery(oldElement).attr(&#39;id&#39;, fileId);      jQuery(oldElement).before(newElement);      jQuery(oldElement).appendTo(form);  }这样改之后，初始化的代码就要这么写：$.ajaxFileUpload({      url:&#39;/ajax.php&#39;,      fileElementId:[&#39;id1&#39;,&#39;id2&#39;]//原先是fileElementId:’id’ 只能上传一个  });到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，为什么不取name呢？然后把以上代码改为如下：if (typeof(fileElementId) == &#39;string&#39;) {    fileElementId = [fileElementId];}for (var i in fileElementId) {    //按name取值      var oldElement = jQuery(&quot;input[name=&quot; + fileElementId[i] + &quot;]&quot;);    oldElement.each(function () {        var newElement = jQuery($(this)).clone();        jQuery(oldElement).attr(&#39;id&#39;, fileId);        jQuery(oldElement).before(newElement);        jQuery(oldElement).appendTo(form);    });}这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。&lt;div&gt;    &lt;img id=&quot;loading&quot; src=&quot;scripts/ajaxFileUploader/loading.gif&quot; style=&quot;display:none;&quot;&gt;    &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;tableForm&quot; id=&quot;calculation_model&quot;&gt;        &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;多组多个文件&lt;/th&gt;        &lt;/tr&gt;        &lt;/thead&gt;        &lt;tbody&gt;        &lt;tr&gt;            &lt;td&gt;第一组&lt;/td&gt;            &lt;td&gt;第二组&lt;/td&gt;        &lt;/tr&gt;        &lt;tr&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;gridDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;caseDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;        &lt;/tr&gt;        &lt;/tbody&gt;        &lt;tfoot&gt;        &lt;tr&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;up1&quot;&gt;Upload&lt;/button&gt;            &lt;/td&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;addInput&quot;&gt;添加一组&lt;/button&gt;            &lt;/td&gt;        &lt;/tr&gt;        &lt;/tfoot&gt;    &lt;/table&gt;&lt;/div&gt;          /**  * Created with IntelliJ IDEA.  * User: Administrator  * Date: 13-7-3  * Time: 上午9:20  * To change this template use File | Settings | File Templates.  */  $(document).ready(function () {      $(&quot;#up1&quot;).click(function(){          var temp = [&quot;gridDoc&quot;,&quot;caseDoc&quot;];          ajaxFileUpload(temp);      });        $(&quot;#addInput&quot;).click(function(){          addInputFile();      });    });    //动态添加一组文件  function addInputFile(){      $(&quot;#calculation_model&quot;).append(&quot; &lt;tr&gt;&quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39;  name=&#39;gridDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt;   &quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39; name=&#39;caseDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt; &quot;+          &quot;&lt;/tr&gt;&quot;);  }      //直接使用下载下来的文件里的demo代码  function ajaxFileUpload(id){      //starting setting some animation when the ajax starts and completes      $(&quot;#loading&quot;).ajaxStart(function(){              $(this).show();          }).ajaxComplete(function(){              $(this).hide();          });        /*      prepareing ajax file upload      url: the url of script file handling the uploaded files      fileElementId: the file type of input element id and it will be the index of  $_FILES Array()      dataType: it support json, xml      secureuri:use secure protocol      success: call back function when the ajax complete      error: callback function when the ajax failed       */      $.ajaxFileUpload({              url:&#39;upload.action&#39;,              //secureuri:false,              fileElementId:id,              dataType: &#39;json&#39;          }      )        return false;    }我action是用的struts2，它的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：package com.ssy.action;import com.opensymphony.xwork2.ActionSupport;import org.apache.commons.io.FileUtils;import org.apache.struts2.util.ServletContextAware;import javax.servlet.ServletContext;import java.io.*;import java.text.SimpleDateFormat;import java.util.Date;import java.util.Random;/** * Created with IntelliJ IDEA. * User: Administrator * Date: 13-7-2 * Time: 下午4:08 * To change this template use File | Settings | File Templates. */public class Fileupload extends ActionSupport implements ServletContextAware {    private File[] gridDoc, caseDoc;    private String[] gridDocFileName, caseDocFileName;    private ServletContext context;    public String execute() {        for (int i = 0; i &lt; gridDocFileName.length; i++) {            System.out.println(gridDocFileName[i]);        }        for (int i = 0; i &lt; caseDocFileName.length; i++) {            System.out.println(caseDocFileName[i]);        }        //System.out.println(doc1FileName);          //System.out.println(doc2FileName);          String targetDirectory = context.getRealPath(&quot;/uploadFile&quot;);        /*         *这里我只取得  第一组的文件进行上传，第二组的类似         */        try {            for (int i = 0; i &lt; gridDoc.length; i++) {                String targetFileName = generateFileName(gridDocFileName[i]);                File target = new File(targetDirectory, targetFileName);                FileUtils.copyFile(gridDoc[i], target);            }        } catch (Exception e) {            e.printStackTrace();        }        return SUCCESS;    }    public File[] getGridDoc() {        return gridDoc;    }    public void setGridDoc(File[] gridDoc) {        this.gridDoc = gridDoc;    }    public File[] getCaseDoc() {        return caseDoc;    }    public void setCaseDoc(File[] caseDoc) {        this.caseDoc = caseDoc;    }    public String[] getGridDocFileName() {        return gridDocFileName;    }    public void setGridDocFileName(String[] gridDocFileName) {        this.gridDocFileName = gridDocFileName;    }    public String[] getCaseDocFileName() {        return caseDocFileName;    }    public void setCaseDocFileName(String[] caseDocFileName) {        this.caseDocFileName = caseDocFileName;    }    /**     * 用日期和随机数格式化文件名避免冲突     *     * @param fileName     * @return     */    private String generateFileName(String fileName) {        System.out.println(fileName);        SimpleDateFormat sf = new SimpleDateFormat(&quot;yyMMddHHmmss&quot;);        String formatDate = sf.format(new Date());        int random = new Random().nextInt(10000);        int position = fileName.lastIndexOf(&quot;.&quot;);        String extension = fileName.substring(position);        return formatDate + random + extension;    }}写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？这个还有待考验，如果看出问题，请指出，共同学习修改后的js文件:ajaxfileupload.zip">
+    <meta itemprop="datePublished" content="March 31, 2014">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">ajaxFileupLoad多文件上传
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？</p>
+
+<ul>
+  <li>一个是对之前大神的贡献表示感谢；</li>
+  <li>二个是自己知识的总结；</li>
+  <li>三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。</li>
+</ul>
+
+<p>用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。
+<!--more-->
+我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，
+后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。</p>
+
+<p>引用网上的做法：</p>
+
+<ul>
+  <li>1，看没有修改前的代码</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">oldElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="s1">'#'</span> <span class="o">+</span> <span class="nx">fileElementId</span><span class="p">);</span>  
+<span class="kd">var</span> <span class="nx">newElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">clone</span><span class="p">();</span>  
+<span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="nx">fileId</span><span class="p">);</span>  
+<span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="nx">newElement</span><span class="p">);</span>  
+<span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>很容易看出，这个就是根据id把input加到from里去，那么要实现多个文件上传，就改成下面的样子：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">fileElementId</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'string'</span><span class="p">){</span>  
+    <span class="nx">fileElementId</span> <span class="o">=</span> <span class="p">[</span><span class="nx">fileElementId</span><span class="p">];</span>  
+<span class="p">}</span>  
+<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">fileElementId</span><span class="p">){</span>  
+    <span class="kd">var</span> <span class="nx">oldElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="s1">'#'</span> <span class="o">+</span> <span class="nx">fileElementId</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>  
+    <span class="kd">var</span> <span class="nx">newElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">clone</span><span class="p">();</span>  
+    <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="nx">fileId</span><span class="p">);</span>  
+    <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="nx">newElement</span><span class="p">);</span>  
+    <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样改之后，初始化的代码就要这么写：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">$</span><span class="p">.</span><span class="nx">ajaxFileUpload</span><span class="p">({</span>  
+    <span class="na">url</span><span class="p">:</span><span class="s1">'/ajax.php'</span><span class="p">,</span>  
+    <span class="na">fileElementId</span><span class="p">:[</span><span class="s1">'id1'</span><span class="p">,</span><span class="s1">'id2'</span><span class="p">]</span><span class="c1">//原先是fileElementId:’id’ 只能上传一个  </span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，
+为什么不取name呢？然后把以上代码改为如下：</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">fileElementId</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'string'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fileElementId</span> <span class="o">=</span> <span class="p">[</span><span class="nx">fileElementId</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">fileElementId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//按name取值  </span>
+    <span class="kd">var</span> <span class="nx">oldElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="s2">"input[name="</span> <span class="o">+</span> <span class="nx">fileElementId</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"]"</span><span class="p">);</span>
+    <span class="nx">oldElement</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">newElement</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)).</span><span class="nx">clone</span><span class="p">();</span>
+        <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="nx">fileId</span><span class="p">);</span>
+        <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="nx">newElement</span><span class="p">);</span>
+        <span class="nx">jQuery</span><span class="p">(</span><span class="nx">oldElement</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"loading"</span> <span class="na">src=</span><span class="s">"scripts/ajaxFileUploader/loading.gif"</span> <span class="na">style=</span><span class="s">"display:none;"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;table</span> <span class="na">cellpadding=</span><span class="s">"0"</span> <span class="na">cellspacing=</span><span class="s">"0"</span> <span class="na">class=</span><span class="s">"tableForm"</span> <span class="na">id=</span><span class="s">"calculation_model"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;th&gt;</span>多组多个文件<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;/thead&gt;</span>
+        <span class="nt">&lt;tbody&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span>第一组<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>第二组<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;&lt;input</span> <span class="na">type=</span><span class="s">"file"</span> <span class="na">name=</span><span class="s">"gridDoc"</span> <span class="na">class=</span><span class="s">"input"</span><span class="nt">&gt;&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;&lt;input</span> <span class="na">type=</span><span class="s">"file"</span> <span class="na">name=</span><span class="s">"caseDoc"</span> <span class="na">class=</span><span class="s">"input"</span><span class="nt">&gt;&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;/tbody&gt;</span>
+        <span class="nt">&lt;tfoot&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span>
+                <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"button"</span> <span class="na">id=</span><span class="s">"up1"</span><span class="nt">&gt;</span>Upload<span class="nt">&lt;/button&gt;</span>
+            <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>
+                <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"button"</span> <span class="na">id=</span><span class="s">"addInput"</span><span class="nt">&gt;</span>添加一组<span class="nt">&lt;/button&gt;</span>
+            <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;/tfoot&gt;</span>
+    <span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/div&gt;</span>          
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/** 
+ * Created with IntelliJ IDEA. 
+ * User: Administrator 
+ * Date: 13-7-3 
+ * Time: 上午9:20 
+ * To change this template use File | Settings | File Templates. 
+ */</span>  
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>  
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#up1"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>  
+        <span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"gridDoc"</span><span class="p">,</span><span class="s2">"caseDoc"</span><span class="p">];</span>  
+        <span class="nx">ajaxFileUpload</span><span class="p">(</span><span class="nx">temp</span><span class="p">);</span>  
+    <span class="p">});</span>  
+  
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#addInput"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>  
+        <span class="nx">addInputFile</span><span class="p">();</span>  
+    <span class="p">});</span>  
+  
+<span class="p">});</span>  
+  
+<span class="c1">//动态添加一组文件  </span>
+<span class="kd">function</span> <span class="nx">addInputFile</span><span class="p">(){</span>  
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#calculation_model"</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">" &lt;tr&gt;"</span><span class="o">+</span>  
+        <span class="s2">"&lt;td&gt;&lt;input type='file'  name='gridDoc' class='input'&gt;&lt;/td&gt;   "</span><span class="o">+</span>  
+        <span class="s2">"&lt;td&gt;&lt;input type='file' name='caseDoc' class='input'&gt;&lt;/td&gt; "</span><span class="o">+</span>  
+        <span class="s2">"&lt;/tr&gt;"</span><span class="p">);</span>  
+<span class="p">}</span>  
+  
+  
+<span class="c1">//直接使用下载下来的文件里的demo代码  </span>
+<span class="kd">function</span> <span class="nx">ajaxFileUpload</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span>  
+    <span class="c1">//starting setting some animation when the ajax starts and completes  </span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#loading"</span><span class="p">).</span><span class="nx">ajaxStart</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>  
+            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>  
+        <span class="p">}).</span><span class="nx">ajaxComplete</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>  
+            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>  
+        <span class="p">});</span>  
+  
+    <span class="cm">/* 
+     prepareing ajax file upload 
+     url: the url of script file handling the uploaded files 
+     fileElementId: the file type of input element id and it will be the index of  $_FILES Array() 
+     dataType: it support json, xml 
+     secureuri:use secure protocol 
+     success: call back function when the ajax complete 
+     error: callback function when the ajax failed 
+ 
+     */</span>  
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajaxFileUpload</span><span class="p">({</span>  
+            <span class="na">url</span><span class="p">:</span><span class="s1">'upload.action'</span><span class="p">,</span>  
+            <span class="c1">//secureuri:false,  </span>
+            <span class="na">fileElementId</span><span class="p">:</span><span class="nx">id</span><span class="p">,</span>  
+            <span class="na">dataType</span><span class="p">:</span> <span class="s1">'json'</span>  
+        <span class="p">}</span>  
+    <span class="p">)</span>  
+  
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>  
+  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我action是用的struts2，它的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ssy</span><span class="o">.</span><span class="na">action</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.opensymphony.xwork2.ActionSupport</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.io.FileUtils</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.struts2.util.ServletContextAware</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created with IntelliJ IDEA.
+ * User: Administrator
+ * Date: 13-7-2
+ * Time: 下午4:08
+ * To change this template use File | Settings | File Templates.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Fileupload</span> <span class="kd">extends</span> <span class="n">ActionSupport</span> <span class="kd">implements</span> <span class="n">ServletContextAware</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">File</span><span class="o">[]</span> <span class="n">gridDoc</span><span class="o">,</span> <span class="n">caseDoc</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">gridDocFileName</span><span class="o">,</span> <span class="n">caseDocFileName</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">ServletContext</span> <span class="n">context</span><span class="o">;</span>
+
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">gridDocFileName</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">gridDocFileName</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">caseDocFileName</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">caseDocFileName</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="o">}</span>
+
+
+        <span class="c1">//System.out.println(doc1FileName);  </span>
+        <span class="c1">//System.out.println(doc2FileName);  </span>
+        <span class="n">String</span> <span class="n">targetDirectory</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getRealPath</span><span class="o">(</span><span class="s">"/uploadFile"</span><span class="o">);</span>
+
+        <span class="cm">/*
+         *这里我只取得  第一组的文件进行上传，第二组的类似
+         */</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">gridDoc</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">String</span> <span class="n">targetFileName</span> <span class="o">=</span> <span class="n">generateFileName</span><span class="o">(</span><span class="n">gridDocFileName</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                <span class="n">File</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">targetDirectory</span><span class="o">,</span> <span class="n">targetFileName</span><span class="o">);</span>
+                <span class="n">FileUtils</span><span class="o">.</span><span class="na">copyFile</span><span class="o">(</span><span class="n">gridDoc</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">target</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">SUCCESS</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">File</span><span class="o">[]</span> <span class="nf">getGridDoc</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">gridDoc</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setGridDoc</span><span class="o">(</span><span class="n">File</span><span class="o">[]</span> <span class="n">gridDoc</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">gridDoc</span> <span class="o">=</span> <span class="n">gridDoc</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">File</span><span class="o">[]</span> <span class="nf">getCaseDoc</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">caseDoc</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCaseDoc</span><span class="o">(</span><span class="n">File</span><span class="o">[]</span> <span class="n">caseDoc</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">caseDoc</span> <span class="o">=</span> <span class="n">caseDoc</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getGridDocFileName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">gridDocFileName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setGridDocFileName</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">gridDocFileName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">gridDocFileName</span> <span class="o">=</span> <span class="n">gridDocFileName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getCaseDocFileName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">caseDocFileName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCaseDocFileName</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">caseDocFileName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">caseDocFileName</span> <span class="o">=</span> <span class="n">caseDocFileName</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 用日期和随机数格式化文件名避免冲突
+     *
+     * @param fileName
+     * @return
+     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">generateFileName</span><span class="o">(</span><span class="n">String</span> <span class="n">fileName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">fileName</span><span class="o">);</span>
+        <span class="n">SimpleDateFormat</span> <span class="n">sf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">"yyMMddHHmmss"</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">formatDate</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
+        <span class="kt">int</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">().</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">position</span> <span class="o">=</span> <span class="n">fileName</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">"."</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">fileName</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">formatDate</span> <span class="o">+</span> <span class="n">random</span> <span class="o">+</span> <span class="n">extension</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？
+这个还有待考验，如果看出问题，请指出，共同学习</p>
+
+<p>修改后的js文件:<a href="/assets/attachment/ajaxfileupload.zip">ajaxfileupload.zip</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ajaxfileupload" class="page__taxonomy-item" rel="tag">ajaxFileupload</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#javascript" class="page__taxonomy-item" rel="tag">javascript</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2014-03-31T00:00:00+08:00">March 31, 2014</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=ajaxFileupLoad%E5%A4%9A%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%20http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/javascript/2014/03/31/Datatables-example-data-source.html" class="pagination--pager" title="DataTables官方例子引导-4种数据源
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/jekyll/2014/04/17/jekyll-able-gbk.html" class="pagination--pager" title="jekyll支持中文解决办法
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" rel="permalink">初探oss-事件通知（http endpoint）
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">初识oss
+
+it技术更新换代太快了，我们的思想也必须跟上才行。
+
+最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。
+
+好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html" rel="permalink">用Intellij IDEA断点调试远程服务器部署的tomcat项目
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">回顾
+
+在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题
+
+  之前没有写清楚
+  时隔久远，已经更新了，不再适用当前
+  没有完全理解，草率就记了，知其然不知其所以然
+  ……
+
+
+发...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="permalink">如何查看磁盘使用情况 du df
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
+
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="permalink">如果从一个主机复制文件到另一个主机：scp
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
+
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>

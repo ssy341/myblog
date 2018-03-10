@@ -1,0 +1,695 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>jekyll初级入门-jekyll安装运行 - 单客欧朋</title>
+<meta name="description" content="  jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c*n,博客等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby相关包下载地址：http://rubyinstaller.org/downloads/下载自己对应系统的版本即可，我是64位的操作系统，下载的  Ruby 2.0.0-p451 (x64)  DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)然后添加环境变量：RUBY_HOME  d:/tool/ruby修改path环境，在最后追加 %RUBY_HOME%/bin保存环境变量，再到命令行输入 ruby --version，可以看到打印出版本信息d:\tool\ruby&gt;ruby --versionruby 2.0.0p451 (2014-02-24) [i386-mingw32]这里配置好后，cmd下进入到devkit目录d:\tool&gt;cd devkitd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  sharedevkitvars.ps1  etc    lib      mingw  msys.ico  sbin执行初始化命令, 执行完后可以看到有config.yml文件生成d:\tool\devkit&gt;ruby dk.rb initd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  shareconfig.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin打开config.yml文件，配置ruby的目录---- d:\tool\ruby保存退出，然后再执行ruby dk.rb install到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本d:\tool\devkit&gt;gem --version2.2.2本地安装了那些插件E:\tools\devkit&gt;gem list --local*** LOCAL GEMS ***bigdecimal (1.2.0)blankslate (2.1.2.4)celluloid (0.15.2)celluloid-io (0.15.0)classifier (1.3.4)colorator (0.1)commander (4.1.6)fast-stemmer (1.0.2)ffi (1.9.3 x86-mingw32)highline (1.6.21)io-console (0.4.2)jekyll (1.5.1)json (1.7.7)liquid (2.5.5)listen (2.7.1, 1.3.1)maruku (0.7.0)minitest (4.3.2)nio4r (1.0.0)parslet (1.5.0)posix-spawn (0.3.8)psych (2.0.5, 2.0.0)pygments.rb (0.5.4)rake (0.9.6)rb-fsevent (0.9.4)rb-inotify (0.9.3)rb-kqueue (0.2.2)rdoc (4.0.0)redcarpet (2.3.0)rubygems-update (2.2.2)safe_yaml (1.0.2)test-unit (2.0.0.0)timers (1.1.0)toml (0.1.1)wdm (0.1.0)yajl-ruby (1.1.0 x86-mingw32)以上步骤安装完后，在命令行输入gem install jekyll，等待自动安装完成，成功之后，再输入jekyll --version查看版本接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入jekyll new myblog，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录cd myblog，再输入jekyll serve ,这个时候打开浏览器访问http://localhost:4000怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我附：  git基本操作  jekyll英文官方文档  jekyll中文官方文档">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="jekyll初级入门-jekyll安装运行">
+<meta property="og:url" content="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html">
+
+
+  <meta property="og:description" content="  jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c*n,博客等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby相关包下载地址：http://rubyinstaller.org/downloads/下载自己对应系统的版本即可，我是64位的操作系统，下载的  Ruby 2.0.0-p451 (x64)  DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)然后添加环境变量：RUBY_HOME  d:/tool/ruby修改path环境，在最后追加 %RUBY_HOME%/bin保存环境变量，再到命令行输入 ruby --version，可以看到打印出版本信息d:\tool\ruby&gt;ruby --versionruby 2.0.0p451 (2014-02-24) [i386-mingw32]这里配置好后，cmd下进入到devkit目录d:\tool&gt;cd devkitd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  sharedevkitvars.ps1  etc    lib      mingw  msys.ico  sbin执行初始化命令, 执行完后可以看到有config.yml文件生成d:\tool\devkit&gt;ruby dk.rb initd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  shareconfig.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin打开config.yml文件，配置ruby的目录---- d:\tool\ruby保存退出，然后再执行ruby dk.rb install到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本d:\tool\devkit&gt;gem --version2.2.2本地安装了那些插件E:\tools\devkit&gt;gem list --local*** LOCAL GEMS ***bigdecimal (1.2.0)blankslate (2.1.2.4)celluloid (0.15.2)celluloid-io (0.15.0)classifier (1.3.4)colorator (0.1)commander (4.1.6)fast-stemmer (1.0.2)ffi (1.9.3 x86-mingw32)highline (1.6.21)io-console (0.4.2)jekyll (1.5.1)json (1.7.7)liquid (2.5.5)listen (2.7.1, 1.3.1)maruku (0.7.0)minitest (4.3.2)nio4r (1.0.0)parslet (1.5.0)posix-spawn (0.3.8)psych (2.0.5, 2.0.0)pygments.rb (0.5.4)rake (0.9.6)rb-fsevent (0.9.4)rb-inotify (0.9.3)rb-kqueue (0.2.2)rdoc (4.0.0)redcarpet (2.3.0)rubygems-update (2.2.2)safe_yaml (1.0.2)test-unit (2.0.0.0)timers (1.1.0)toml (0.1.1)wdm (0.1.0)yajl-ruby (1.1.0 x86-mingw32)以上步骤安装完后，在命令行输入gem install jekyll，等待自动安装完成，成功之后，再输入jekyll --version查看版本接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入jekyll new myblog，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录cd myblog，再输入jekyll serve ,这个时候打开浏览器访问http://localhost:4000怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我附：  git基本操作  jekyll英文官方文档  jekyll中文官方文档">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2014-04-25T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        空
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 高新区 天府2街 蜀都中心</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="jekyll初级入门-jekyll安装运行">
+    <meta itemprop="description" content="  jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c*n,博客等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby相关包下载地址：http://rubyinstaller.org/downloads/下载自己对应系统的版本即可，我是64位的操作系统，下载的  Ruby 2.0.0-p451 (x64)  DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)然后添加环境变量：RUBY_HOME  d:/tool/ruby修改path环境，在最后追加 %RUBY_HOME%/bin保存环境变量，再到命令行输入 ruby --version，可以看到打印出版本信息d:\tool\ruby&gt;ruby --versionruby 2.0.0p451 (2014-02-24) [i386-mingw32]这里配置好后，cmd下进入到devkit目录d:\tool&gt;cd devkitd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  sharedevkitvars.ps1  etc    lib      mingw  msys.ico  sbin执行初始化命令, 执行完后可以看到有config.yml文件生成d:\tool\devkit&gt;ruby dk.rb initd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  shareconfig.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin打开config.yml文件，配置ruby的目录---- d:\tool\ruby保存退出，然后再执行ruby dk.rb install到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本d:\tool\devkit&gt;gem --version2.2.2本地安装了那些插件E:\tools\devkit&gt;gem list --local*** LOCAL GEMS ***bigdecimal (1.2.0)blankslate (2.1.2.4)celluloid (0.15.2)celluloid-io (0.15.0)classifier (1.3.4)colorator (0.1)commander (4.1.6)fast-stemmer (1.0.2)ffi (1.9.3 x86-mingw32)highline (1.6.21)io-console (0.4.2)jekyll (1.5.1)json (1.7.7)liquid (2.5.5)listen (2.7.1, 1.3.1)maruku (0.7.0)minitest (4.3.2)nio4r (1.0.0)parslet (1.5.0)posix-spawn (0.3.8)psych (2.0.5, 2.0.0)pygments.rb (0.5.4)rake (0.9.6)rb-fsevent (0.9.4)rb-inotify (0.9.3)rb-kqueue (0.2.2)rdoc (4.0.0)redcarpet (2.3.0)rubygems-update (2.2.2)safe_yaml (1.0.2)test-unit (2.0.0.0)timers (1.1.0)toml (0.1.1)wdm (0.1.0)yajl-ruby (1.1.0 x86-mingw32)以上步骤安装完后，在命令行输入gem install jekyll，等待自动安装完成，成功之后，再输入jekyll --version查看版本接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入jekyll new myblog，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录cd myblog，再输入jekyll serve ,这个时候打开浏览器访问http://localhost:4000怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我附：  git基本操作  jekyll英文官方文档  jekyll中文官方文档">
+    <meta itemprop="datePublished" content="April 25, 2014">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">jekyll初级入门-jekyll安装运行
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="/assets/images/logo-2x.png" alt="jekyll-logo" /></p>
+
+<blockquote>
+  <p>jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。</p>
+</blockquote>
+
+<!--more-->
+
+<p>说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。
+说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。
+从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。</p>
+
+<p>github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。
+jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）
+基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c<em>*n,博客</em>等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。</p>
+
+<p>本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。
+之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。</p>
+
+<p>说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.
+我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。</p>
+
+<p>安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby</p>
+
+<p>相关包下载地址：<a href="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a></p>
+
+<p>下载自己对应系统的版本即可，我是64位的操作系统，下载的</p>
+<ul>
+  <li><a href="http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.0.0-p451-x64-mingw32.7z?direct">Ruby 2.0.0-p451 (x64)</a></li>
+  <li><a href="http://cdn.rubyinstaller.org/archives/devkits/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe">DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe</a></li>
+</ul>
+
+<p>下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)</p>
+
+<p>然后添加环境变量：</p>
+
+<p>RUBY_HOME  d:/tool/ruby</p>
+
+<p>修改path环境，在最后追加 %RUBY_HOME%/bin</p>
+
+<p>保存环境变量，再到命令行输入 <code class="highlighter-rouge">ruby --version</code>，可以看到打印出版本信息</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d:<span class="se">\t</span>ool<span class="se">\r</span>uby&gt;ruby <span class="nt">--version</span>
+ruby 2.0.0p451 <span class="o">(</span>2014-02-24<span class="o">)</span> <span class="o">[</span>i386-mingw32]
+</code></pre></div></div>
+
+<p>这里配置好后，cmd下进入到devkit目录</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d:<span class="se">\t</span>ool&gt;cd devkit
+d:<span class="se">\t</span>ool<span class="se">\d</span>evkit&gt;ls
+bin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  share
+devkitvars.ps1  etc    lib      mingw  msys.ico  sbin
+</code></pre></div></div>
+
+<p>执行初始化命令, 执行完后可以看到有config.yml文件生成</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d:<span class="se">\t</span>ool<span class="se">\d</span>evkit&gt;ruby dk.rb init
+d:<span class="se">\t</span>ool<span class="se">\d</span>evkit&gt;ls
+bin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  share
+config.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin
+</code></pre></div></div>
+
+<p>打开config.yml文件，配置ruby的目录</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">---</span>
+- d:<span class="se">\t</span>ool<span class="se">\r</span>uby
+</code></pre></div></div>
+
+<p>保存退出，然后再执行
+<code class="highlighter-rouge">ruby dk.rb install</code></p>
+
+<p>到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d:<span class="se">\t</span>ool<span class="se">\d</span>evkit&gt;gem <span class="nt">--version</span>
+2.2.2
+</code></pre></div></div>
+
+<p>本地安装了那些插件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>E:<span class="se">\t</span>ools<span class="se">\d</span>evkit&gt;gem list <span class="nt">--local</span>
+
+<span class="k">***</span> LOCAL GEMS <span class="k">***</span>
+
+bigdecimal <span class="o">(</span>1.2.0<span class="o">)</span>
+blankslate <span class="o">(</span>2.1.2.4<span class="o">)</span>
+celluloid <span class="o">(</span>0.15.2<span class="o">)</span>
+celluloid-io <span class="o">(</span>0.15.0<span class="o">)</span>
+classifier <span class="o">(</span>1.3.4<span class="o">)</span>
+colorator <span class="o">(</span>0.1<span class="o">)</span>
+commander <span class="o">(</span>4.1.6<span class="o">)</span>
+fast-stemmer <span class="o">(</span>1.0.2<span class="o">)</span>
+ffi <span class="o">(</span>1.9.3 x86-mingw32<span class="o">)</span>
+highline <span class="o">(</span>1.6.21<span class="o">)</span>
+io-console <span class="o">(</span>0.4.2<span class="o">)</span>
+jekyll <span class="o">(</span>1.5.1<span class="o">)</span>
+json <span class="o">(</span>1.7.7<span class="o">)</span>
+liquid <span class="o">(</span>2.5.5<span class="o">)</span>
+listen <span class="o">(</span>2.7.1, 1.3.1<span class="o">)</span>
+maruku <span class="o">(</span>0.7.0<span class="o">)</span>
+minitest <span class="o">(</span>4.3.2<span class="o">)</span>
+nio4r <span class="o">(</span>1.0.0<span class="o">)</span>
+parslet <span class="o">(</span>1.5.0<span class="o">)</span>
+posix-spawn <span class="o">(</span>0.3.8<span class="o">)</span>
+psych <span class="o">(</span>2.0.5, 2.0.0<span class="o">)</span>
+pygments.rb <span class="o">(</span>0.5.4<span class="o">)</span>
+rake <span class="o">(</span>0.9.6<span class="o">)</span>
+rb-fsevent <span class="o">(</span>0.9.4<span class="o">)</span>
+rb-inotify <span class="o">(</span>0.9.3<span class="o">)</span>
+rb-kqueue <span class="o">(</span>0.2.2<span class="o">)</span>
+rdoc <span class="o">(</span>4.0.0<span class="o">)</span>
+redcarpet <span class="o">(</span>2.3.0<span class="o">)</span>
+rubygems-update <span class="o">(</span>2.2.2<span class="o">)</span>
+safe_yaml <span class="o">(</span>1.0.2<span class="o">)</span>
+test-unit <span class="o">(</span>2.0.0.0<span class="o">)</span>
+timers <span class="o">(</span>1.1.0<span class="o">)</span>
+toml <span class="o">(</span>0.1.1<span class="o">)</span>
+wdm <span class="o">(</span>0.1.0<span class="o">)</span>
+yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
+</code></pre></div></div>
+
+<p>以上步骤安装完后，在命令行输入<code class="highlighter-rouge">gem install jekyll</code>，等待自动安装完成，成功之后，再输入<code class="highlighter-rouge">jekyll --version</code>查看版本</p>
+
+<p>接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入<code class="highlighter-rouge">jekyll new myblog</code>，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录<code class="highlighter-rouge">cd myblog</code>，再输入<code class="highlighter-rouge">jekyll serve </code>,这个时候打开浏览器访问<code class="highlighter-rouge">http://localhost:4000</code></p>
+
+<p>怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it</p>
+
+<p>如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我</p>
+
+<p>附：</p>
+<ul>
+  <li><a href="/git/2013/12/18/git.html">git基本操作</a></li>
+  <li><a href="http://jekyllrb.com/docs/home/">jekyll英文官方文档</a></li>
+  <li><a href="http://jekyllcn.com/docs/home/">jekyll中文官方文档</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#jekyll%E5%85%A5%E9%97%A8" class="page__taxonomy-item" rel="tag">jekyll入门</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2014-04-25T00:00:00+08:00">April 25, 2014</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=jekyll%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8-jekyll%E5%AE%89%E8%A3%85%E8%BF%90%E8%A1%8C%20http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/jekyll/2014/04/18/jekyll-server-watch-error.html" class="pagination--pager" title="cannot load such file – wdm (LoadError)
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/nas/2014/05/29/ata-status-error.html" class="pagination--pager" title="freenas启动过程中屏幕不断提示ata status error
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" rel="permalink">初探oss-事件通知（http endpoint）
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">初识oss
+
+it技术更新换代太快了，我们的思想也必须跟上才行。
+
+最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。
+
+好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html" rel="permalink">用Intellij IDEA断点调试远程服务器部署的tomcat项目
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">回顾
+
+在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题
+
+  之前没有写清楚
+  时隔久远，已经更新了，不再适用当前
+  没有完全理解，草率就记了，知其然不知其所以然
+  ……
+
+
+发...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="permalink">如何查看磁盘使用情况 du df
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
+
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="permalink">如果从一个主机复制文件到另一个主机：scp
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
+
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>

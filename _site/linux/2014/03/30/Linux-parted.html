@@ -1,0 +1,739 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ubuntu server下建立分区表/分区/格式化/自动挂载 - 单客欧朋</title>
+<meta name="description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="ubuntu server下建立分区表/分区/格式化/自动挂载">
+<meta property="og:url" content="http://localhost:4000/linux/2014/03/30/Linux-parted.html">
+
+
+  <meta property="og:description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2014-03-30T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/2014/03/30/Linux-parted.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        空
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 高新区 天府2街 蜀都中心</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ubuntu server下建立分区表/分区/格式化/自动挂载">
+    <meta itemprop="description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
+    <meta itemprop="datePublished" content="March 30, 2014">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">ubuntu server下建立分区表/分区/格式化/自动挂载
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>流程为：新建分区–》格式化分区–》挂载分区</p>
+
+<p>首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：</p>
+
+<p>MBR分区（主引导记录）表：
+支持最大卷：2T （T; terabytes,1TB=1024GB）
+分区的设限：最多4个主分区或3个主分区加一个扩展分区。</p>
+
+<p>GPT分区（GUID分区表）表：
+支持最大卷：18EB，（E：exabytes,1EB=1024TB）
+每个磁盘最多支持128个分区
+第一：新建分区
+在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作
+（ps：使用fdisk命令，会有下面的警告信息：<strong>WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.</strong>)</p>
+
+<blockquote>
+  <p>以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smotive@ubuntu-nas:~<span class="nv">$ </span><span class="nb">sudo </span>fdisk <span class="nt">-l</span>
+<span class="o">[</span><span class="nb">sudo</span><span class="o">]</span> password <span class="k">for </span>smotive: 
+
+Disk /dev/sda: 320.1 GB, 320072933376 bytes
+255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectors
+Units <span class="o">=</span> 扇区 of 1 <span class="k">*</span> 512 <span class="o">=</span> 512 bytes
+Sector size <span class="o">(</span>logical/physical<span class="o">)</span>: 512 bytes / 4096 bytes
+I/O size <span class="o">(</span>minimum/optimal<span class="o">)</span>: 4096 bytes / 4096 bytes
+Disk identifier: 0x000109ef
+
+   设备 启动      起点          终点     块数   Id  系统
+/dev/sda1   <span class="k">*</span>        2048   617381887   308689920   83  Linux
+/dev/sda2       617383934   625141759     3878913    5  扩展
+Partition 2 does not start on physical sector boundary.
+/dev/sda5       617383936   625141759     3878912   82  Linux 交换 / Solaris
+
+WARNING: GPT <span class="o">(</span>GUID Partition Table<span class="o">)</span> detected on <span class="s1">'/dev/sdb'</span><span class="o">!</span> The util fdisk doesn<span class="s1">'t support GPT. Use GNU Parted.
+
+
+Disk /dev/sdb: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectors
+Units = 扇区 of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0xd87cd87c
+
+   设备 启动      起点          终点     块数   Id  系统
+/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到
+</span></code></pre></div></div>
+
+<p>可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smotive@ubuntu-nas:~<span class="nv">$ </span><span class="nb">sudo </span>parted /dev/sdb
+GNU Parted 2.3
+使用 /dev/sdb
+欢迎使用 GNU Parted! 输入 <span class="s1">'help'</span>可获得命令列表.
+<span class="o">(</span>parted<span class="o">)</span>  mklabel gpt 
+</code></pre></div></div>
+
+<p>此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>parted<span class="o">)</span> print
+Model: ATA WDC WD5000AADS-0 <span class="o">(</span>scsi<span class="o">)</span>
+磁盘 /dev/sdb: 500GB
+Sector size <span class="o">(</span>logical/physical<span class="o">)</span>: 512B/512B
+分区表：gpt
+
+数字  开始：  End    大小   文件系统  Name     标志
+ 1    17.4kB  500GB  500GB  ext4      primary     <span class="nt">--</span>在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了
+</code></pre></div></div>
+
+<p>接下来分区，输入如下命令</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkpart primary 0 <span class="nt">-1</span>
+</code></pre></div></div>
+
+<p>这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印
+信息</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>parted<span class="o">)</span> print
+Model: ATA WDC WD5000AADS-0 <span class="o">(</span>scsi<span class="o">)</span>
+磁盘 /dev/sdb: 500GB
+Sector size <span class="o">(</span>logical/physical<span class="o">)</span>: 512B/512B
+分区表：gpt
+
+数字  开始：  End    大小   文件系统  Name     标志
+ 1    17.4kB  500GB  500GB  ext4      primary   <span class="nt">--</span>分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行
+</code></pre></div></div>
+
+<p>到这里，建立分区表，分区就完成了，退出parted</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>parted<span class="o">)</span>quit                                                             
+Information: You may need to update /etc/fstab. <span class="nt">--</span>这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件
+</code></pre></div></div>
+
+<p>现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.ext4 /dev/sdb1  <span class="nt">--</span>把硬盘格式化为ext4的文件系统格式 
+</code></pre></div></div>
+
+<p>接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，
+既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联
+我在我的主目录下创建一个文件夹</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> /home/smotive/wd500
+</code></pre></div></div>
+
+<p>然后挂载硬盘</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mount /dev/sdb1 /home/smotive/wd500
+</code></pre></div></div>
+
+<p>然后再查看系统挂载信息</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smotive@ubuntu-nas:~<span class="nv">$ </span><span class="nb">df</span> <span class="nt">-h</span>
+文件系统        容量  已用  可用 已用% 挂载点
+/dev/sda1       290G  2.3G  273G    1% /
+udev            1.8G  4.0K  1.8G    1% /dev
+tmpfs           731M  420K  730M    1% /run
+none            5.0M     0  5.0M    0% /run/lock
+none            1.8G     0  1.8G    0% /run/shm
+cgroup          1.8G     0  1.8G    0% /sys/fs/cgroup
+/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  <span class="nt">--</span>此时硬盘已经挂载到系统，可以存放文件使用了
+</code></pre></div></div>
+<p>接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/fstab: static file system information.</span>
+<span class="c">#</span>
+<span class="c"># Use 'blkid' to print the universally unique identifier for a</span>
+<span class="c"># device; this may be used with UUID= as a more robust way to name devices</span>
+<span class="c"># that works even if disks are added and removed. See fstab(5).</span>
+<span class="c">#</span>
+<span class="c"># &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span>
+proc            /proc           proc    nodev,noexec,nosuid 0       0
+<span class="c"># / was on /dev/sda1 during installation</span>
+<span class="nv">UUID</span><span class="o">=</span>6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    <span class="nv">errors</span><span class="o">=</span>remount-ro 0       1
+<span class="c"># swap was on /dev/sda5 during installation</span>
+<span class="nv">UUID</span><span class="o">=</span>9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0
+/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  
+
+<span class="c">#第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）</span>
+<span class="c">#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）</span>
+<span class="c">#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）</span>
+<span class="c">#第四列：挂载参数     （看帮助man mount）</span>
+<span class="c">#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）</span>
+<span class="c">#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）</span>
+</code></pre></div></div>
+<p>修改好后保存退出
+修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，
+则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，
+具体看这里<a href="/linux/2014/03/30/Linux-recover-etc-fstab.html">恢复模式下修改/etc/fatab文件</a>
+大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助</p>
+
+<p>参考：</p>
+
+<p><a href="http://vbird.dic.ksu.edu.tw/linux_basic/0230filesystem_4.php">第八章、Linux 磁盘与文件系统管理</a></p>
+
+<p><a href="http://zh.wikipedia.org/zh-cn/Ext4">ext4介绍</a></p>
+
+<p><a href="http://www.fikker.com/isp/help/linux-fdisk.html">Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）</a></p>
+
+<p><a href="http://www.blogjava.net/haha1903/archive/2011/12/21/366942.html">parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）</a></p>
+
+<p><a href="http://haibusuanyun.blog.51cto.com/2701158/756949">一次添加硬盘分区并修改/etc/fstab引起的故障</a></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ext4" class="page__taxonomy-item" rel="tag">ext4</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#fdisk" class="page__taxonomy-item" rel="tag">fdisk</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#mkfs" class="page__taxonomy-item" rel="tag">mkfs</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#parted" class="page__taxonomy-item" rel="tag">parted</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#%E9%B8%9F%E5%93%A5%E7%A7%81%E6%88%BF%E8%8F%9C" class="page__taxonomy-item" rel="tag">鸟哥私房菜</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2014-03-30T00:00:00+08:00">March 30, 2014</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=ubuntu+server%E4%B8%8B%E5%BB%BA%E7%AB%8B%E5%88%86%E5%8C%BA%E8%A1%A8%2F%E5%88%86%E5%8C%BA%2F%E6%A0%BC%E5%BC%8F%E5%8C%96%2F%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2014%2F03%2F30%2FLinux-parted.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2014%2F03%2F30%2FLinux-parted.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2014%2F03%2F30%2FLinux-parted.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2014%2F03%2F30%2FLinux-parted.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/openstack/2014/03/28/openstack_login_error_note.html" class="pagination--pager" title="登陆openstack提示You are not authorized for any projects.
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/2014/03/30/Linux-recover-etc-fstab.html" class="pagination--pager" title="ubuntu server 恢复模式下修改/etc/fstab文件
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" rel="permalink">初探oss-事件通知（http endpoint）
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">初识oss
+
+it技术更新换代太快了，我们的思想也必须跟上才行。
+
+最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。
+
+好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html" rel="permalink">用Intellij IDEA断点调试远程服务器部署的tomcat项目
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">回顾
+
+在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题
+
+  之前没有写清楚
+  时隔久远，已经更新了，不再适用当前
+  没有完全理解，草率就记了，知其然不知其所以然
+  ……
+
+
+发...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="permalink">如何查看磁盘使用情况 du df
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
+
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="permalink">如果从一个主机复制文件到另一个主机：scp
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
+
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>
