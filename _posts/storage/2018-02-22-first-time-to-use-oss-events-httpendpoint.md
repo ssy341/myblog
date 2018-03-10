@@ -98,29 +98,25 @@ oss会向该地址发送消息。根据oss技术人员提供的信息，我们�
 我的项目环境是spring mvc，下面贴出我已经调试好的代码：
 
 ```java
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.entity.InputStreamEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * oss文件上传成功
@@ -129,8 +125,9 @@ import java.util.*;
  */
 @PostMapping(value = "/oss/listener")
 @ResponseBody
-public String ossfileuploadsuccess(HttpServletRequest request) {
+public ResponseEntity<String> ossfileuploadsuccess(HttpServletRequest request, HttpServletResponse response) {
     log.info("oss客户端上传文件");
+    long start = System.currentTimeMillis();
     try {
         HttpEntity entity = new InputStreamEntity(request.getInputStream(),
                 request.getContentLength());
@@ -145,7 +142,7 @@ public String ossfileuploadsuccess(HttpServletRequest request) {
         while (headerNames.hasMoreElements()) {
             String name = headerNames.nextElement();
             String value = request.getHeader(name);
-            System.out.println(name + ":" + value);
+            log.debug("{}:{}", name, value);
             hm.put(name, value);
         }
 
@@ -153,13 +150,13 @@ public String ossfileuploadsuccess(HttpServletRequest request) {
         String certHeader = request.getHeader("x-mns-signing-cert-url");
         if (certHeader == null) {
             log.info("SigningCerURL Header not found");
-            return "SigningCerURL Header not found";
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("SigningCerURL Header not found");
         }
 
         String cert = certHeader;
         if (cert.isEmpty()) {
             log.info("SigningCertURL empty");
-            return "SigningCertURL empty";
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("SigningCertURL empty");
         }
         cert = new String(Base64.decodeBase64(cert));
         log.info("SigningCertURL:\t" + cert);
@@ -167,7 +164,7 @@ public String ossfileuploadsuccess(HttpServletRequest request) {
 
         if (!authenticate(method, target, hm, cert)) {
             log.info("authenticate fail");
-            return "authenticate fail";
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("authenticate fail");
         }
 
         //parser content of simplified notification
@@ -182,29 +179,20 @@ public String ossfileuploadsuccess(HttpServletRequest request) {
         String result = null;
         byte[] messageBodyAsBytes = content.getBytes();
         if (messageBodyAsBytes != null) {
-            try {
-                result = new String(Base64.decodeBase64(messageBodyAsBytes), "UTF-8");
-            } catch (UnsupportedEncodingException var4) {
-                throw new RuntimeException("Not support encoding: UTF-8");
-            }
+            result = new String(Base64.decodeBase64(messageBodyAsBytes), "UTF-8");
         }
         //这里的result就是文件的信息
         log.info("Simplified Notification: \n {}", result);
-
-        JSONObject jsonObject = JSON.parseObject(result);
-        JSONArray events = jsonObject.getJSONArray("events");
-
-        if(Objects.nonNull(events) && CollectionUtils.isNotEmpty(events)){
-            JSONObject eventEntity = (JSONObject) events.get(0);
-            JSONObject userIdentity = eventEntity.getJSONObject("userIdentity");
-            //用户uuid  根据uuid查询本系统对应的用户信息
-            String principalId =userIdentity.getString("principalId");
-        }
-
+        
+        log.info("处理oss文件线程启动完毕,耗时：{}", System.currentTimeMillis() - start);
+    } catch (UnsupportedEncodingException var4) {
+        log.error("Not support encoding: UTF-8", var4);
+        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Not support encoding: UTF-8");
     } catch (Exception e) {
-        log.error("错误", e);
+        log.error("oss文件上传监听系统错误", e);
+        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("system error");
     }
-    return ajaxJson;
+    return ResponseEntity.noContent().build();
 }
 
 /**
@@ -292,6 +280,9 @@ private String safeGetHeader(Map<String, String> headers, String name) {
         }
     }
 ```
+
+**需要注意的是由于主题默认的重试策略为 [EXPONENTIAL_DECAY_RETRY][EXPONENTIAL_DECAY_RETRY] ，上面的程序需要在[5s]之类返回[204]httpcode，否则阿里认为该推送为不成功。
+即，按照重试规则来重新推送数据直到收到204代码为止**
 
 代码虽然很多，但是不复杂，其实就是对request进行解析，进行验证，把oss包含信息取出来，最终获取到base64编码的文件信息。
 
@@ -403,3 +394,4 @@ private String safeGetHeader(Map<String, String> headers, String name) {
 [oss-mns-topic-notice]: https://www.aliyun.com/price/product#/mns/detail
 [mns-java-sdk]: https://help.aliyun.com/document_detail/27508.html
 [mns-sample-code]: http://docs-aliyun.cn-hangzhou.oss.aliyun-inc.com/assets/attach/27508/cn_zh/1491978276754/aliyun-sdk-mns-samples-1.1.8.zip?spm=a2c4g.11186623.2.5.KVAOlJ&file=aliyun-sdk-mns-samples-1.1.8.zip 
+[EXPONENTIAL_DECAY_RETRY]: https://help.aliyun.com/document_detail/27481.html?spm=a2c4g.11186623.2.5.RCmDd6
