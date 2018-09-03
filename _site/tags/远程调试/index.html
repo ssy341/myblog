@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>远程调试 - 单客欧朋</title>
-<meta name="description" content="An amazing website.">
+<meta name="description" content="好记性不如烂笔头">
 
 
 
@@ -167,6 +167,35 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://localhost:4000/ide/2018/02/04/how-to-debug-remote-host-in-intellij.html" rel="permalink">用Intellij IDEA断点调试远程服务器部署的tomcat项目
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">回顾
+
+在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题
+
+  之前没有写清楚
+  时隔久远，已经更新了，不再适用当前
+  没有完全理解，草率就记了，知其然不知其所以然
+  ……
+
+
+发...</p>
+  </article>
+</div>
+    
+      
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://localhost:4000/ide/2013/10/17/intellij-idea-remote-debug-project.html" rel="permalink">在intellij idea下远程调试项目
 </a>
       
@@ -174,11 +203,11 @@
     
     <p class="archive__item-excerpt" itemprop="description">
   1，首先发布一个和本地一模一样的代码到服务器，假设到 f:/bjhgtest（最后有说明）
-  2，打开服务器下tomcat安装目录conf文件夹下的catalina.bat，加入以下代码：
+  2，打开服务器下tomcat安装目录bin文件夹下的catalina.bat，加入以下代码：
 
 
 
-set JAVA_OPTS=%JAVA_OPTS%  -server -Xdebug -Xnoagent -D...</p>
+set JAVA_OPTS=%JAVA_OPTS%  -server -Xdebug -Xnoagent -Dj...</p>
   </article>
 </div>
     

@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>单客欧朋 - 页面 5</title>
-<meta name="description" content="An amazing website.">
+<meta name="description" content="好记性不如烂笔头">
 
 
 
@@ -186,7 +186,7 @@
     <ul class="author__urls social-icons">
       
         <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
-          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 高新区 天府2街 蜀都中心</span>
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
         </li>
       
 
@@ -302,19 +302,20 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2014/03/26/Linux-tar-zip.html" rel="permalink">linux 文件解压、压缩 tar zip
+        <a href="http://localhost:4000/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html" rel="permalink">ajaxFileupLoad多文件上传
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">tar/zip 解压
-tar xvfz jdk.tar.gz
-zip -r 1.zip a.txt rule
-unzip yasuo.zip
-unzip abc\?.zip` ?表示一个字符，如果用*表示任意多个字符
-unzip -v large.zip
-unzip -t large.zip
-unzip -j m...</p>
+    <p class="archive__item-excerpt" itemprop="description">打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？
+
+
+  一个是对之前大神的贡献表示感谢；
+  二个是自己知识的总结；
+  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。
+
+
+用过这个插件的都知道这个插件的基本用法，我就不废...</p>
   </article>
 </div>
 
@@ -327,68 +328,28 @@ unzip -j m...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2014/03/26/Linux-file.html" rel="permalink">linux 文件操作命令 rmdir mkdir rm
+        <a href="http://localhost:4000/javascript/2014/03/31/Datatables-example-data-source.html" rel="permalink">DataTables官方例子引导-4种数据源
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">rmdir 删除一个空的目录
-● -v 选项
-提示删除操作成功
-● -p 选项
-如果一个目录及其子目录都是空的，其中在删除最子目录的时候，使用-p选项，则这些相关的目录都会被删除掉。
-
-mkdir filename 新建文件夹
-
-rmdir filename 删除目录
-
-rm -rf filename 删除文件/...</p>
-  </article>
-</div>
-
-  
+    <p class="archive__item-excerpt" itemprop="description">下面列举了DataTables支持的四种数据源
 
 
 
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/java/2014/03/05/java-split.html" rel="permalink">java的split方法使用问题
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">首先看如下代码
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
- 
-public class StrTest {
-    @Test
-    public void sterTst(){
-        String ste...</p>
-  </article>
-</div>
-
-  
 
 
+dom（直接把数据写在html页面上）
 
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2013/12/26/Linux-help.html" rel="permalink">linux如果获取帮助 help –help
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
+js数组
 
-如果记不起命令了，直接输入 help
+异步请求(json格式的文件)
+
+请求服务器（json数据源）
+
+
+  更多例子参考这里
+
 </p>
   </article>
 </div>
@@ -402,28 +363,86 @@ public class StrTest {
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2013/12/26/Linux-basic.html" rel="permalink">linux查看文件基本命令 ls pwd
+        <a href="http://localhost:4000/javascript/2014/03/31/Datatables-example-basic.html" rel="permalink">DataTables官方例子引导-入门
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
+    <p class="archive__item-excerpt" itemprop="description">下面列举了datatables的基本使用例子
 
-如果记不起命令了，直接输入 help
 
-列出当前目录下的文件：ls
 
-ls -l 
-列出文件的详细信息
 
-ls -tl 
-按时间排序列出文件
 
-ls -trl
-把最近修改的文件列在最后
-通用的做法
-ls -l |sort +[r]n
-n用日期所在列的 列...</p>
+0配置
+
+开启/屏蔽功能
+
+指定列排序（升序/降序）
+
+多列自定义排序
+
+初始化多个datatables
+
+隐藏列
+
+表头合并列
+
+自定义datatables各个组件的位置（sdom属性）
+
+自适应页面大小
+
+允许状态保存，下次访问回到上次的状态
+
+data...</p>
+  </article>
+</div>
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2014/03/30/Linux-recover-etc-fstab.html" rel="permalink">ubuntu server 恢复模式下修改/etc/fstab文件
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件
+
+首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，
+其中有一句 no recovery nomodeset，把...</p>
+  </article>
+</div>
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2014/03/30/Linux-parted.html" rel="permalink">ubuntu server下建立分区表/分区/格式化/自动挂载
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">流程为：新建分区–》格式化分区–》挂载分区
+
+首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：
+
+MBR分区（主引导记录）表：
+支持最大卷：2T （T; terabytes,1TB=1024GB）
+分区的设限：最多4个主分区或3个主分区加一个扩展分区。
+
+GPT分区（GUID分区表）表：
+支持最大卷：...</p>
   </article>
 </div>
 
@@ -481,12 +500,19 @@ n用日期所在列的 列...</p>
         <li><a href="http://localhost:4000/page6/">6</a></li>
       
     
+      
+        
+        
+        
+        <li><a href="http://localhost:4000/page7/">7</a></li>
+      
+    
 
     
     
 
     
-      <li><a href="http://localhost:4000/page7/">7</a></li>
+      <li><a href="http://localhost:4000/page8/">8</a></li>
     
 
     

@@ -1,0 +1,638 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>在Ubuntu下安装RabbitMQ - 单客欧朋</title>
+<meta name="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="在Ubuntu下安装RabbitMQ">
+<meta property="og:url" content="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html">
+
+
+  <meta property="og:description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-02-27T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        空
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="在Ubuntu下安装RabbitMQ">
+    <meta itemprop="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+    <meta itemprop="datePublished" content="February 27, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">在Ubuntu下安装RabbitMQ
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 
+的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。</p>
+
+<h2 id="安装rabbitmq">安装RabbitMQ</h2>
+
+<ul>
+  <li>第一步：添加源
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'deb http://www.rabbitmq.com/debian/ testing main'</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/rabbitmq.list
+</code></pre></div>    </div>
+  </li>
+  <li>第二步：添加秘钥
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-O-</span> https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | <span class="nb">sudo </span>apt-key add
+</code></pre></div>    </div>
+  </li>
+  <li>第三步：更新源
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
+</code></pre></div>    </div>
+  </li>
+  <li>第四步：安装
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>rabbitmq-server
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="开启web管理界面">开启WEB管理界面</h2>
+
+<p>RabbitMQ默认没有打开WEB管理界面，需要手动操作</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>rabbitmq-plugins <span class="nb">enable </span>rabbitmq_management
+</code></pre></div></div>
+<p>通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/rabbitmq_login.png" alt="RabbitMQ登录界面" /></p>
+
+<p>使用默认用户guest，密码guest可以登录</p>
+
+<h2 id="允许非本地访问管理界面">允许非本地访问管理界面</h2>
+
+<p>打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以</p>
+
+<ul>
+  <li>第一步：添加用户
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>rabbitmqctl add_user demo 123456
+<span class="nb">sudo </span>rabbitmqctl list_users
+</code></pre></div>    </div>
+    <p>添加一个用户名demo，密码为123456的用户记录</p>
+  </li>
+  <li>第二步：设置权限
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>rabbitmqctl set_permissions <span class="nt">-p</span> <span class="s2">"/"</span> demo <span class="s2">".*"</span> <span class="s2">".*"</span> <span class="s2">".*"</span>
+<span class="nb">sudo </span>rabbitmqctl list_permissions <span class="nt">-p</span> /
+</code></pre></div>    </div>
+    <p>设置demo用户可以从任意ip访问该管理界面</p>
+  </li>
+  <li>第三步：设置角色
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>rabbitmqctl set_user_tags demo administrator
+<span class="nb">sudo </span>rabbitmqctl list_users
+</code></pre></div>    </div>
+    <p>设置demo用户为管理员权限</p>
+  </li>
+</ul>
+
+<p>完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/rabbitmq_dashborad.png" alt="RabbitMQ管理界面" /></p>
+
+<p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
+
+<blockquote>
+  <p>Reference:</p>
+  <ul>
+    <li>https://blog.csdn.net/rickey17/article/details/72756766</li>
+    <li>https://blog.haohtml.com/archives/15249</li>
+  </ul>
+</blockquote>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#rabbitmq" class="page__taxonomy-item" rel="tag">rabbitmq</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2018-02-27T00:00:00+08:00">February 27, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85RabbitMQ%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-rabbitmq-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-rabbitmq-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-rabbitmq-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-rabbitmq-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Nginx
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Redis
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">背景
+
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
+
+安装Redis
+
+sudo apt-get install redis-server
+
+
+更改默认的端口
+
+redis默认的访问端口是6379，避免端口被恶意程序使用，我们修改redis的默认端口
+
+打开配置文件/e...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
+
+安装Nginx
+
+在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
+
+sudo apt-get install nginx
+
+
+默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-mysql-on-ubuntu.html" rel="permalink">在Ubuntu下安装MySQL
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。
+
+安装MySQL
+
+sudo apt-get install mysql-server mysql-client
+
+
+安装过程中会要求输入root用户的密码，记下自己输入的密码即可
+
+安装完后检测是否安装成功，...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>

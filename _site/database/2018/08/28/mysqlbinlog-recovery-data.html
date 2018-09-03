@@ -1,0 +1,1079 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>在ubuntu下使用mysqlbinlog恢复drop后的数据 - 单客欧朋</title>
+<meta name="description" content="背景我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了mysql的日志功能，据说可以一定程度的恢复数据，这次我来验证一下，通过我几个小时的挣扎，数据恢复过来，但从结果来看，并不是100%的恢复了，没办法，只能再花时间精力把数据重新来过。只可惜什么都有就是没有后悔药，写下此篇，引以为戒，数据一定一定一定要备份！！！操作一定一定一定要谨慎！！！虽然没有100%的恢复，但是如果没有开启log_bin那一定就恢复不了了，至少还有个救命稻草，下文介绍如何使用mysqlbinlog命令恢复drop后的数据查看mysql日志是否开启进入mysql的配置目录，一般在/etc/mysql/mysql.conf.d目录里面，有如下两个文件thxopen@Thxopen:/etc/mysql/mysql.conf.d$ lsmysqld.cnf  mysqld_safe_syslog.cnf编辑mysqld.cnf文件，找到log_bin配置# The following can be used as easy to replay backup logs or for replication.# note: if you are setting up a replication slave, see README.Debian about#       other settings you may need to change.server-id               = 1log_bin                 = /var/log/mysql/mysql-bin.logexpire_logs_days        = 10max_binlog_size   = 500M默认情况下log_bin功能是关闭的，把 server-id 和 log_bin 取消注释，保存退出，重启mysql即可。查找 mysql 日志文件根据log_bin配置的日志目录，我找到了日志thxopen@Thxopen:/etc/mysql/mysql.conf.d$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364160drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql        154 8月  29 10:06 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.indexmysql-bin.000001 即为我们需要的日志文件，使用mysqlbinlog命令可以导出可执行的sql文件mysqlbinlog 介绍像一般的系统一样，我们会对系统的每一个操作记录下操作日志，而log_bin就是对数据库的每一个操作记录下的一个二进制的日志，里面包含了我们所有执行的sql语句。通过此命令，我们可以导出我们操作的sql语句，这样达到恢复数据的目的。关于mysqlbinlog命令几个常使用的参数，可以帮助我们更快的找到我们的数据  --start-position 起始位置（不包含）  --stop-position 截止位置  --start-datetime 起始时间  --stop-datetime 截止时间  --base64-output=decode-rows 输出的文件base64解码更多关于mysqlbinlog的参数可以通过参数--help获取模拟实际的操作，新增数据，修改数据，删除表，恢复数据  1，创建一张测试表create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null);运行结果：mysql&gt; create table tb_recovery_test    -&gt; (    -&gt;   id int not null ,    -&gt;   column1 varchar(32)          null,    -&gt;   column2 varchar(32)          null    -&gt; );Query OK, 0 rows affected (0.05 sec)  2，插入测试数据insert into tb_recovery_test (id,column1,column2)       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);insert into tb_recovery_test (id,column1,column2)       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);运行结果：mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; select * from tb_recovery_test;+----+--------------+-------------------+| id | column1      | column2           |+----+--------------+-------------------+|  1 | 数据操作需谨慎 | 定期备份数据        ||  2 | 后悔了        | 可是没有后悔药      |+----+--------------+-------------------+2 rows in set (0.00 sec)  3，修改数据，这里模拟一下真实的场景，对数据进行修改，删除，添加字段操作update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,        column2 = null        where id = 2;delete from tb_recovery_test where id = 1;ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;insert into tb_recovery_test (id,column1,column2,column3)       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;运行结果：mysql&gt; update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,    -&gt;         column2 = null    -&gt;         where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; delete from tb_recovery_test where id = 1;Query OK, 1 row affected (0.00 sec)mysql&gt; ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;Query OK, 0 rows affected (0.10 sec)Records: 0  Duplicates: 0  Warnings: 0mysql&gt; insert into tb_recovery_test (id,column1,column2,column3)    -&gt;       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;Query OK, 1 row affected (0.00 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; select * from tb_recovery_test;+----+-------------------------------------------------+-------------------------+-----------------+| id | column1                                         | column2                 | column3         |+----+-------------------------------------------------+-------------------------+-----------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药       | 修改了column2字段的值     | NULL            ||  3 | 新增了一个字段                                     | 新增了一个字段            | 修改了新增字段的值 |+----+--------------------------------------------------+------------------------+-----------------+2 rows in set (0.00 sec)  4，最后我误操作，把表tb_recovery_test删除drop table tb_recovery_test;运行结果：mysql&gt; drop table tb_recovery_test;Query OK, 0 rows affected (0.03 sec)显然，最后一步操作之后，我们之前所做的操作白费了，还好我们开启了log_bin功能，通过日志来找回误操作删除的数据通过日志文件恢复 tb_recovery_test 数据进入到mysql保存日志的目录，通过前面配置可以知道日志文件保存在 /var/log/mysql/ 下thxopen@Thxopen:/var/log/mysql$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364164drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql       3411 8月  29 13:14 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.index从列出的文件可以看出 mysql-bin.000004 文件是最近改动的，一般来说文件的后缀是增长的，根据实际情况，这里我选择最后一个日志文件进行恢复操作执行导出日志操作，先看看导出的sql具体是什么样的sudo mysqlbinlog --base64-output=decode-rows /var/log/mysql/mysql-bin.000004 &gt; ./recovery-decode.sqlps: 添加--base64-output=decode-rows 参数导出的sql文件里不包含数据部分（即insert，delete，update），主要是方便分析，实际导出的sql是不能加这个参数的查看导出sql，我截取了文件的开头和结尾部分，中间部分省略/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;# at 123#180829 10:06:43 server id 1  end_log_pos 154 CRC32 0xa18892ca 	Previous-GTIDs# [empty]# at 154#180829 13:07:48 server id 1  end_log_pos 219 CRC32 0x7e4bd4d6 	Anonymous_GTID	last_committed=0	sequence_number=1	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了中间的内容#省略了中间的内容#省略了中间的内容#省略了中间的内容# at 1970#180829 13:10:10 server id 1  end_log_pos 2035 CRC32 0x8c8ac254 	Anonymous_GTID	last_committed=6	sequence_number=7	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2035#180829 13:10:10 server id 1  end_log_pos 2110 CRC32 0x1d22149c 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2110#180829 13:10:10 server id 1  end_log_pos 2181 CRC32 0xcccc7fab 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2181#180829 13:10:10 server id 1  end_log_pos 2287 CRC32 0x322b3ff6 	Write_rows: table id 168 flags: STMT_END_F# at 2287#180829 13:10:10 server id 1  end_log_pos 2318 CRC32 0xaa8d7acf 	Xid = 3075COMMIT/*!*/;# at 2318#180829 13:10:10 server id 1  end_log_pos 2383 CRC32 0x05b7bd59 	Anonymous_GTID	last_committed=7	sequence_number=8	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2383#180829 13:10:10 server id 1  end_log_pos 2458 CRC32 0x171d4eab 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2458#180829 13:10:10 server id 1  end_log_pos 2529 CRC32 0xe95d3272 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2529#180829 13:10:10 server id 1  end_log_pos 2713 CRC32 0x4386d86f 	Update_rows: table id 168 flags: STMT_END_F# at 2713#180829 13:10:10 server id 1  end_log_pos 2744 CRC32 0xcde5fff8 	Xid = 3076COMMIT/*!*/;# at 2744#180829 13:10:19 server id 1  end_log_pos 2809 CRC32 0x3b9cc08b 	Anonymous_GTID	last_committed=8	sequence_number=9	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2809#180829 13:10:19 server id 1  end_log_pos 2884 CRC32 0xb86bbce3 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519419/*!*/;BEGIN/*!*/;# at 2884#180829 13:10:19 server id 1  end_log_pos 2955 CRC32 0x7b3dc472 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2955#180829 13:10:19 server id 1  end_log_pos 3180 CRC32 0x1ff6807f 	Update_rows: table id 168 flags: STMT_END_F# at 3180#180829 13:10:19 server id 1  end_log_pos 3211 CRC32 0xda138c1f 	Xid = 3077COMMIT/*!*/;# at 3211#180829 13:14:00 server id 1  end_log_pos 3276 CRC32 0x9e823905 	Anonymous_GTID	last_committed=9	sequence_number=10	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 3276#180829 13:14:00 server id 1  end_log_pos 3411 CRC32 0x2f9c474a 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519640/*!*/;DROP TABLE `tb_recovery_test` /* generated by server *//*!*/;SET @@SESSION.GTID_NEXT= &#39;AUTOMATIC&#39; /* added by mysqlbinlog */ /*!*/;DELIMITER ;# End of log file/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;从文件里可以看出我一开始的建表语句，也就是我每一步操作都记录在这个日志里，那么我只要把我之前的每一步都再执行一边，数据就能恢复回来，我们按照这个思路操作  1，先确定起始position，这里我选择 end_log_pos 219 ，前面参数解释了，起始点是不包含的所以要选建表语句之前的操作点（也可以选择起始时间 180829 13:07:48）  2，确定截止position end_log_pos 3276 或截止时间 180829 13:14:00  3，导出恢复数据sql#使用position导出sqlsudo mysqlbinlog --start-position=219 --stop-position=3276 /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql#使用时间导出sqlsudo mysqlbinlog --start-datetime=&#39;2018-08-29 13:07:48&#39; --stop-datetime=&#39;2018-08-29 13:14:00&#39; /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql下面为导出的sql前半部分，可以看到BINLOG后面有base64的字符，这个就是对数据的操作/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;BINLOG &#39;sv+FWw8BAAAAdwAAAHsAAAABAAQANS43LjIyLTB1YnVudHUwLjE2LjA0LjEtbG9nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACy/4VbEzgNAAgAEgAEBAQEEgAAXwAEGggAAAAICAgCAAAACgoKKioAEjQAAfEskqM=&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了后面的#省略了后面的#省略了后面的#省略了后面的  4，导入sql到数据库mysql -uroot -p database_name &lt; recovery-restore.sqlps：还可以加入[-f] 参数，强制执行，即忽略所有错误，根据实际情况使用这个参数运行结果：thxopen@Thxopen:~$ mysql -uroot -p thxopen &lt; recovery-restore.sqlEnter password:thxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 17Server version: 5.7.22-0ubuntu0.16.04.1-log (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt; use thxopen;Reading table information for completion of table and column namesYou can turn off this feature to get a quicker startup with -ADatabase changedmysql&gt; show tables;+-------------------+| Tables_in_thxopen |+-------------------+| tb_recovery_test  |+-------------------+1 row in set (0.00 sec)mysql&gt; select * from tb_recovery_test;+----+----------------------------------------------+------------------------+------------------+| id | column1                                      | column2                | column3          |+----+----------------------------------------------+------------------------+------------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药    | 修改了column2字段的值    | NULL             ||  3 | 新增了一个字段                                  | 新增了一个字段           | 修改了新增字段的值  |+----+----------------------------------------------+------------------------+------------------+2 rows in set (0.00 sec)mysql&gt;导入之后，重新登录到mysql，查看表，查看数据，已经恢复到drop之前的状态了，到此大功告成，数据恢复成功！导入恢复数据到数据库可能会遇到的错误      Duplicate entry 重复的实体，出现此错误代表恢复的sql脚本里，包含创建了实体的语句，重新执行一边，则报错        Duplicate column name 重复的列名称，理由同上        Duplicate key name 重复的键索引，理由同上        Can’t find record in ‘table_name’ 由于业务逻辑，有些数据删除，修改，新增，删除，修改反复这样操作，导致恢复的时候出现此错误        Cannot add or update a child row: a foreign key constraint fails (thxopen.tb_recovery_test, CONSTRAINT FKan5m1ygnxb4ibmq1ncqklji26 FOREIGN KEY (rid) REFERENCES tb_recovery_relate (id))由于外键关联，修改表的数据在另一个表中不存在导致        Table ‘table_name’ already exists 重复的表，恢复sql脚本了包含数据库里已经存在的表        Can’t write; duplicate key in table 创建表的外键名称重复了        MySQL server has gone away 由于导入的恢复sql太大，超过了mysql的限制，需要修改配置文件/etc/mysql/mysql.conf.d/mysqld.cnf 里 max_allowed_packet = 16M 配置，根据实际情况调大一些  总结对于文中的例子，恢复数据是100%的，但是在实际的项目中，虽然开启了log_bin，但不能想着万事大吉就不管了，我就是惨痛的经历，数据感觉50%都没恢复到。简直是血的教训，血的教训，血的教训啊~不过从这个也可以看出系统设计本身的问题，逻辑复杂，耦合度高，关联性太强，比如我误删的数据，由于表之间的关系比较复杂，恢复出来的数据有很多问题。主要是如下几个问题：  手动在Intellij Database Console执行的update语句，在恢复之后没有体现出来，字段是null  部分表的数据完全没有，一条数据也没有  由于我是覆盖数据，都是先drop表，然后又create了表，而日志文件又没有从最开始创建表的，所以执行恢复sql的时候，报了如上列出的所有error，对于重复表，重复字段这些，我把日志里的删除，可以解决，但是对于数据的关联出错，找不到记录的就太多了，没有办法一一修复，为了执行完成sql，导入的时候加了[-f]参数，忽略所有错误因为上面这些问题，加上日志本身也不全，导致数据根本没法100%的恢复说了这么多，还是一句话，没有规矩，不成方圆，做事要小心谨慎，按照一定的流程做事就可以减少犯错误的几率。定期备份数据，操作数据谨慎  Reference      https://www.cnblogs.com/cenalulu/archive/2013/01/08/2850820.html    https://blog.csdn.net/leshami/article/details/41962243    http://www.unixfbi.com/499.html    http://blog.51cto.com/suifu/1845457    https://www.cnblogs.com/leezhxing/p/3347610.html    http://www.hankcs.com/appos/database/mysql-restore-dropped-table.html    https://blog.csdn.net/weixin_41004350/article/details/78547005    https://blog.csdn.net/xyz846/article/details/52210542  ">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="在ubuntu下使用mysqlbinlog恢复drop后的数据">
+<meta property="og:url" content="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html">
+
+
+  <meta property="og:description" content="背景我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了mysql的日志功能，据说可以一定程度的恢复数据，这次我来验证一下，通过我几个小时的挣扎，数据恢复过来，但从结果来看，并不是100%的恢复了，没办法，只能再花时间精力把数据重新来过。只可惜什么都有就是没有后悔药，写下此篇，引以为戒，数据一定一定一定要备份！！！操作一定一定一定要谨慎！！！虽然没有100%的恢复，但是如果没有开启log_bin那一定就恢复不了了，至少还有个救命稻草，下文介绍如何使用mysqlbinlog命令恢复drop后的数据查看mysql日志是否开启进入mysql的配置目录，一般在/etc/mysql/mysql.conf.d目录里面，有如下两个文件thxopen@Thxopen:/etc/mysql/mysql.conf.d$ lsmysqld.cnf  mysqld_safe_syslog.cnf编辑mysqld.cnf文件，找到log_bin配置# The following can be used as easy to replay backup logs or for replication.# note: if you are setting up a replication slave, see README.Debian about#       other settings you may need to change.server-id               = 1log_bin                 = /var/log/mysql/mysql-bin.logexpire_logs_days        = 10max_binlog_size   = 500M默认情况下log_bin功能是关闭的，把 server-id 和 log_bin 取消注释，保存退出，重启mysql即可。查找 mysql 日志文件根据log_bin配置的日志目录，我找到了日志thxopen@Thxopen:/etc/mysql/mysql.conf.d$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364160drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql        154 8月  29 10:06 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.indexmysql-bin.000001 即为我们需要的日志文件，使用mysqlbinlog命令可以导出可执行的sql文件mysqlbinlog 介绍像一般的系统一样，我们会对系统的每一个操作记录下操作日志，而log_bin就是对数据库的每一个操作记录下的一个二进制的日志，里面包含了我们所有执行的sql语句。通过此命令，我们可以导出我们操作的sql语句，这样达到恢复数据的目的。关于mysqlbinlog命令几个常使用的参数，可以帮助我们更快的找到我们的数据  --start-position 起始位置（不包含）  --stop-position 截止位置  --start-datetime 起始时间  --stop-datetime 截止时间  --base64-output=decode-rows 输出的文件base64解码更多关于mysqlbinlog的参数可以通过参数--help获取模拟实际的操作，新增数据，修改数据，删除表，恢复数据  1，创建一张测试表create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null);运行结果：mysql&gt; create table tb_recovery_test    -&gt; (    -&gt;   id int not null ,    -&gt;   column1 varchar(32)          null,    -&gt;   column2 varchar(32)          null    -&gt; );Query OK, 0 rows affected (0.05 sec)  2，插入测试数据insert into tb_recovery_test (id,column1,column2)       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);insert into tb_recovery_test (id,column1,column2)       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);运行结果：mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; select * from tb_recovery_test;+----+--------------+-------------------+| id | column1      | column2           |+----+--------------+-------------------+|  1 | 数据操作需谨慎 | 定期备份数据        ||  2 | 后悔了        | 可是没有后悔药      |+----+--------------+-------------------+2 rows in set (0.00 sec)  3，修改数据，这里模拟一下真实的场景，对数据进行修改，删除，添加字段操作update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,        column2 = null        where id = 2;delete from tb_recovery_test where id = 1;ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;insert into tb_recovery_test (id,column1,column2,column3)       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;运行结果：mysql&gt; update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,    -&gt;         column2 = null    -&gt;         where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; delete from tb_recovery_test where id = 1;Query OK, 1 row affected (0.00 sec)mysql&gt; ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;Query OK, 0 rows affected (0.10 sec)Records: 0  Duplicates: 0  Warnings: 0mysql&gt; insert into tb_recovery_test (id,column1,column2,column3)    -&gt;       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;Query OK, 1 row affected (0.00 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; select * from tb_recovery_test;+----+-------------------------------------------------+-------------------------+-----------------+| id | column1                                         | column2                 | column3         |+----+-------------------------------------------------+-------------------------+-----------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药       | 修改了column2字段的值     | NULL            ||  3 | 新增了一个字段                                     | 新增了一个字段            | 修改了新增字段的值 |+----+--------------------------------------------------+------------------------+-----------------+2 rows in set (0.00 sec)  4，最后我误操作，把表tb_recovery_test删除drop table tb_recovery_test;运行结果：mysql&gt; drop table tb_recovery_test;Query OK, 0 rows affected (0.03 sec)显然，最后一步操作之后，我们之前所做的操作白费了，还好我们开启了log_bin功能，通过日志来找回误操作删除的数据通过日志文件恢复 tb_recovery_test 数据进入到mysql保存日志的目录，通过前面配置可以知道日志文件保存在 /var/log/mysql/ 下thxopen@Thxopen:/var/log/mysql$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364164drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql       3411 8月  29 13:14 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.index从列出的文件可以看出 mysql-bin.000004 文件是最近改动的，一般来说文件的后缀是增长的，根据实际情况，这里我选择最后一个日志文件进行恢复操作执行导出日志操作，先看看导出的sql具体是什么样的sudo mysqlbinlog --base64-output=decode-rows /var/log/mysql/mysql-bin.000004 &gt; ./recovery-decode.sqlps: 添加--base64-output=decode-rows 参数导出的sql文件里不包含数据部分（即insert，delete，update），主要是方便分析，实际导出的sql是不能加这个参数的查看导出sql，我截取了文件的开头和结尾部分，中间部分省略/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;# at 123#180829 10:06:43 server id 1  end_log_pos 154 CRC32 0xa18892ca 	Previous-GTIDs# [empty]# at 154#180829 13:07:48 server id 1  end_log_pos 219 CRC32 0x7e4bd4d6 	Anonymous_GTID	last_committed=0	sequence_number=1	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了中间的内容#省略了中间的内容#省略了中间的内容#省略了中间的内容# at 1970#180829 13:10:10 server id 1  end_log_pos 2035 CRC32 0x8c8ac254 	Anonymous_GTID	last_committed=6	sequence_number=7	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2035#180829 13:10:10 server id 1  end_log_pos 2110 CRC32 0x1d22149c 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2110#180829 13:10:10 server id 1  end_log_pos 2181 CRC32 0xcccc7fab 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2181#180829 13:10:10 server id 1  end_log_pos 2287 CRC32 0x322b3ff6 	Write_rows: table id 168 flags: STMT_END_F# at 2287#180829 13:10:10 server id 1  end_log_pos 2318 CRC32 0xaa8d7acf 	Xid = 3075COMMIT/*!*/;# at 2318#180829 13:10:10 server id 1  end_log_pos 2383 CRC32 0x05b7bd59 	Anonymous_GTID	last_committed=7	sequence_number=8	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2383#180829 13:10:10 server id 1  end_log_pos 2458 CRC32 0x171d4eab 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2458#180829 13:10:10 server id 1  end_log_pos 2529 CRC32 0xe95d3272 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2529#180829 13:10:10 server id 1  end_log_pos 2713 CRC32 0x4386d86f 	Update_rows: table id 168 flags: STMT_END_F# at 2713#180829 13:10:10 server id 1  end_log_pos 2744 CRC32 0xcde5fff8 	Xid = 3076COMMIT/*!*/;# at 2744#180829 13:10:19 server id 1  end_log_pos 2809 CRC32 0x3b9cc08b 	Anonymous_GTID	last_committed=8	sequence_number=9	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2809#180829 13:10:19 server id 1  end_log_pos 2884 CRC32 0xb86bbce3 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519419/*!*/;BEGIN/*!*/;# at 2884#180829 13:10:19 server id 1  end_log_pos 2955 CRC32 0x7b3dc472 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2955#180829 13:10:19 server id 1  end_log_pos 3180 CRC32 0x1ff6807f 	Update_rows: table id 168 flags: STMT_END_F# at 3180#180829 13:10:19 server id 1  end_log_pos 3211 CRC32 0xda138c1f 	Xid = 3077COMMIT/*!*/;# at 3211#180829 13:14:00 server id 1  end_log_pos 3276 CRC32 0x9e823905 	Anonymous_GTID	last_committed=9	sequence_number=10	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 3276#180829 13:14:00 server id 1  end_log_pos 3411 CRC32 0x2f9c474a 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519640/*!*/;DROP TABLE `tb_recovery_test` /* generated by server *//*!*/;SET @@SESSION.GTID_NEXT= &#39;AUTOMATIC&#39; /* added by mysqlbinlog */ /*!*/;DELIMITER ;# End of log file/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;从文件里可以看出我一开始的建表语句，也就是我每一步操作都记录在这个日志里，那么我只要把我之前的每一步都再执行一边，数据就能恢复回来，我们按照这个思路操作  1，先确定起始position，这里我选择 end_log_pos 219 ，前面参数解释了，起始点是不包含的所以要选建表语句之前的操作点（也可以选择起始时间 180829 13:07:48）  2，确定截止position end_log_pos 3276 或截止时间 180829 13:14:00  3，导出恢复数据sql#使用position导出sqlsudo mysqlbinlog --start-position=219 --stop-position=3276 /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql#使用时间导出sqlsudo mysqlbinlog --start-datetime=&#39;2018-08-29 13:07:48&#39; --stop-datetime=&#39;2018-08-29 13:14:00&#39; /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql下面为导出的sql前半部分，可以看到BINLOG后面有base64的字符，这个就是对数据的操作/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;BINLOG &#39;sv+FWw8BAAAAdwAAAHsAAAABAAQANS43LjIyLTB1YnVudHUwLjE2LjA0LjEtbG9nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACy/4VbEzgNAAgAEgAEBAQEEgAAXwAEGggAAAAICAgCAAAACgoKKioAEjQAAfEskqM=&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了后面的#省略了后面的#省略了后面的#省略了后面的  4，导入sql到数据库mysql -uroot -p database_name &lt; recovery-restore.sqlps：还可以加入[-f] 参数，强制执行，即忽略所有错误，根据实际情况使用这个参数运行结果：thxopen@Thxopen:~$ mysql -uroot -p thxopen &lt; recovery-restore.sqlEnter password:thxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 17Server version: 5.7.22-0ubuntu0.16.04.1-log (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt; use thxopen;Reading table information for completion of table and column namesYou can turn off this feature to get a quicker startup with -ADatabase changedmysql&gt; show tables;+-------------------+| Tables_in_thxopen |+-------------------+| tb_recovery_test  |+-------------------+1 row in set (0.00 sec)mysql&gt; select * from tb_recovery_test;+----+----------------------------------------------+------------------------+------------------+| id | column1                                      | column2                | column3          |+----+----------------------------------------------+------------------------+------------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药    | 修改了column2字段的值    | NULL             ||  3 | 新增了一个字段                                  | 新增了一个字段           | 修改了新增字段的值  |+----+----------------------------------------------+------------------------+------------------+2 rows in set (0.00 sec)mysql&gt;导入之后，重新登录到mysql，查看表，查看数据，已经恢复到drop之前的状态了，到此大功告成，数据恢复成功！导入恢复数据到数据库可能会遇到的错误      Duplicate entry 重复的实体，出现此错误代表恢复的sql脚本里，包含创建了实体的语句，重新执行一边，则报错        Duplicate column name 重复的列名称，理由同上        Duplicate key name 重复的键索引，理由同上        Can’t find record in ‘table_name’ 由于业务逻辑，有些数据删除，修改，新增，删除，修改反复这样操作，导致恢复的时候出现此错误        Cannot add or update a child row: a foreign key constraint fails (thxopen.tb_recovery_test, CONSTRAINT FKan5m1ygnxb4ibmq1ncqklji26 FOREIGN KEY (rid) REFERENCES tb_recovery_relate (id))由于外键关联，修改表的数据在另一个表中不存在导致        Table ‘table_name’ already exists 重复的表，恢复sql脚本了包含数据库里已经存在的表        Can’t write; duplicate key in table 创建表的外键名称重复了        MySQL server has gone away 由于导入的恢复sql太大，超过了mysql的限制，需要修改配置文件/etc/mysql/mysql.conf.d/mysqld.cnf 里 max_allowed_packet = 16M 配置，根据实际情况调大一些  总结对于文中的例子，恢复数据是100%的，但是在实际的项目中，虽然开启了log_bin，但不能想着万事大吉就不管了，我就是惨痛的经历，数据感觉50%都没恢复到。简直是血的教训，血的教训，血的教训啊~不过从这个也可以看出系统设计本身的问题，逻辑复杂，耦合度高，关联性太强，比如我误删的数据，由于表之间的关系比较复杂，恢复出来的数据有很多问题。主要是如下几个问题：  手动在Intellij Database Console执行的update语句，在恢复之后没有体现出来，字段是null  部分表的数据完全没有，一条数据也没有  由于我是覆盖数据，都是先drop表，然后又create了表，而日志文件又没有从最开始创建表的，所以执行恢复sql的时候，报了如上列出的所有error，对于重复表，重复字段这些，我把日志里的删除，可以解决，但是对于数据的关联出错，找不到记录的就太多了，没有办法一一修复，为了执行完成sql，导入的时候加了[-f]参数，忽略所有错误因为上面这些问题，加上日志本身也不全，导致数据根本没法100%的恢复说了这么多，还是一句话，没有规矩，不成方圆，做事要小心谨慎，按照一定的流程做事就可以减少犯错误的几率。定期备份数据，操作数据谨慎  Reference      https://www.cnblogs.com/cenalulu/archive/2013/01/08/2850820.html    https://blog.csdn.net/leshami/article/details/41962243    http://www.unixfbi.com/499.html    http://blog.51cto.com/suifu/1845457    https://www.cnblogs.com/leezhxing/p/3347610.html    http://www.hankcs.com/appos/database/mysql-restore-dropped-table.html    https://blog.csdn.net/weixin_41004350/article/details/78547005    https://blog.csdn.net/xyz846/article/details/52210542  ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-08-28T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        空
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="在ubuntu下使用mysqlbinlog恢复drop后的数据">
+    <meta itemprop="description" content="背景我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了mysql的日志功能，据说可以一定程度的恢复数据，这次我来验证一下，通过我几个小时的挣扎，数据恢复过来，但从结果来看，并不是100%的恢复了，没办法，只能再花时间精力把数据重新来过。只可惜什么都有就是没有后悔药，写下此篇，引以为戒，数据一定一定一定要备份！！！操作一定一定一定要谨慎！！！虽然没有100%的恢复，但是如果没有开启log_bin那一定就恢复不了了，至少还有个救命稻草，下文介绍如何使用mysqlbinlog命令恢复drop后的数据查看mysql日志是否开启进入mysql的配置目录，一般在/etc/mysql/mysql.conf.d目录里面，有如下两个文件thxopen@Thxopen:/etc/mysql/mysql.conf.d$ lsmysqld.cnf  mysqld_safe_syslog.cnf编辑mysqld.cnf文件，找到log_bin配置# The following can be used as easy to replay backup logs or for replication.# note: if you are setting up a replication slave, see README.Debian about#       other settings you may need to change.server-id               = 1log_bin                 = /var/log/mysql/mysql-bin.logexpire_logs_days        = 10max_binlog_size   = 500M默认情况下log_bin功能是关闭的，把 server-id 和 log_bin 取消注释，保存退出，重启mysql即可。查找 mysql 日志文件根据log_bin配置的日志目录，我找到了日志thxopen@Thxopen:/etc/mysql/mysql.conf.d$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364160drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql        154 8月  29 10:06 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.indexmysql-bin.000001 即为我们需要的日志文件，使用mysqlbinlog命令可以导出可执行的sql文件mysqlbinlog 介绍像一般的系统一样，我们会对系统的每一个操作记录下操作日志，而log_bin就是对数据库的每一个操作记录下的一个二进制的日志，里面包含了我们所有执行的sql语句。通过此命令，我们可以导出我们操作的sql语句，这样达到恢复数据的目的。关于mysqlbinlog命令几个常使用的参数，可以帮助我们更快的找到我们的数据  --start-position 起始位置（不包含）  --stop-position 截止位置  --start-datetime 起始时间  --stop-datetime 截止时间  --base64-output=decode-rows 输出的文件base64解码更多关于mysqlbinlog的参数可以通过参数--help获取模拟实际的操作，新增数据，修改数据，删除表，恢复数据  1，创建一张测试表create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null);运行结果：mysql&gt; create table tb_recovery_test    -&gt; (    -&gt;   id int not null ,    -&gt;   column1 varchar(32)          null,    -&gt;   column2 varchar(32)          null    -&gt; );Query OK, 0 rows affected (0.05 sec)  2，插入测试数据insert into tb_recovery_test (id,column1,column2)       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);insert into tb_recovery_test (id,column1,column2)       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);运行结果：mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (1,&#39;数据操作需谨慎&#39;,&#39;定期备份数据&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; insert into tb_recovery_test (id,column1,column2)    -&gt;       values (2,&#39;后悔了&#39;,&#39;可是没有后悔药&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; select * from tb_recovery_test;+----+--------------+-------------------+| id | column1      | column2           |+----+--------------+-------------------+|  1 | 数据操作需谨慎 | 定期备份数据        ||  2 | 后悔了        | 可是没有后悔药      |+----+--------------+-------------------+2 rows in set (0.00 sec)  3，修改数据，这里模拟一下真实的场景，对数据进行修改，删除，添加字段操作update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,        column2 = null        where id = 2;delete from tb_recovery_test where id = 1;ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;insert into tb_recovery_test (id,column1,column2,column3)       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;运行结果：mysql&gt; update tb_recovery_test set column1 = &#39;数据操作需谨慎,定期备份数据,什么都有就是没有后悔药&#39;,    -&gt;         column2 = null    -&gt;         where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; delete from tb_recovery_test where id = 1;Query OK, 1 row affected (0.00 sec)mysql&gt; ALTER TABLE tb_recovery_test ADD column3 varchar(32) NULL;Query OK, 0 rows affected (0.10 sec)Records: 0  Duplicates: 0  Warnings: 0mysql&gt; insert into tb_recovery_test (id,column1,column2,column3)    -&gt;       values (3,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;,&#39;新增了一个字段&#39;);Query OK, 1 row affected (0.01 sec)mysql&gt; update tb_recovery_test set column3 = &#39;修改了新增字段的值&#39; where id = 3;Query OK, 1 row affected (0.00 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; update tb_recovery_test set column2 = &#39;修改了column2字段的值&#39; where id = 2;Query OK, 1 row affected (0.01 sec)Rows matched: 1  Changed: 1  Warnings: 0mysql&gt; select * from tb_recovery_test;+----+-------------------------------------------------+-------------------------+-----------------+| id | column1                                         | column2                 | column3         |+----+-------------------------------------------------+-------------------------+-----------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药       | 修改了column2字段的值     | NULL            ||  3 | 新增了一个字段                                     | 新增了一个字段            | 修改了新增字段的值 |+----+--------------------------------------------------+------------------------+-----------------+2 rows in set (0.00 sec)  4，最后我误操作，把表tb_recovery_test删除drop table tb_recovery_test;运行结果：mysql&gt; drop table tb_recovery_test;Query OK, 0 rows affected (0.03 sec)显然，最后一步操作之后，我们之前所做的操作白费了，还好我们开启了log_bin功能，通过日志来找回误操作删除的数据通过日志文件恢复 tb_recovery_test 数据进入到mysql保存日志的目录，通过前面配置可以知道日志文件保存在 /var/log/mysql/ 下thxopen@Thxopen:/var/log/mysql$ cd /var/log/mysql/thxopen@Thxopen:/var/log/mysql$ lserror.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.indexthxopen@Thxopen:/var/log/mysql$ ll总用量 364164drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../-rw-r----- 1 mysql adm    108427282 8月  29 10:13 error.log-rw-r----- 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001-rw-r----- 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002-rw-r----- 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003-rw-r----- 1 mysql mysql       3411 8月  29 13:14 mysql-bin.000004-rw-r----- 1 mysql mysql        128 8月  29 10:06 mysql-bin.index从列出的文件可以看出 mysql-bin.000004 文件是最近改动的，一般来说文件的后缀是增长的，根据实际情况，这里我选择最后一个日志文件进行恢复操作执行导出日志操作，先看看导出的sql具体是什么样的sudo mysqlbinlog --base64-output=decode-rows /var/log/mysql/mysql-bin.000004 &gt; ./recovery-decode.sqlps: 添加--base64-output=decode-rows 参数导出的sql文件里不包含数据部分（即insert，delete，update），主要是方便分析，实际导出的sql是不能加这个参数的查看导出sql，我截取了文件的开头和结尾部分，中间部分省略/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;# at 123#180829 10:06:43 server id 1  end_log_pos 154 CRC32 0xa18892ca 	Previous-GTIDs# [empty]# at 154#180829 13:07:48 server id 1  end_log_pos 219 CRC32 0x7e4bd4d6 	Anonymous_GTID	last_committed=0	sequence_number=1	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了中间的内容#省略了中间的内容#省略了中间的内容#省略了中间的内容# at 1970#180829 13:10:10 server id 1  end_log_pos 2035 CRC32 0x8c8ac254 	Anonymous_GTID	last_committed=6	sequence_number=7	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2035#180829 13:10:10 server id 1  end_log_pos 2110 CRC32 0x1d22149c 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2110#180829 13:10:10 server id 1  end_log_pos 2181 CRC32 0xcccc7fab 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2181#180829 13:10:10 server id 1  end_log_pos 2287 CRC32 0x322b3ff6 	Write_rows: table id 168 flags: STMT_END_F# at 2287#180829 13:10:10 server id 1  end_log_pos 2318 CRC32 0xaa8d7acf 	Xid = 3075COMMIT/*!*/;# at 2318#180829 13:10:10 server id 1  end_log_pos 2383 CRC32 0x05b7bd59 	Anonymous_GTID	last_committed=7	sequence_number=8	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2383#180829 13:10:10 server id 1  end_log_pos 2458 CRC32 0x171d4eab 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519410/*!*/;BEGIN/*!*/;# at 2458#180829 13:10:10 server id 1  end_log_pos 2529 CRC32 0xe95d3272 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2529#180829 13:10:10 server id 1  end_log_pos 2713 CRC32 0x4386d86f 	Update_rows: table id 168 flags: STMT_END_F# at 2713#180829 13:10:10 server id 1  end_log_pos 2744 CRC32 0xcde5fff8 	Xid = 3076COMMIT/*!*/;# at 2744#180829 13:10:19 server id 1  end_log_pos 2809 CRC32 0x3b9cc08b 	Anonymous_GTID	last_committed=8	sequence_number=9	rbr_only=yes/*!50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED*//*!*/;SET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 2809#180829 13:10:19 server id 1  end_log_pos 2884 CRC32 0xb86bbce3 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519419/*!*/;BEGIN/*!*/;# at 2884#180829 13:10:19 server id 1  end_log_pos 2955 CRC32 0x7b3dc472 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168# at 2955#180829 13:10:19 server id 1  end_log_pos 3180 CRC32 0x1ff6807f 	Update_rows: table id 168 flags: STMT_END_F# at 3180#180829 13:10:19 server id 1  end_log_pos 3211 CRC32 0xda138c1f 	Xid = 3077COMMIT/*!*/;# at 3211#180829 13:14:00 server id 1  end_log_pos 3276 CRC32 0x9e823905 	Anonymous_GTID	last_committed=9	sequence_number=10	rbr_only=noSET @@SESSION.GTID_NEXT= &#39;ANONYMOUS&#39;/*!*/;# at 3276#180829 13:14:00 server id 1  end_log_pos 3411 CRC32 0x2f9c474a 	Query	thread_id=15	exec_time=0	error_code=0SET TIMESTAMP=1535519640/*!*/;DROP TABLE `tb_recovery_test` /* generated by server *//*!*/;SET @@SESSION.GTID_NEXT= &#39;AUTOMATIC&#39; /* added by mysqlbinlog */ /*!*/;DELIMITER ;# End of log file/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;从文件里可以看出我一开始的建表语句，也就是我每一步操作都记录在这个日志里，那么我只要把我之前的每一步都再执行一边，数据就能恢复回来，我们按照这个思路操作  1，先确定起始position，这里我选择 end_log_pos 219 ，前面参数解释了，起始点是不包含的所以要选建表语句之前的操作点（也可以选择起始时间 180829 13:07:48）  2，确定截止position end_log_pos 3276 或截止时间 180829 13:14:00  3，导出恢复数据sql#使用position导出sqlsudo mysqlbinlog --start-position=219 --stop-position=3276 /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql#使用时间导出sqlsudo mysqlbinlog --start-datetime=&#39;2018-08-29 13:07:48&#39; --stop-datetime=&#39;2018-08-29 13:14:00&#39; /var/log/mysql/mysql-bin.000004 &gt; ./recovery-restore.sql下面为导出的sql前半部分，可以看到BINLOG后面有base64的字符，这个就是对数据的操作/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;DELIMITER /*!*/;# at 4#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup# Warning: this binlog is either in use or was not closed properly.ROLLBACK/*!*/;BINLOG &#39;sv+FWw8BAAAAdwAAAHsAAAABAAQANS43LjIyLTB1YnVudHUwLjE2LjA0LjEtbG9nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACy/4VbEzgNAAgAEgAEBAQEEgAAXwAEGggAAAAICAgCAAAACgoKKioAEjQAAfEskqM=&#39;/*!*/;# at 219#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0use `thxopen`/*!*/;SET TIMESTAMP=1535519268/*!*/;SET @@session.pseudo_thread_id=15/*!*/;SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;SET @@session.sql_mode=1436549152/*!*/;SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;/*!\C utf8 *//*!*/;SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=8/*!*/;SET @@session.lc_time_names=0/*!*/;SET @@session.collation_database=DEFAULT/*!*/;create table tb_recovery_test(  id int not null ,  column1 varchar(32)          null,  column2 varchar(32)          null)/*!*/;# at 425#省略了后面的#省略了后面的#省略了后面的#省略了后面的  4，导入sql到数据库mysql -uroot -p database_name &lt; recovery-restore.sqlps：还可以加入[-f] 参数，强制执行，即忽略所有错误，根据实际情况使用这个参数运行结果：thxopen@Thxopen:~$ mysql -uroot -p thxopen &lt; recovery-restore.sqlEnter password:thxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 17Server version: 5.7.22-0ubuntu0.16.04.1-log (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt; use thxopen;Reading table information for completion of table and column namesYou can turn off this feature to get a quicker startup with -ADatabase changedmysql&gt; show tables;+-------------------+| Tables_in_thxopen |+-------------------+| tb_recovery_test  |+-------------------+1 row in set (0.00 sec)mysql&gt; select * from tb_recovery_test;+----+----------------------------------------------+------------------------+------------------+| id | column1                                      | column2                | column3          |+----+----------------------------------------------+------------------------+------------------+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药    | 修改了column2字段的值    | NULL             ||  3 | 新增了一个字段                                  | 新增了一个字段           | 修改了新增字段的值  |+----+----------------------------------------------+------------------------+------------------+2 rows in set (0.00 sec)mysql&gt;导入之后，重新登录到mysql，查看表，查看数据，已经恢复到drop之前的状态了，到此大功告成，数据恢复成功！导入恢复数据到数据库可能会遇到的错误      Duplicate entry 重复的实体，出现此错误代表恢复的sql脚本里，包含创建了实体的语句，重新执行一边，则报错        Duplicate column name 重复的列名称，理由同上        Duplicate key name 重复的键索引，理由同上        Can’t find record in ‘table_name’ 由于业务逻辑，有些数据删除，修改，新增，删除，修改反复这样操作，导致恢复的时候出现此错误        Cannot add or update a child row: a foreign key constraint fails (thxopen.tb_recovery_test, CONSTRAINT FKan5m1ygnxb4ibmq1ncqklji26 FOREIGN KEY (rid) REFERENCES tb_recovery_relate (id))由于外键关联，修改表的数据在另一个表中不存在导致        Table ‘table_name’ already exists 重复的表，恢复sql脚本了包含数据库里已经存在的表        Can’t write; duplicate key in table 创建表的外键名称重复了        MySQL server has gone away 由于导入的恢复sql太大，超过了mysql的限制，需要修改配置文件/etc/mysql/mysql.conf.d/mysqld.cnf 里 max_allowed_packet = 16M 配置，根据实际情况调大一些  总结对于文中的例子，恢复数据是100%的，但是在实际的项目中，虽然开启了log_bin，但不能想着万事大吉就不管了，我就是惨痛的经历，数据感觉50%都没恢复到。简直是血的教训，血的教训，血的教训啊~不过从这个也可以看出系统设计本身的问题，逻辑复杂，耦合度高，关联性太强，比如我误删的数据，由于表之间的关系比较复杂，恢复出来的数据有很多问题。主要是如下几个问题：  手动在Intellij Database Console执行的update语句，在恢复之后没有体现出来，字段是null  部分表的数据完全没有，一条数据也没有  由于我是覆盖数据，都是先drop表，然后又create了表，而日志文件又没有从最开始创建表的，所以执行恢复sql的时候，报了如上列出的所有error，对于重复表，重复字段这些，我把日志里的删除，可以解决，但是对于数据的关联出错，找不到记录的就太多了，没有办法一一修复，为了执行完成sql，导入的时候加了[-f]参数，忽略所有错误因为上面这些问题，加上日志本身也不全，导致数据根本没法100%的恢复说了这么多，还是一句话，没有规矩，不成方圆，做事要小心谨慎，按照一定的流程做事就可以减少犯错误的几率。定期备份数据，操作数据谨慎  Reference      https://www.cnblogs.com/cenalulu/archive/2013/01/08/2850820.html    https://blog.csdn.net/leshami/article/details/41962243    http://www.unixfbi.com/499.html    http://blog.51cto.com/suifu/1845457    https://www.cnblogs.com/leezhxing/p/3347610.html    http://www.hankcs.com/appos/database/mysql-restore-dropped-table.html    https://blog.csdn.net/weixin_41004350/article/details/78547005    https://blog.csdn.net/xyz846/article/details/52210542  ">
+    <meta itemprop="datePublished" content="August 28, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">在ubuntu下使用mysqlbinlog恢复drop后的数据
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="背景">背景</h2>
+
+<p>我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？</p>
+
+<p>在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。</p>
+
+<p>同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了mysql的日志功能，据说可以一定程度的恢复数据，
+这次我来验证一下，通过我几个小时的挣扎，数据恢复过来，但从结果来看，并不是100%的恢复了，没办法，只能再花时间精力把数据重新来过。</p>
+
+<p>只可惜什么都有就是没有后悔药，写下此篇，引以为戒，<strong>数据一定一定一定要备份！！！操作一定一定一定要谨慎！！！</strong></p>
+
+<p>虽然没有100%的恢复，但是如果没有开启<code class="highlighter-rouge">log_bin</code>那一定就恢复不了了，至少还有个救命稻草，下文介绍如何使用<code class="highlighter-rouge">mysqlbinlog</code>命令恢复drop后的数据</p>
+
+<h2 id="查看mysql日志是否开启">查看mysql日志是否开启</h2>
+
+<p>进入mysql的配置目录，一般在<code class="highlighter-rouge">/etc/mysql/mysql.conf.d</code>目录里面，有如下两个文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:/etc/mysql/mysql.conf.d<span class="nv">$ </span><span class="nb">ls
+</span>mysqld.cnf  mysqld_safe_syslog.cnf
+</code></pre></div></div>
+
+<p>编辑<code class="highlighter-rouge">mysqld.cnf</code>文件，找到<code class="highlighter-rouge">log_bin</code>配置</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># The following can be used as easy to replay backup logs or for replication.</span>
+<span class="c"># note: if you are setting up a replication slave, see README.Debian about</span>
+<span class="c">#       other settings you may need to change.</span>
+server-id               <span class="o">=</span> 1
+log_bin                 <span class="o">=</span> /var/log/mysql/mysql-bin.log
+expire_logs_days        <span class="o">=</span> 10
+max_binlog_size   <span class="o">=</span> 500M
+</code></pre></div></div>
+
+<p>默认情况下<code class="highlighter-rouge">log_bin</code>功能是关闭的，把 <code class="highlighter-rouge">server-id</code> 和 <code class="highlighter-rouge">log_bin</code> 取消注释，保存退出，重启mysql即可。</p>
+
+<h2 id="查找-mysql-日志文件">查找 mysql 日志文件</h2>
+
+<p>根据<code class="highlighter-rouge">log_bin</code>配置的日志目录，我找到了日志</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:/etc/mysql/mysql.conf.d<span class="nv">$ </span><span class="nb">cd</span> /var/log/mysql/
+thxopen@Thxopen:/var/log/mysql<span class="nv">$ </span><span class="nb">ls
+</span>error.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.index
+thxopen@Thxopen:/var/log/mysql<span class="nv">$ </span>ll
+总用量 364160
+drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./
+drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../
+<span class="nt">-rw-r-----</span> 1 mysql adm    108427282 8月  29 10:13 error.log
+<span class="nt">-rw-r-----</span> 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001
+<span class="nt">-rw-r-----</span> 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002
+<span class="nt">-rw-r-----</span> 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003
+<span class="nt">-rw-r-----</span> 1 mysql mysql        154 8月  29 10:06 mysql-bin.000004
+<span class="nt">-rw-r-----</span> 1 mysql mysql        128 8月  29 10:06 mysql-bin.index
+
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">mysql-bin.000001</code> 即为我们需要的日志文件，使用<code class="highlighter-rouge">mysqlbinlog</code>命令可以导出可执行的sql文件</p>
+
+<h2 id="mysqlbinlog-介绍">mysqlbinlog 介绍</h2>
+
+<p>像一般的系统一样，我们会对系统的每一个操作记录下操作日志，而<code class="highlighter-rouge">log_bin</code>就是对数据库的每一个操作记录下的一个二进制的日志，里面包含了我们
+所有执行的sql语句。</p>
+
+<p>通过此命令，我们可以导出我们操作的sql语句，这样达到恢复数据的目的。
+关于<code class="highlighter-rouge">mysqlbinlog</code>命令几个常使用的参数，可以帮助我们更快的找到我们的数据</p>
+
+<ul>
+  <li><code class="highlighter-rouge">--start-position</code> 起始位置（不包含）</li>
+  <li><code class="highlighter-rouge">--stop-position</code> 截止位置</li>
+  <li><code class="highlighter-rouge">--start-datetime</code> 起始时间</li>
+  <li><code class="highlighter-rouge">--stop-datetime</code> 截止时间</li>
+  <li><code class="highlighter-rouge">--base64-output=decode-rows</code> 输出的文件base64解码</li>
+</ul>
+
+<p>更多关于<code class="highlighter-rouge">mysqlbinlog</code>的参数可以通过参数<code class="highlighter-rouge">--help</code>获取</p>
+
+<h2 id="模拟实际的操作新增数据修改数据删除表恢复数据">模拟实际的操作，新增数据，修改数据，删除表，恢复数据</h2>
+
+<ul>
+  <li>1，创建一张测试表</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">table</span> <span class="n">tb_recovery_test</span>
+<span class="p">(</span>
+  <span class="n">id</span> <span class="n">int</span> <span class="k">not</span> <span class="k">null</span> <span class="p">,</span>
+  <span class="n">column1</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>          <span class="k">null</span><span class="p">,</span>
+  <span class="n">column2</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>          <span class="k">null</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>运行结果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; create table tb_recovery_test
+    -&gt; <span class="o">(</span>
+    -&gt;   <span class="nb">id </span>int not null ,
+    -&gt;   column1 varchar<span class="o">(</span>32<span class="o">)</span>          null,
+    -&gt;   column2 varchar<span class="o">(</span>32<span class="o">)</span>          null
+    -&gt; <span class="o">)</span><span class="p">;</span>
+Query OK, 0 rows affected <span class="o">(</span>0.05 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>2，插入测试数据</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">insert</span> <span class="k">into</span> <span class="n">tb_recovery_test</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">)</span> 
+      <span class="k">values</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s1">'数据操作需谨慎'</span><span class="p">,</span><span class="s1">'定期备份数据'</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">tb_recovery_test</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">)</span> 
+      <span class="k">values</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="s1">'后悔了'</span><span class="p">,</span><span class="s1">'可是没有后悔药'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>运行结果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; insert into tb_recovery_test <span class="o">(</span><span class="nb">id</span>,column1,column2<span class="o">)</span>
+    -&gt;       values <span class="o">(</span>1,<span class="s1">'数据操作需谨慎'</span>,<span class="s1">'定期备份数据'</span><span class="o">)</span><span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.01 sec<span class="o">)</span>
+
+mysql&gt; insert into tb_recovery_test <span class="o">(</span><span class="nb">id</span>,column1,column2<span class="o">)</span>
+    -&gt;       values <span class="o">(</span>2,<span class="s1">'后悔了'</span>,<span class="s1">'可是没有后悔药'</span><span class="o">)</span><span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.01 sec<span class="o">)</span>
+
+mysql&gt; <span class="k">select</span> <span class="k">*</span> from tb_recovery_test<span class="p">;</span>
++----+--------------+-------------------+
+| <span class="nb">id</span> | column1      | column2           |
++----+--------------+-------------------+
+|  1 | 数据操作需谨慎 | 定期备份数据        |
+|  2 | 后悔了        | 可是没有后悔药      |
++----+--------------+-------------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>3，修改数据，这里模拟一下真实的场景，对数据进行修改，删除，添加字段操作</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">update</span> <span class="n">tb_recovery_test</span> <span class="k">set</span> <span class="n">column1</span> <span class="o">=</span> <span class="s1">'数据操作需谨慎,定期备份数据,什么都有就是没有后悔药'</span><span class="p">,</span>
+        <span class="n">column2</span> <span class="o">=</span> <span class="k">null</span>
+        <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">delete</span> <span class="k">from</span> <span class="n">tb_recovery_test</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">tb_recovery_test</span> <span class="k">ADD</span> <span class="n">column3</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="k">NULL</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">tb_recovery_test</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">,</span><span class="n">column3</span><span class="p">)</span> 
+      <span class="k">values</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="s1">'新增了一个字段'</span><span class="p">,</span><span class="s1">'新增了一个字段'</span><span class="p">,</span><span class="s1">'新增了一个字段'</span><span class="p">);</span>
+<span class="k">update</span> <span class="n">tb_recovery_test</span> <span class="k">set</span> <span class="n">column3</span> <span class="o">=</span> <span class="s1">'修改了新增字段的值'</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">update</span> <span class="n">tb_recovery_test</span> <span class="k">set</span> <span class="n">column2</span> <span class="o">=</span> <span class="s1">'修改了column2字段的值'</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>运行结果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; update tb_recovery_test <span class="nb">set </span>column1 <span class="o">=</span> <span class="s1">'数据操作需谨慎,定期备份数据,什么都有就是没有后悔药'</span>,
+    -&gt;         column2 <span class="o">=</span> null
+    -&gt;         where <span class="nb">id</span> <span class="o">=</span> 2<span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.01 sec<span class="o">)</span>
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; delete from tb_recovery_test where <span class="nb">id</span> <span class="o">=</span> 1<span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.00 sec<span class="o">)</span>
+
+mysql&gt; ALTER TABLE tb_recovery_test ADD column3 varchar<span class="o">(</span>32<span class="o">)</span> NULL<span class="p">;</span>
+Query OK, 0 rows affected <span class="o">(</span>0.10 sec<span class="o">)</span>
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; insert into tb_recovery_test <span class="o">(</span><span class="nb">id</span>,column1,column2,column3<span class="o">)</span>
+    -&gt;       values <span class="o">(</span>3,<span class="s1">'新增了一个字段'</span>,<span class="s1">'新增了一个字段'</span>,<span class="s1">'新增了一个字段'</span><span class="o">)</span><span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.01 sec<span class="o">)</span>
+
+mysql&gt; update tb_recovery_test <span class="nb">set </span>column3 <span class="o">=</span> <span class="s1">'修改了新增字段的值'</span> where <span class="nb">id</span> <span class="o">=</span> 3<span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.00 sec<span class="o">)</span>
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; update tb_recovery_test <span class="nb">set </span>column2 <span class="o">=</span> <span class="s1">'修改了column2字段的值'</span> where <span class="nb">id</span> <span class="o">=</span> 2<span class="p">;</span>
+Query OK, 1 row affected <span class="o">(</span>0.01 sec<span class="o">)</span>
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; <span class="k">select</span> <span class="k">*</span> from tb_recovery_test<span class="p">;</span>
++----+-------------------------------------------------+-------------------------+-----------------+
+| <span class="nb">id</span> | column1                                         | column2                 | column3         |
++----+-------------------------------------------------+-------------------------+-----------------+
+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药       | 修改了column2字段的值     | NULL            |
+|  3 | 新增了一个字段                                     | 新增了一个字段            | 修改了新增字段的值 |
++----+--------------------------------------------------+------------------------+-----------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>4，最后我误操作，把表<code class="highlighter-rouge">tb_recovery_test</code>删除</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">drop</span> <span class="k">table</span> <span class="n">tb_recovery_test</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>运行结果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; drop table tb_recovery_test<span class="p">;</span>
+Query OK, 0 rows affected <span class="o">(</span>0.03 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<p>显然，最后一步操作之后，我们之前所做的操作白费了，还好我们开启了<code class="highlighter-rouge">log_bin</code>功能，通过日志来找回误操作删除的数据</p>
+
+<h2 id="通过日志文件恢复-tb_recovery_test-数据">通过日志文件恢复 tb_recovery_test 数据</h2>
+
+<p>进入到mysql保存日志的目录，通过前面配置可以知道日志文件保存在 <code class="highlighter-rouge">/var/log/mysql/</code> 下</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:/var/log/mysql<span class="nv">$ </span><span class="nb">cd</span> /var/log/mysql/
+thxopen@Thxopen:/var/log/mysql<span class="nv">$ </span><span class="nb">ls
+</span>error.log  mysql-bin.000001  mysql-bin.000002  mysql-bin.000003  mysql-bin.000004  mysql-bin.index
+thxopen@Thxopen:/var/log/mysql<span class="nv">$ </span>ll
+总用量 364164
+drwxr-x--- 1 mysql adm          512 8月  29 10:06 ./
+drwxrwxr-x 1 root  syslog       512 11月 18  2017 ../
+<span class="nt">-rw-r-----</span> 1 mysql adm    108427282 8月  29 10:13 error.log
+<span class="nt">-rw-r-----</span> 1 mysql mysql        154 8月  28 19:37 mysql-bin.000001
+<span class="nt">-rw-r-----</span> 1 mysql mysql        177 8月  28 19:55 mysql-bin.000002
+<span class="nt">-rw-r-----</span> 1 mysql mysql  264390804 8月  29 10:06 mysql-bin.000003
+<span class="nt">-rw-r-----</span> 1 mysql mysql       3411 8月  29 13:14 mysql-bin.000004
+<span class="nt">-rw-r-----</span> 1 mysql mysql        128 8月  29 10:06 mysql-bin.index
+</code></pre></div></div>
+
+<p>从列出的文件可以看出 <code class="highlighter-rouge">mysql-bin.000004</code> 文件是最近改动的，一般来说文件的后缀是增长的，根据实际情况，这里我选择最后一个日志文件进行恢复操作</p>
+
+<p>执行导出日志操作，先看看导出的sql具体是什么样的</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mysqlbinlog <span class="nt">--base64-output</span><span class="o">=</span>decode-rows /var/log/mysql/mysql-bin.000004 <span class="o">&gt;</span> ./recovery-decode.sql
+</code></pre></div></div>
+<p>ps: 添加<code class="highlighter-rouge">--base64-output=decode-rows</code> 参数导出的sql文件里不包含数据部分（即insert，delete，update），主要是方便分析，实际导出的
+sql是<strong>不能</strong>加这个参数的</p>
+
+<p>查看导出sql，我截取了文件的开头和结尾部分，中间部分省略</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/<span class="k">*</span><span class="o">!</span>50530 SET @@SESSION.PSEUDO_SLAVE_MODE<span class="o">=</span>1<span class="k">*</span>/<span class="p">;</span>
+/<span class="k">*</span><span class="o">!</span>50003 SET @OLD_COMPLETION_TYPE<span class="o">=</span>@@COMPLETION_TYPE,COMPLETION_TYPE<span class="o">=</span>0<span class="k">*</span>/<span class="p">;</span>
+DELIMITER /<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 4</span>
+<span class="c">#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup</span>
+<span class="c"># Warning: this binlog is either in use or was not closed properly.</span>
+ROLLBACK/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 123</span>
+<span class="c">#180829 10:06:43 server id 1  end_log_pos 154 CRC32 0xa18892ca 	Previous-GTIDs</span>
+<span class="c"># [empty]</span>
+<span class="c"># at 154</span>
+<span class="c">#180829 13:07:48 server id 1  end_log_pos 219 CRC32 0x7e4bd4d6 	Anonymous_GTID	last_committed=0	sequence_number=1	rbr_only=no</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'ANONYMOUS'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 219</span>
+<span class="c">#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0</span>
+use <span class="sb">`</span>thxopen<span class="sb">`</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519268/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.pseudo_thread_id<span class="o">=</span>15/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.foreign_key_checks<span class="o">=</span>1, @@session.sql_auto_is_null<span class="o">=</span>0, @@session.unique_checks<span class="o">=</span>1, @@session.autocommit<span class="o">=</span>1/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.sql_mode<span class="o">=</span>1436549152/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.auto_increment_increment<span class="o">=</span>1, @@session.auto_increment_offset<span class="o">=</span>1/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+/<span class="k">*</span><span class="o">!</span><span class="se">\C</span> utf8 <span class="k">*</span>//<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.character_set_client<span class="o">=</span>33,@@session.collation_connection<span class="o">=</span>33,@@session.collation_server<span class="o">=</span>8/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.lc_time_names<span class="o">=</span>0/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.collation_database<span class="o">=</span>DEFAULT/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+create table tb_recovery_test
+<span class="o">(</span>
+  <span class="nb">id </span>int not null ,
+  column1 varchar<span class="o">(</span>32<span class="o">)</span>          null,
+  column2 varchar<span class="o">(</span>32<span class="o">)</span>          null
+<span class="o">)</span>
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 425</span>
+
+<span class="c">#省略了中间的内容</span>
+<span class="c">#省略了中间的内容</span>
+<span class="c">#省略了中间的内容</span>
+<span class="c">#省略了中间的内容</span>
+
+<span class="c"># at 1970</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2035 CRC32 0x8c8ac254 	Anonymous_GTID	last_committed=6	sequence_number=7	rbr_only=yes</span>
+/<span class="k">*</span><span class="o">!</span>50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED<span class="k">*</span>//<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'ANONYMOUS'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2035</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2110 CRC32 0x1d22149c 	Query	thread_id=15	exec_time=0	error_code=0</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519410/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+BEGIN
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2110</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2181 CRC32 0xcccc7fab 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168</span>
+<span class="c"># at 2181</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2287 CRC32 0x322b3ff6 	Write_rows: table id 168 flags: STMT_END_F</span>
+<span class="c"># at 2287</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2318 CRC32 0xaa8d7acf 	Xid = 3075</span>
+COMMIT/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2318</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2383 CRC32 0x05b7bd59 	Anonymous_GTID	last_committed=7	sequence_number=8	rbr_only=yes</span>
+/<span class="k">*</span><span class="o">!</span>50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED<span class="k">*</span>//<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'ANONYMOUS'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2383</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2458 CRC32 0x171d4eab 	Query	thread_id=15	exec_time=0	error_code=0</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519410/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+BEGIN
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2458</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2529 CRC32 0xe95d3272 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168</span>
+<span class="c"># at 2529</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2713 CRC32 0x4386d86f 	Update_rows: table id 168 flags: STMT_END_F</span>
+<span class="c"># at 2713</span>
+<span class="c">#180829 13:10:10 server id 1  end_log_pos 2744 CRC32 0xcde5fff8 	Xid = 3076</span>
+COMMIT/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2744</span>
+<span class="c">#180829 13:10:19 server id 1  end_log_pos 2809 CRC32 0x3b9cc08b 	Anonymous_GTID	last_committed=8	sequence_number=9	rbr_only=yes</span>
+/<span class="k">*</span><span class="o">!</span>50718 SET TRANSACTION ISOLATION LEVEL READ COMMITTED<span class="k">*</span>//<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'ANONYMOUS'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2809</span>
+<span class="c">#180829 13:10:19 server id 1  end_log_pos 2884 CRC32 0xb86bbce3 	Query	thread_id=15	exec_time=0	error_code=0</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519419/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+BEGIN
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 2884</span>
+<span class="c">#180829 13:10:19 server id 1  end_log_pos 2955 CRC32 0x7b3dc472 	Table_map: `thxopen`.`tb_recovery_test` mapped to number 168</span>
+<span class="c"># at 2955</span>
+<span class="c">#180829 13:10:19 server id 1  end_log_pos 3180 CRC32 0x1ff6807f 	Update_rows: table id 168 flags: STMT_END_F</span>
+<span class="c"># at 3180</span>
+<span class="c">#180829 13:10:19 server id 1  end_log_pos 3211 CRC32 0xda138c1f 	Xid = 3077</span>
+COMMIT/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 3211</span>
+<span class="c">#180829 13:14:00 server id 1  end_log_pos 3276 CRC32 0x9e823905 	Anonymous_GTID	last_committed=9	sequence_number=10	rbr_only=no</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'ANONYMOUS'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 3276</span>
+<span class="c">#180829 13:14:00 server id 1  end_log_pos 3411 CRC32 0x2f9c474a 	Query	thread_id=15	exec_time=0	error_code=0</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519640/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+DROP TABLE <span class="sb">`</span>tb_recovery_test<span class="sb">`</span> /<span class="k">*</span> generated by server <span class="k">*</span>/
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@SESSION.GTID_NEXT<span class="o">=</span> <span class="s1">'AUTOMATIC'</span> /<span class="k">*</span> added by mysqlbinlog <span class="k">*</span>/ /<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+DELIMITER <span class="p">;</span>
+<span class="c"># End of log file</span>
+/<span class="k">*</span><span class="o">!</span>50003 SET <span class="nv">COMPLETION_TYPE</span><span class="o">=</span>@OLD_COMPLETION_TYPE<span class="k">*</span>/<span class="p">;</span>
+/<span class="k">*</span><span class="o">!</span>50530 SET @@SESSION.PSEUDO_SLAVE_MODE<span class="o">=</span>0<span class="k">*</span>/<span class="p">;</span>
+</code></pre></div></div>
+
+<p>从文件里可以看出我一开始的建表语句，也就是我每一步操作都记录在这个日志里，那么我只要把我之前的每一步都再执行一边，数据就能恢复回来，我们按照这个思路操作</p>
+
+<ul>
+  <li>1，先确定起始position，这里我选择 <code class="highlighter-rouge">end_log_pos 219</code> ，前面参数解释了，起始点是不包含的所以要选建表语句之前的操作点（也可以选择起始时间 <code class="highlighter-rouge">180829 13:07:48</code>）</li>
+  <li>2，确定截止position <code class="highlighter-rouge">end_log_pos 3276</code> 或截止时间 <code class="highlighter-rouge">180829 13:14:00</code></li>
+  <li>3，导出恢复数据sql</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#使用position导出sql</span>
+<span class="nb">sudo </span>mysqlbinlog <span class="nt">--start-position</span><span class="o">=</span>219 <span class="nt">--stop-position</span><span class="o">=</span>3276 /var/log/mysql/mysql-bin.000004 <span class="o">&gt;</span> ./recovery-restore.sql
+<span class="c">#使用时间导出sql</span>
+<span class="nb">sudo </span>mysqlbinlog <span class="nt">--start-datetime</span><span class="o">=</span><span class="s1">'2018-08-29 13:07:48'</span> <span class="nt">--stop-datetime</span><span class="o">=</span><span class="s1">'2018-08-29 13:14:00'</span> /var/log/mysql/mysql-bin.000004 <span class="o">&gt;</span> ./recovery-restore.sql
+</code></pre></div></div>
+
+<p>下面为导出的sql前半部分，可以看到<code class="highlighter-rouge">BINLOG</code>后面有base64的字符，这个就是对数据的操作</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/<span class="k">*</span><span class="o">!</span>50530 SET @@SESSION.PSEUDO_SLAVE_MODE<span class="o">=</span>1<span class="k">*</span>/<span class="p">;</span>
+/<span class="k">*</span><span class="o">!</span>50003 SET @OLD_COMPLETION_TYPE<span class="o">=</span>@@COMPLETION_TYPE,COMPLETION_TYPE<span class="o">=</span>0<span class="k">*</span>/<span class="p">;</span>
+DELIMITER /<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 4</span>
+<span class="c">#180829 10:06:42 server id 1  end_log_pos 123 CRC32 0xa3922cf1 	Start: binlog v 4, server v 5.7.22-0ubuntu0.16.04.1-log created 180829 10:06:42 at startup</span>
+<span class="c"># Warning: this binlog is either in use or was not closed properly.</span>
+ROLLBACK/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+BINLOG <span class="s1">'
+sv+FWw8BAAAAdwAAAHsAAAABAAQANS43LjIyLTB1YnVudHUwLjE2LjA0LjEtbG9nAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAACy/4VbEzgNAAgAEgAEBAQEEgAAXwAEGggAAAAICAgCAAAACgoKKioAEjQA
+AfEskqM=
+'</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 219</span>
+<span class="c">#180829 13:07:48 server id 1  end_log_pos 425 CRC32 0x331aefcb 	Query	thread_id=15	exec_time=0	error_code=0</span>
+use <span class="sb">`</span>thxopen<span class="sb">`</span>/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET <span class="nv">TIMESTAMP</span><span class="o">=</span>1535519268/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.pseudo_thread_id<span class="o">=</span>15/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.foreign_key_checks<span class="o">=</span>1, @@session.sql_auto_is_null<span class="o">=</span>0, @@session.unique_checks<span class="o">=</span>1, @@session.autocommit<span class="o">=</span>1/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.sql_mode<span class="o">=</span>1436549152/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.auto_increment_increment<span class="o">=</span>1, @@session.auto_increment_offset<span class="o">=</span>1/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+/<span class="k">*</span><span class="o">!</span><span class="se">\C</span> utf8 <span class="k">*</span>//<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.character_set_client<span class="o">=</span>33,@@session.collation_connection<span class="o">=</span>33,@@session.collation_server<span class="o">=</span>8/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.lc_time_names<span class="o">=</span>0/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+SET @@session.collation_database<span class="o">=</span>DEFAULT/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+create table tb_recovery_test
+<span class="o">(</span>
+  <span class="nb">id </span>int not null ,
+  column1 varchar<span class="o">(</span>32<span class="o">)</span>          null,
+  column2 varchar<span class="o">(</span>32<span class="o">)</span>          null
+<span class="o">)</span>
+/<span class="k">*</span><span class="o">!</span><span class="k">*</span>/<span class="p">;</span>
+<span class="c"># at 425</span>
+
+<span class="c">#省略了后面的</span>
+<span class="c">#省略了后面的</span>
+<span class="c">#省略了后面的</span>
+<span class="c">#省略了后面的</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>4，导入sql到数据库</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span> database_name &lt; recovery-restore.sql
+</code></pre></div></div>
+
+<p>ps：还可以加入[-f] 参数，强制执行，即忽略所有错误，根据实际情况使用这个参数</p>
+
+<p>运行结果：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span>mysql <span class="nt">-uroot</span> <span class="nt">-p</span> thxopen &lt; recovery-restore.sql
+Enter password:
+thxopen@Thxopen:~<span class="nv">$ </span>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>
+Enter password:
+Welcome to the MySQL monitor.  Commands end with <span class="p">;</span> or <span class="se">\g</span><span class="nb">.</span>
+Your MySQL connection <span class="nb">id </span>is 17
+Server version: 5.7.22-0ubuntu0.16.04.1-log <span class="o">(</span>Ubuntu<span class="o">)</span>
+
+Copyright <span class="o">(</span>c<span class="o">)</span> 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type <span class="s1">'help;'</span> or <span class="s1">'\h'</span> <span class="k">for </span>help. Type <span class="s1">'\c'</span> to clear the current input statement.
+
+mysql&gt; use thxopen<span class="p">;</span>
+Reading table information <span class="k">for </span>completion of table and column names
+You can turn off this feature to get a quicker startup with <span class="nt">-A</span>
+
+Database changed
+mysql&gt; show tables<span class="p">;</span>
++-------------------+
+| Tables_in_thxopen |
++-------------------+
+| tb_recovery_test  |
++-------------------+
+1 row <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+
+mysql&gt; <span class="k">select</span> <span class="k">*</span> from tb_recovery_test<span class="p">;</span>
++----+----------------------------------------------+------------------------+------------------+
+| <span class="nb">id</span> | column1                                      | column2                | column3          |
++----+----------------------------------------------+------------------------+------------------+
+|  2 | 数据操作需谨慎,定期备份数据,什么都有就是没有后悔药    | 修改了column2字段的值    | NULL             |
+|  3 | 新增了一个字段                                  | 新增了一个字段           | 修改了新增字段的值  |
++----+----------------------------------------------+------------------------+------------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+
+mysql&gt;
+</code></pre></div></div>
+
+<p>导入之后，重新登录到mysql，查看表，查看数据，已经恢复到drop之前的状态了，到此大功告成，数据恢复成功！</p>
+
+<h2 id="导入恢复数据到数据库可能会遇到的错误">导入恢复数据到数据库可能会遇到的错误</h2>
+
+<ul>
+  <li>
+    <p>Duplicate entry 重复的实体，出现此错误代表恢复的sql脚本里，包含创建了实体的语句，重新执行一边，则报错</p>
+  </li>
+  <li>
+    <p>Duplicate column name 重复的列名称，理由同上</p>
+  </li>
+  <li>
+    <p>Duplicate key name 重复的键索引，理由同上</p>
+  </li>
+  <li>
+    <p>Can’t find record in ‘table_name’ 由于业务逻辑，有些数据删除，修改，新增，删除，修改反复这样操作，导致恢复的时候出现此错误</p>
+  </li>
+  <li>
+    <p>Cannot add or update a child row: a foreign key constraint fails (<code class="highlighter-rouge">thxopen</code>.<code class="highlighter-rouge">tb_recovery_test</code>, CONSTRAINT <code class="highlighter-rouge">FKan5m1ygnxb4ibmq1ncqklji26</code> FOREIGN KEY (<code class="highlighter-rouge">rid</code>) REFERENCES <code class="highlighter-rouge">tb_recovery_relate</code> (<code class="highlighter-rouge">id</code>))
+由于外键关联，修改表的数据在另一个表中不存在导致</p>
+  </li>
+  <li>
+    <p>Table ‘table_name’ already exists 重复的表，恢复sql脚本了包含数据库里已经存在的表</p>
+  </li>
+  <li>
+    <p>Can’t write; duplicate key in table 创建表的外键名称重复了</p>
+  </li>
+  <li>
+    <p>MySQL server has gone away 由于导入的恢复sql太大，超过了mysql的限制，需要修改配置文件<code class="highlighter-rouge">/etc/mysql/mysql.conf.d/mysqld.cnf</code> 里 <code class="highlighter-rouge">max_allowed_packet = 16M</code> 配置，根据实际情况调大一些</p>
+  </li>
+</ul>
+
+<h2 id="总结">总结</h2>
+
+<p>对于文中的例子，恢复数据是100%的，但是在实际的项目中，虽然开启了<code class="highlighter-rouge">log_bin</code>，
+但不能想着万事大吉就不管了，我就是惨痛的经历，数据感觉50%都没恢复到。简直是血的教训，血的教训，血的教训啊~</p>
+
+<p>不过从这个也可以看出系统设计本身的问题，逻辑复杂，耦合度高，关联性太强，比如我误删的数据，
+由于表之间的关系比较复杂，恢复出来的数据有很多问题。</p>
+
+<p>主要是如下几个问题：</p>
+
+<ul>
+  <li>手动在Intellij Database Console执行的update语句，在恢复之后没有体现出来，字段是null</li>
+  <li>部分表的数据完全没有，一条数据也没有</li>
+  <li>由于我是覆盖数据，都是先drop表，然后又create了表，而日志文件又没有从最开始创建表的，
+所以执行恢复sql的时候，报了如上列出的所有error，对于重复表，重复字段这些，我把日志里的删除，可以解决，
+但是对于数据的关联出错，找不到记录的就太多了，没有办法一一修复，为了执行完成sql，导入的时候加了[-f]参数，忽略所有错误</li>
+</ul>
+
+<p>因为上面这些问题，加上日志本身也不全，导致数据根本没法100%的恢复</p>
+
+<p>说了这么多，还是一句话，<strong>没有规矩，不成方圆</strong>，做事要小心谨慎，按照一定的流程做事就可以减少犯错误的几率。</p>
+
+<p><strong>定期备份数据，操作数据谨慎</strong></p>
+
+<blockquote>
+  <p>Reference</p>
+  <ul>
+    <li><a href="https://www.cnblogs.com/cenalulu/archive/2013/01/08/2850820.html">https://www.cnblogs.com/cenalulu/archive/2013/01/08/2850820.html</a></li>
+    <li><a href="https://blog.csdn.net/leshami/article/details/41962243">https://blog.csdn.net/leshami/article/details/41962243</a></li>
+    <li><a href="http://www.unixfbi.com/499.html">http://www.unixfbi.com/499.html</a></li>
+    <li><a href="http://blog.51cto.com/suifu/1845457">http://blog.51cto.com/suifu/1845457</a></li>
+    <li><a href="https://www.cnblogs.com/leezhxing/p/3347610.html">https://www.cnblogs.com/leezhxing/p/3347610.html</a></li>
+    <li><a href="http://www.hankcs.com/appos/database/mysql-restore-dropped-table.html">http://www.hankcs.com/appos/database/mysql-restore-dropped-table.html</a></li>
+    <li><a href="https://blog.csdn.net/weixin_41004350/article/details/78547005">https://blog.csdn.net/weixin_41004350/article/details/78547005</a></li>
+    <li><a href="https://blog.csdn.net/xyz846/article/details/52210542">https://blog.csdn.net/xyz846/article/details/52210542</a></li>
+  </ul>
+</blockquote>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#drop" class="page__taxonomy-item" rel="tag">drop</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#mysql" class="page__taxonomy-item" rel="tag">mysql</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#mysqlbinlog" class="page__taxonomy-item" rel="tag">mysqlbinlog</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#database" class="page__taxonomy-item" rel="tag">database</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2018-08-28T00:00:00+08:00">August 28, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8ubuntu%E4%B8%8B%E4%BD%BF%E7%94%A8mysqlbinlog%E6%81%A2%E5%A4%8Ddrop%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%20http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2018%2F08%2F28%2Fmysqlbinlog-recovery-data.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2018%2F08%2F28%2Fmysqlbinlog-recovery-data.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2018%2F08%2F28%2Fmysqlbinlog-recovery-data.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2018%2F08%2F28%2Fmysqlbinlog-recovery-data.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Redis
+">向前</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
+
+安装Redis
+
+sudo apt-get install redis-server
+
+
+更改默认的端口
+
+redis默认的访问端口是6379，避免端口被恶意程序使用，我们修改redis的默认端口
+
+打开配置文件/e...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 
+的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。
+
+安装RabbitMQ
+
+
+  第一步：添加源
+    echo 'de...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
+
+安装Nginx
+
+在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
+
+sudo apt-get install nginx
+
+
+默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linux/2018/02/27/install-mysql-on-ubuntu.html" rel="permalink">在Ubuntu下安装MySQL
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。
+
+安装MySQL
+
+sudo apt-get install mysql-server mysql-client
+
+
+安装过程中会要求输入root用户的密码，记下自己输入的密码即可
+
+安装完后检测是否安装成功，...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>

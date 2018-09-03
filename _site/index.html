@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>单客欧朋</title>
-<meta name="description" content="An amazing website.">
+<meta name="description" content="好记性不如烂笔头">
 
 
 
@@ -184,7 +184,7 @@
     <ul class="author__urls social-icons">
       
         <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
-          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 高新区 天府2街 蜀都中心</span>
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
         </li>
       
 
@@ -300,18 +300,18 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/storage/2018/03/10/about-oss-security-stuffs.html" rel="permalink">如何安全的使用OSS-访问控制之策略（Policy）管理
+        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">安全使用oss
+    <p class="archive__item-excerpt" itemprop="description">背景
 
-配置策略，限制操作
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
 
-生成公网访问的url
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
 
-</p>
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
   </article>
 </div>
 
@@ -324,18 +324,23 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" rel="permalink">初探oss-事件通知（http endpoint）
+        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">初识oss
+    <p class="archive__item-excerpt" itemprop="description">Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
 
-it技术更新换代太快了，我们的思想也必须跟上才行。
+安装Redis
 
-最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。
+sudo apt-get install redis-server
 
-好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批...</p>
+
+更改默认的端口
+
+redis默认的访问端口是6379，避免端口被恶意程序使用，我们修改redis的默认端口
+
+打开配置文件/e...</p>
   </article>
 </div>
 
@@ -348,24 +353,19 @@ it技术更新换代太快了，我们的思想也必须跟上才行。
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="permalink">如何查看磁盘使用情况 du df
+        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
+    <p class="archive__item-excerpt" itemprop="description">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 
+的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。
 
-du -smh folder_name
-
-
-查看磁盘占用
-df -hT
+安装RabbitMQ
 
 
-列出某目录下文件占用空间情况
-du -smh *
-
-</p>
+  第一步：添加源
+    echo 'de...</p>
   </article>
 </div>
 
@@ -378,16 +378,21 @@ du -smh *
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="permalink">如果从一个主机复制文件到另一个主机：scp
+        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
+    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
 
-在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
-上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
-讲的这两个...</p>
+安装Nginx
+
+在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
+
+sudo apt-get install nginx
+
+
+默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
 
@@ -400,16 +405,21 @@ du -smh *
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html" rel="permalink">如果从一个主机复制文件到另一个主机：rsync
+        <a href="http://localhost:4000/linux/2018/02/27/install-mysql-on-ubuntu.html" rel="permalink">在Ubuntu下安装MySQL
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">rsync这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。
+    <p class="archive__item-excerpt" itemprop="description">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。
+
+安装MySQL
+
+sudo apt-get install mysql-server mysql-client
 
 
-  rsync 可以作为一个相当棒的异地备援系统的备份指令！ 因为 rsync 可以达到类似『镜相 (mirror) 』的功能！
-rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的速度快，而且他在...</p>
+安装过程中会要求输入root用户的密码，记下自己输入的密码即可
+
+安装完后检测是否安装成功，...</p>
   </article>
 </div>
 
@@ -457,7 +467,7 @@ rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的�
     
 
     
-      <li><a href="http://localhost:4000/page7/">7</a></li>
+      <li><a href="http://localhost:4000/page8/">8</a></li>
     
 
     
