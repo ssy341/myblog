@@ -2,8 +2,6 @@
 categories: ide
 tags: [intellij idea,远程调试,tomcat]
 title: 用Intellij IDEA断点调试远程服务器部署的tomcat项目
-toc: true
-toc_label: "目录"
 ---
 
 

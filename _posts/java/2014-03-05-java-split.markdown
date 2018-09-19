@@ -1,9 +1,9 @@
 ---
-layout: single
 title: java的split方法使用问题
 categories: java
 tags: [split]
 date: 2014-03-05
+toc: false
 ---
 
 首先看如下代码
@@ -28,9 +28,9 @@ public class StrTest {
  
 执行结果如下：
 
-
-
+```
 1
+-
 1-1-101
 admin
 ```

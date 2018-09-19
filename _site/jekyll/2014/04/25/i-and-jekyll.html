@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="jekyll初级入门-jekyll安装运行">
-<meta property="og:url" content="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html">
+<meta property="og:url" content="http://www.thxopen.com/jekyll/2014/04/25/i-and-jekyll.html">
 
 
   <meta property="og:description" content="  jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。说到jekyll，我也是无意之间接触到的，以前都用svn管理代码，中国近几年【开源】也是越来越旺盛，不过我们不得不感谢开源给我们带来的好处。说到开源，有些人就会想起github（简单说就是一个在线托管代码的），上面托管了很多优秀的开源软件，给我们程序员带来极大的便利，再次感谢开源。从github开始，我管理代码的方式也从svn到git了，通过后面的学习，发现git确实有独特之处，让我一下子爱上了她。github是外国人做的，她的功能不简单，不仅仅可以托管代码，他还提供了一个生成demo的静态网页的功能，这个就是jekyll的功劳。jekyll是ruby上的一款插件（ps：我对于ruby不熟悉，如果对ruby的描述上有误的还请指出）基于jekyll的性质，在github上搭建免费、不限流量的blog貌似就火起来了，有些程序员爱折腾，不喜欢那些已经很成熟的blog系统，比如c*n,博客等等，即使jekyll提供的功能没有那些丰富、高级，但是用来做blog，我觉得已经非常好了。本站就是使用jekyll，不过在这里给大家提醒下，虽然github上搭建blog是免费的，但是对于我们中国人来说，免费好像就是无限制的压榨，像之前github上就因为一个js的引用，导致中国ip暂时不能访问github，所以我觉得开源，免费我们还得好好像外国人学习。之前我也是在github上弄的，后面还是自己购买了空间，而且速度还快些，毕竟github是国外的服务器。说了这么多废话，还么进入正题呢？呵呵！其实我也是比较爱折腾的，而且希望能一直折腾下去.我在使用jekyll的过程中有遇到问题和困难，自己搜索记录下来，下面就简单讲讲怎么安装jekyll搭建自己的网站。安装jekyll之前要安装ruby环境，ruby安装很简单，在网站下载ruby核心包和开发包，解压后配置下环境变量即可使用，下面是在windows下安装ruby相关包下载地址：http://rubyinstaller.org/downloads/下载自己对应系统的版本即可，我是64位的操作系统，下载的  Ruby 2.0.0-p451 (x64)  DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe下载完后，把ruby放在d:/tool/ruby下，devkit放在d:/tool/devkit,接下来打开命令行(开始键+r，输入cmd)然后添加环境变量：RUBY_HOME  d:/tool/ruby修改path环境，在最后追加 %RUBY_HOME%/bin保存环境变量，再到命令行输入 ruby --version，可以看到打印出版本信息d:\tool\ruby&gt;ruby --versionruby 2.0.0p451 (2014-02-24) [i386-mingw32]这里配置好后，cmd下进入到devkit目录d:\tool&gt;cd devkitd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  sharedevkitvars.ps1  etc    lib      mingw  msys.ico  sbin执行初始化命令, 执行完后可以看到有config.yml文件生成d:\tool\devkit&gt;ruby dk.rb initd:\tool\devkit&gt;lsbin         devkitvars.bat  dk.rb  include  m.ico  msys.bat  postinstall  shareconfig.yml  devkitvars.ps1  etc    lib      mingw  msys.ico  sbin打开config.yml文件，配置ruby的目录---- d:\tool\ruby保存退出，然后再执行ruby dk.rb install到这里ruby的环境已经安装完毕，你可以查看相关信息，比如gem版本d:\tool\devkit&gt;gem --version2.2.2本地安装了那些插件E:\tools\devkit&gt;gem list --local*** LOCAL GEMS ***bigdecimal (1.2.0)blankslate (2.1.2.4)celluloid (0.15.2)celluloid-io (0.15.0)classifier (1.3.4)colorator (0.1)commander (4.1.6)fast-stemmer (1.0.2)ffi (1.9.3 x86-mingw32)highline (1.6.21)io-console (0.4.2)jekyll (1.5.1)json (1.7.7)liquid (2.5.5)listen (2.7.1, 1.3.1)maruku (0.7.0)minitest (4.3.2)nio4r (1.0.0)parslet (1.5.0)posix-spawn (0.3.8)psych (2.0.5, 2.0.0)pygments.rb (0.5.4)rake (0.9.6)rb-fsevent (0.9.4)rb-inotify (0.9.3)rb-kqueue (0.2.2)rdoc (4.0.0)redcarpet (2.3.0)rubygems-update (2.2.2)safe_yaml (1.0.2)test-unit (2.0.0.0)timers (1.1.0)toml (0.1.1)wdm (0.1.0)yajl-ruby (1.1.0 x86-mingw32)以上步骤安装完后，在命令行输入gem install jekyll，等待自动安装完成，成功之后，再输入jekyll --version查看版本接下来最神奇的时刻来到了，在命令行下随便进入一个目录，这里假设是d:/,输入jekyll new myblog，这时会在该目录下生成一个myblog的文件夹，先不管，命令行进入该目录cd myblog，再输入jekyll serve ,这个时候打开浏览器访问http://localhost:4000怎么样，是不是很神奇，一个简单的站点就完成了，如果你需要更好的使用jekyll，下面有官方的api，有详细的介绍，相信只要按照api来，你很快就会创建出属于自己的站点，just do it如果遇到问题，在文章下方留言，我尽快回复，或者直接发邮件和在微博私信我附：  git基本操作  jekyll英文官方文档  jekyll中文官方文档">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html">
+<link rel="canonical" href="http://www.thxopen.com/jekyll/2014/04/25/i-and-jekyll.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -302,6 +313,13 @@
       
 
       <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              
+            </nav>
+          </aside>
         
         <p><img src="/assets/images/logo-2x.png" alt="jekyll-logo" /></p>
 
@@ -457,11 +475,11 @@ yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
     
       
       
-      <a href="http://localhost:4000/tags/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#jekyll%E5%85%A5%E9%97%A8" class="page__taxonomy-item" rel="tag">jekyll入门</a>
+      <a href="http://www.thxopen.com/tags/#jekyll%E5%85%A5%E9%97%A8" class="page__taxonomy-item" rel="tag">jekyll入门</a>
     
     </span>
   </p>
@@ -482,7 +500,7 @@ yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
     
       
       
-      <a href="http://localhost:4000/categories/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a>
+      <a href="http://www.thxopen.com/categories/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a>
     
     </span>
   </p>
@@ -498,24 +516,24 @@ yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=jekyll%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8-jekyll%E5%AE%89%E8%A3%85%E8%BF%90%E8%A1%8C%20http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=jekyll%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8-jekyll%E5%AE%89%E8%A3%85%E8%BF%90%E8%A1%8C%20http%3A%2F%2Fwww.thxopen.com%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fjekyll%2F2014%2F04%2F25%2Fi-and-jekyll.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/jekyll/2014/04/18/jekyll-server-watch-error.html" class="pagination--pager" title="cannot load such file – wdm (LoadError)
+      <a href="http://www.thxopen.com/jekyll/2014/04/18/jekyll-server-watch-error.html" class="pagination--pager" title="cannot load such file – wdm (LoadError)
 ">向前</a>
     
     
-      <a href="http://localhost:4000/nas/2014/05/29/ata-status-error.html" class="pagination--pager" title="freenas启动过程中屏幕不断提示ata status error
+      <a href="http://www.thxopen.com/nas/2014/05/29/ata-status-error.html" class="pagination--pager" title="freenas启动过程中屏幕不断提示ata status error
 ">向后</a>
     
   </nav>
@@ -540,7 +558,36 @@ yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -564,7 +611,7 @@ yajl-ruby <span class="o">(</span>1.1.0 x86-mingw32<span class="o">)</span>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -593,7 +640,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -606,33 +653,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -667,7 +687,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -677,15 +697,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

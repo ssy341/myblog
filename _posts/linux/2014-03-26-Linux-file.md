@@ -3,6 +3,7 @@ categories: linux
 tags: [linux命令,鸟哥私房菜]
 title: linux 文件操作命令 rmdir mkdir rm 
 date: 2014-3-26
+toc: false
 ---
 
 rmdir 删除一个空的目录

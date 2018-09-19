@@ -3,6 +3,7 @@ categories: linux
 tags: [linux命令,鸟哥私房菜]
 title: linux 文件解压、压缩 tar zip 
 date: 2014-3-26
+toc: false
 ---
 
 tar/zip 解压

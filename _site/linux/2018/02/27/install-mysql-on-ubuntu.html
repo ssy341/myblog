@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>在Ubuntu下安装MySQL - 单客欧朋</title>
-<meta name="description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可安装完后检测是否安装成功，使用root用户和刚刚输入的密码连接到mysqlmysql -uroot -p刚刚输入的密码Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑如下目录mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo mysql service restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -p你的密码grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;flush privileges;exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+<meta name="description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
 
 
 
@@ -18,10 +18,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="在Ubuntu下安装MySQL">
-<meta property="og:url" content="http://localhost:4000/linux/2018/02/27/install-mysql-on-ubuntu.html">
+<meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-mysql-on-ubuntu.html">
 
 
-  <meta property="og:description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可安装完后检测是否安装成功，使用root用户和刚刚输入的密码连接到mysqlmysql -uroot -p刚刚输入的密码Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑如下目录mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo mysql service restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -p你的密码grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;flush privileges;exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+  <meta property="og:description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
 
 
 
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/linux/2018/02/27/install-mysql-on-ubuntu.html">
+<link rel="canonical" href="http://www.thxopen.com/linux/2018/02/27/install-mysql-on-ubuntu.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -288,7 +299,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="在Ubuntu下安装MySQL">
-    <meta itemprop="description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可安装完后检测是否安装成功，使用root用户和刚刚输入的密码连接到mysqlmysql -uroot -p刚刚输入的密码Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑如下目录mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo mysql service restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -p你的密码grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;flush privileges;exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+    <meta itemprop="description" content="MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
     <meta itemprop="datePublished" content="February 27, 2018">
     
 
@@ -303,6 +314,19 @@
 
       <section class="page__content" itemprop="text">
         
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#安装mysql">安装MySQL</a></li>
+  <li><a href="#更改默认端口">更改默认端口</a></li>
+  <li><a href="#授权可以访问的客户端">授权可以访问的客户端</a></li>
+  <li><a href="#在console中使用mysql">在console中使用mysql</a></li>
+  <li><a href="#使用mysql-workbench操作mysql数据">使用MySQL Workbench操作mysql数据</a></li>
+</ul>
+            </nav>
+          </aside>
+        
         <p>MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。</p>
 
 <h2 id="安装mysql">安装MySQL</h2>
@@ -312,33 +336,12 @@
 
 <p>安装过程中会要求输入root用户的密码，记下自己输入的密码即可</p>
 
-<p>安装完后检测是否安装成功，使用root用户和刚刚输入的密码连接到mysql</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>刚刚输入的密码
-
-Welcome to the MySQL monitor.  Commands end with <span class="p">;</span> or <span class="se">\g</span><span class="nb">.</span>
-Your MySQL connection <span class="nb">id </span>is 6
-Server version: 5.7.22-0ubuntu0.16.04.1 <span class="o">(</span>Ubuntu<span class="o">)</span>
-
-Copyright <span class="o">(</span>c<span class="o">)</span> 2000, 2018, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type <span class="s1">'help;'</span> or <span class="s1">'\h'</span> <span class="k">for </span>help. Type <span class="s1">'\c'</span> to clear the current input statement.
-
-mysql&gt;
-
-</code></pre></div></div>
-
-<p>出现上述代表mysql安装成功</p>
-
 <h2 id="更改默认端口">更改默认端口</h2>
 
 <p>mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击</p>
 
-<p>编辑如下目录mysql的配置文件：</p>
+<p>编辑目录 <code class="highlighter-rouge">/etc/mysql/mysql.conf.d/mysqld.cnf</code> 下mysql的配置文件：</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/mysql/mysql.conf.d/mysqld.cnf
 
 <span class="c"># * Basic Settings</span>
@@ -355,7 +358,7 @@ skip-external-locking
 </code></pre></div></div>
 <p>这里演示把默认端口修改为7777，保存修改，重启mysql即可</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mysql service restart
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service mysql restart
 </code></pre></div></div>
 
 <p>重启之后，查询端口来验证是否修改成功</p>
@@ -371,11 +374,12 @@ tcp        0      0 0.0.0.0:7777            0.0.0.0:<span class="k">*</span>    
 
 <p>首先登录到mysql，授权root用户可以从任意ip获得所有特权</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>你的密码
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>
+Enter password:
 
-grant all privileges on <span class="k">*</span>.<span class="k">*</span> to <span class="s1">'root'</span>@<span class="s1">'%'</span> identified by <span class="s1">'你的密码'</span><span class="p">;</span>
-flush privileges<span class="p">;</span>
-<span class="nb">exit</span><span class="p">;</span>
+mysql&gt; grant all privileges on <span class="k">*</span>.<span class="k">*</span> to <span class="s1">'root'</span>@<span class="s1">'%'</span> identified by <span class="s1">'你的密码'</span><span class="p">;</span>
+mysql&gt; flush privileges<span class="p">;</span>
+mysql&gt; <span class="nb">exit</span><span class="p">;</span>
 </code></pre></div></div>
 
 <p>ps：为了安全，你可以指定ip和操作权限</p>
@@ -393,6 +397,58 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
 
 </code></pre></div></div>
 <p>把<code class="highlighter-rouge">127.0.0.1</code>修改为<code class="highlighter-rouge">0.0.0.0</code>即可，然后保存修改，重启mysql生效</p>
+
+<h2 id="在console中使用mysql">在console中使用mysql</h2>
+
+<p>检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>
+Enter password:
+
+Welcome to the MySQL monitor.  Commands end with <span class="p">;</span> or <span class="se">\g</span><span class="nb">.</span>
+Your MySQL connection <span class="nb">id </span>is 6
+Server version: 5.7.22-0ubuntu0.16.04.1 <span class="o">(</span>Ubuntu<span class="o">)</span>
+
+Copyright <span class="o">(</span>c<span class="o">)</span> 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type <span class="s1">'help;'</span> or <span class="s1">'\h'</span> <span class="k">for </span>help. Type <span class="s1">'\c'</span> to clear the current input statement.
+
+mysql&gt;
+
+</code></pre></div></div>
+
+<p>出现上述代表mysql安装成功，可以正常使用</p>
+
+<h2 id="使用mysql-workbench操作mysql数据">使用MySQL Workbench操作mysql数据</h2>
+
+<p><a href="https://www.mysql.com/products/workbench/">MySQL Workbench</a> 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。
+支持在Windows, Linux 和 Mac OS X上使用。</p>
+
+<p>在官网上<a href="https://dev.mysql.com/downloads/workbench/">下载</a>对应平台的安装包，安装即可使用。</p>
+
+<p>工具欢迎面如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql workbench dashboard.png" alt="mysql workbench dashboard" /></p>
+
+<p>界面看起来比较清爽，简洁，但是功能非常强大。</p>
+
+<p>可以通过【加号】按钮新建一个mysql连接，如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql new connection.png" alt="mysql new connection" /></p>
+
+<p>输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。</p>
+
+<p>进入MySQL Workbench主界面，如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql sql console.png" alt="mysql sql console" /></p>
+
+<p>主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域</p>
+
+<p>整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。</p>
 
 <p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
 
@@ -422,11 +478,11 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
     
       
       
-      <a href="http://localhost:4000/tags/#nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+      <a href="http://www.thxopen.com/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
     
     </span>
   </p>
@@ -447,7 +503,7 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
     
       
       
-      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+      <a href="http://www.thxopen.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
     
     </span>
   </p>
@@ -463,24 +519,24 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85MySQL%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85MySQL%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-mysql-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/linux/2018/02/27/install-java-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装JAVA开发环境
+      <a href="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装JAVA开发环境
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Nginx
+      <a href="http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Nginx
 ">向后</a>
     
   </nav>
@@ -505,7 +561,36 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -529,7 +614,7 @@ bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把12
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -558,7 +643,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -571,33 +656,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -632,7 +690,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -642,15 +700,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

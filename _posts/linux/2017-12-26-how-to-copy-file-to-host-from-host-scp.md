@@ -3,6 +3,7 @@ categories: linux
 tags: [linux命令,鸟哥私房菜]
 title: 如果从一个主机复制文件到另一个主机：scp 
 date: 2017-12-26
+toc: false
 ---
 
 在linux下复制文件通常使用`cp`命令完成，今天介绍另外两个命令`scp`,`rsync`

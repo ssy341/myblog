@@ -1,9 +1,9 @@
 ---
-layout: single
 title: git基本操作
 categories: git
 tags: [git基本操作命令]
 date: 2013-12-18
+toc: false
 ---
 
 git clone git@github.com:ssy341/myblog.git  克隆项目到本地（项目名称即为文件夹名称）

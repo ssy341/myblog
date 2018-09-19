@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="登陆openstack提示You are not authorized for any projects.">
-<meta property="og:url" content="http://localhost:4000/openstack/2014/03/28/openstack_login_error_note.html">
+<meta property="og:url" content="http://www.thxopen.com/openstack/2014/03/28/openstack_login_error_note.html">
 
 
   <meta property="og:description" content="一路配置过来，安装keystone glance nova 最后能打开主页面，我输入登录名和密码提示我没有授权任何project下面是我执行的 keystone_data.sh#!/bin/sh## Keystone Datas## Description: Fill Keystone with datas.# Mainly inspired by http://www.hastexo.com/resources/docs/installing-openstack-essex-20121-ubuntu-1204-precise-pangolin# Written by Martin Gerhard Loschwitz / Hastexo# Modified by Emilien Macchi / StackOps## Support: openstack@lists.launchpad.net# License: Apache Software License (ASL) 2.0##ADMIN_PASSWORD=${ADMIN_PASSWORD:-password}ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}SERVICE_PASSWORD=${SERVICE_PASSWORD:-$ADMIN_PASSWORD}export SERVICE_TOKEN=&quot;1234567890&quot;export SERVICE_ENDPOINT=&quot;http://localhost:35357/v2.0&quot;SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}get_id () {    echo `$@ | awk &#39;/ id / { print $4 }&#39;`}# TenantsADMIN_TENANT=$(get_id keystone tenant-create --name=admin)SERVICE_TENANT=$(get_id keystone tenant-create --name=$SERVICE_TENANT_NAME)DEMO_TENANT=$(get_id keystone tenant-create --name=demo)INVIS_TENANT=$(get_id keystone tenant-create --name=invisible_to_admin)# UsersADMIN_USER=$(get_id keystone user-create --name=admin --pass=&quot;$ADMIN_PASSWORD&quot; --email=admin@domain.com)DEMO_USER=$(get_id keystone user-create --name=demo --pass=&quot;$ADMIN_PASSWORD&quot; --email=demo@domain.com)# RolesADMIN_ROLE=$(get_id keystone role-create --name=admin)KEYSTONEADMIN_ROLE=$(get_id keystone role-create --name=KeystoneAdmin)KEYSTONESERVICE_ROLE=$(get_id keystone role-create --name=KeystoneServiceAdmin)# Add Roles to Users in Tenantskeystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $ADMIN_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $DEMO_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONEADMIN_ROLE --tenant-id $ADMIN_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONESERVICE_ROLE --tenant-id $ADMIN_TENANT# The Member role is used by Horizon and SwiftMEMBER_ROLE=$(get_id keystone role-create --name=Member)keystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $DEMO_TENANTkeystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $INVIS_TENANT# Configure service users/rolesNOVA_USER=$(get_id keystone user-create --name=nova --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=nova@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $NOVA_USER --role-id $ADMIN_ROLEGLANCE_USER=$(get_id keystone user-create --name=glance --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=glance@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $GLANCE_USER --role-id $ADMIN_ROLESWIFT_USER=$(get_id keystone user-create --name=swift --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=swift@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $SWIFT_USER --role-id $ADMIN_ROLERESELLER_ROLE=$(get_id keystone role-create --name=ResellerAdmin)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $NOVA_USER --role-id $RESELLER_ROLEQUANTUM_USER=$(get_id keystone user-create --name=quantum --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=quantum@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $QUANTUM_USER --role-id $ADMIN_ROLECINDER_USER=$(get_id keystone user-create --name=cinder --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=cinder@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $CINDER_USER --role-id $ADMIN_ROLE执行完上面的，用命令查看 keystone user-list   keystone role-list  keystone tenant-list 均有值 ，这是为什么呢？根据错误提示“没有被授权任何项目”，我联想到是不是user和role没有进行关联呢？打开keystone实例，总共10张表，分别为：  ec2_credential  ENDPOINT  metadata  migrate_version  role  service  tenant  token  user  user_tenant_membership我一个表一个表查看，发现user_tenant_membership这张表有两个字段user_id和tenant_id，但是没有值，我查看表结构发现时外键关联的，我尝试把user和tenant进行关联，重新登录，竟然ok了分析：初次接触openstack，太多东西不明白，对照书上操作，新的技术更新比较快，书上的内容就不同步了，以上的keystone datas 应该是少添加了user的权限或添加错误，或许还有其他问题，不过暂时还没有发现，再以后的操作过程中再记录下来">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/openstack/2014/03/28/openstack_login_error_note.html">
+<link rel="canonical" href="http://www.thxopen.com/openstack/2014/03/28/openstack_login_error_note.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -303,6 +314,13 @@
 
       <section class="page__content" itemprop="text">
         
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              
+            </nav>
+          </aside>
+        
         <p>一路配置过来，安装keystone glance nova 最后能打开主页面，我输入登录名和密码提示我没有授权任何project
 下面是我执行的 <code class="highlighter-rouge">keystone_data.sh</code></p>
 
@@ -406,7 +424,7 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
       
       
-      <a href="http://localhost:4000/tags/#keystone" class="page__taxonomy-item" rel="tag">keystone</a>
+      <a href="http://www.thxopen.com/tags/#keystone" class="page__taxonomy-item" rel="tag">keystone</a>
     
     </span>
   </p>
@@ -427,7 +445,7 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
       
       
-      <a href="http://localhost:4000/categories/#openstack" class="page__taxonomy-item" rel="tag">openstack</a>
+      <a href="http://www.thxopen.com/categories/#openstack" class="page__taxonomy-item" rel="tag">openstack</a>
     
     </span>
   </p>
@@ -443,24 +461,24 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E7%99%BB%E9%99%86openstack%E6%8F%90%E7%A4%BAYou+are+not+authorized+for+any+projects.%20http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E7%99%BB%E9%99%86openstack%E6%8F%90%E7%A4%BAYou+are+not+authorized+for+any+projects.%20http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/openstack/2014/03/27/openstack_FAQ.html" class="pagination--pager" title="执行keystone-manage db_sync错误
+      <a href="http://www.thxopen.com/openstack/2014/03/27/openstack_FAQ.html" class="pagination--pager" title="执行keystone-manage db_sync错误
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2014/03/30/Linux-parted.html" class="pagination--pager" title="ubuntu server下建立分区表/分区/格式化/自动挂载
+      <a href="http://www.thxopen.com/linux/2014/03/30/Linux-parted.html" class="pagination--pager" title="ubuntu server下建立分区表/分区/格式化/自动挂载
 ">向后</a>
     
   </nav>
@@ -485,7 +503,36 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -509,7 +556,7 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -538,7 +585,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -551,33 +598,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -612,7 +632,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -622,15 +642,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

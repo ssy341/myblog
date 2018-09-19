@@ -3,6 +3,7 @@ categories: linux
 tags: [fstab,鸟哥私房菜]
 title: ubuntu server 恢复模式下修改/etc/fstab文件
 date: 2014-3-30
+toc: false
 ---
 
 由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件

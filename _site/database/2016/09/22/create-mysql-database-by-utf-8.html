@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>mysql以utf-8字符集创建数据库 - 单客欧朋</title>
-<meta name="description" content="创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ciCREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name">
+<meta name="description" content="CREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci">
 
 
 
@@ -18,10 +18,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="mysql以utf-8字符集创建数据库">
-<meta property="og:url" content="http://localhost:4000/database/2016/09/22/create-mysql-database-by-utf-8.html">
+<meta property="og:url" content="http://www.thxopen.com/database/2016/09/22/create-mysql-database-by-utf-8.html">
 
 
-  <meta property="og:description" content="创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ciCREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name">
+  <meta property="og:description" content="CREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci">
 
 
 
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/database/2016/09/22/create-mysql-database-by-utf-8.html">
+<link rel="canonical" href="http://www.thxopen.com/database/2016/09/22/create-mysql-database-by-utf-8.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -288,7 +299,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="mysql以utf-8字符集创建数据库">
-    <meta itemprop="description" content="创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ciCREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name">
+    <meta itemprop="description" content="CREATE DATABASE 的语法：CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name[create_specification [, create_specification] ...]create_specification:[DEFAULT] CHARACTER SET charset_name| [DEFAULT] COLLATE collation_name创建utf-8字符集数据库CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;对已有的数据库更改字符编码ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci">
     <meta itemprop="datePublished" content="September 22, 2016">
     
 
@@ -303,24 +314,24 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>创建utf-8字符集数据库</p>
+        <p>CREATE DATABASE 的语法：</p>
 
-<pre><code class="language-mysql">CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-</code></pre>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE <span class="o">{</span>DATABASE | SCHEMA<span class="o">}</span> <span class="o">[</span>IF NOT EXISTS] db_name
+<span class="o">[</span>create_specification <span class="o">[</span>, create_specification] ...]
+create_specification:
+<span class="o">[</span>DEFAULT] CHARACTER SET charset_name
+| <span class="o">[</span>DEFAULT] COLLATE collation_name
+</code></pre></div></div>
+
+<p>创建utf-8字符集数据库</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci<span class="p">;</span>
+</code></pre></div></div>
 
 <p>对已有的数据库更改字符编码</p>
 
-<pre><code class="language-mysql">ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
-</code></pre>
-
-<p>CREATE DATABASE 的语法：</p>
-
-<pre><code class="language-mysql">CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
-[create_specification [, create_specification] ...]
-create_specification:
-[DEFAULT] CHARACTER SET charset_name
-| [DEFAULT] COLLATE collation_name
-</code></pre>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALTER DATABASE db_name DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
+</code></pre></div></div>
 
 
         
@@ -342,11 +353,11 @@ create_specification:
     
       
       
-      <a href="http://localhost:4000/tags/#database" class="page__taxonomy-item" rel="tag">database</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#database" class="page__taxonomy-item" rel="tag">database</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#mysql" class="page__taxonomy-item" rel="tag">mysql</a>
+      <a href="http://www.thxopen.com/tags/#mysql" class="page__taxonomy-item" rel="tag">mysql</a>
     
     </span>
   </p>
@@ -367,7 +378,7 @@ create_specification:
     
       
       
-      <a href="http://localhost:4000/categories/#database" class="page__taxonomy-item" rel="tag">database</a>
+      <a href="http://www.thxopen.com/categories/#database" class="page__taxonomy-item" rel="tag">database</a>
     
     </span>
   </p>
@@ -383,24 +394,24 @@ create_specification:
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=mysql%E4%BB%A5utf-8%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%20http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=mysql%E4%BB%A5utf-8%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%20http%3A%2F%2Fwww.thxopen.com%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fdatabase%2F2016%2F09%2F22%2Fcreate-mysql-database-by-utf-8.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/nas/2014/05/29/ata-status-error.html" class="pagination--pager" title="freenas启动过程中屏幕不断提示ata status error
+      <a href="http://www.thxopen.com/nas/2014/05/29/ata-status-error.html" class="pagination--pager" title="freenas启动过程中屏幕不断提示ata status error
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html" class="pagination--pager" title="如果从一个主机复制文件到另一个主机：rsync
+      <a href="http://www.thxopen.com/database/2017/03/22/get-auto-increment-value-of-table.html" class="pagination--pager" title="在mysql中获取表格自增长列（AUTO_INCREMENT）当前的值
 ">向后</a>
     
   </nav>
@@ -425,7 +436,36 @@ create_specification:
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -449,7 +489,7 @@ create_specification:
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -478,7 +518,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -491,33 +531,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -552,7 +565,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -562,15 +575,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

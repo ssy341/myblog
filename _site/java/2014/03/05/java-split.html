@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="java的split方法使用问题">
-<meta property="og:url" content="http://localhost:4000/java/2014/03/05/java-split.html">
+<meta property="og:url" content="http://www.thxopen.com/java/2014/03/05/java-split.html">
 
 
   <meta property="og:description" content="首先看如下代码import org.apache.commons.lang3.StringUtils;import org.junit.Test; public class StrTest {    @Test    public void sterTst(){        String ster = &quot;1-1-101|admin&quot;;        System.out.println(ster.split(&quot;|&quot;)[0]);        System.out.println(ster.split(&quot;|&quot;)[1]);        System.out.println(StringUtils.split(ster,&quot;|&quot;)[0]);        System.out.println(StringUtils.split(ster,&quot;|&quot;)[1]);    }}执行结果如下：1-1-1-101admin很奇怪，我想把1-1-101和admin分开，直接使用String类的split方法确得不到我想要的结果，而使用工具类却可以，这是怎么回事，查询java api后明白了public String[] split(String regex)可以看出参数是regex正则表达式，如果直接使用split方法来处理|的话，还需要转义，否则直接使用|作为分割符号得不到正确结果，如下：String[] strarr = &quot;1-1-101|admin&quot;.split(&quot;\\|&quot;);这样就能达到和工具类一样的结果了虽然split是平时用的比较频繁的方法，但恰恰容易犯错，以后使用方法前先看看api，就不会犯这个低级错误了">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/java/2014/03/05/java-split.html">
+<link rel="canonical" href="http://www.thxopen.com/java/2014/03/05/java-split.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -363,7 +374,7 @@ admin
     
       
       
-      <a href="http://localhost:4000/tags/#split" class="page__taxonomy-item" rel="tag">split</a>
+      <a href="http://www.thxopen.com/tags/#split" class="page__taxonomy-item" rel="tag">split</a>
     
     </span>
   </p>
@@ -384,7 +395,7 @@ admin
     
       
       
-      <a href="http://localhost:4000/categories/#java" class="page__taxonomy-item" rel="tag">java</a>
+      <a href="http://www.thxopen.com/categories/#java" class="page__taxonomy-item" rel="tag">java</a>
     
     </span>
   </p>
@@ -400,24 +411,24 @@ admin
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=java%E7%9A%84split%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%20http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=java%E7%9A%84split%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98%20http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2014%2F03%2F05%2Fjava-split.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/linux/2013/12/26/Linux-help.html" class="pagination--pager" title="linux如果获取帮助 help –help
+      <a href="http://www.thxopen.com/linux/2013/12/26/Linux-help.html" class="pagination--pager" title="linux如果获取帮助 help –help
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2014/03/26/Linux-file.html" class="pagination--pager" title="linux 文件操作命令 rmdir mkdir rm
+      <a href="http://www.thxopen.com/linux/2014/03/26/Linux-file.html" class="pagination--pager" title="linux 文件操作命令 rmdir mkdir rm
 ">向后</a>
     
   </nav>
@@ -442,7 +453,36 @@ admin
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -466,7 +506,7 @@ admin
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -495,7 +535,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -508,33 +548,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -569,7 +582,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -579,15 +592,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

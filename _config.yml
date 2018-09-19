@@ -12,8 +12,8 @@ locale                   : "zh-CN"
 title                    : "单客欧朋"
 title_separator          : "-"
 name                     : "单思义"
-description              : "An amazing website."
-url                      : http://thxopen.com # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+description              : "好记性不如烂笔头"
+url                      : http://www.thxopen.com # the base hostname & protocol for your site
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : ssy341/myblog # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -91,12 +91,12 @@ analytics:
 # Site Author
 author:
   name             : "单思义"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "空"
-  location         : "成都市 高新区 天府2街 蜀都中心"
+  avatar           : "/assets/images/bio-photo.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  bio              : "好记性不如烂笔头"
+  location         : "成都市 武侯区 天府软件园"
   email            : keith@thxopen.com
   uri              :
-  home             : http://datatables.club # null (default), "absolute or relative url to link to author home"
+  home             : http://www.thxopen.com # null (default), "absolute or relative url to link to author home"
   bitbucket        :
   codepen          :
   dribbble         :
@@ -152,6 +152,8 @@ exclude:
   - /docs # ignore Minimal Mistakes /docs
   - /test # ignore Minimal Mistakes /test
   - .idea # ignore Minimal Mistakes /.idea
+  - myblog-minimal.iml
+  - start.sh
 keep_files:
   - .git
   - .svn
@@ -255,6 +257,8 @@ defaults:
       type: posts
     values:
       layout: single #统一使用single模板
+      toc: true
+      toc_label: "目录"
       author_profile: true #在页面显示个人信息
       read_time: false #生成阅读时间
       comments: # true #允许评论

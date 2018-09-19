@@ -3,6 +3,7 @@ categories: linux
 tags: [linux命令,鸟哥私房菜]
 title: 如果从一个主机复制文件到另一个主机：rsync 
 date: 2017-12-26
+toc: false
 ---
 
 `rsync`这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。
@@ -11,9 +12,9 @@ date: 2017-12-26
 > `rsync` 最早是想要取代 `rcp` 这个指令的，因为 `rsync` 不但传输的速度快，而且他在传输时， 
 > 可以比对本地端与远程主机欲复制的档案内容，而仅复制两端有差异的档案而已，所以传输的时间就相对的降低很多！
  
-虽然我没有去查，但根据上面的描述，我觉得rsync就是remote synchronization的简写，远程同步。没想到让我知道一个这么抢到的命令。
+虽然我没有去查，但根据上面的描述，我觉得rsync就是remote synchronization的简写，远程同步。没想到让我知道一个这么强大的命令。
 
-先来看看它的语法吧：
+`rsync` 语法如下：
  
 ```bash
 rsync [-avrlptgoD] [-e ssh] [user@host:/dir] [/local/path]
@@ -49,7 +50,7 @@ rsync -av /etc /tmp
 ```bash
 rsync -av -e ssh ubuntu@hostname:~ /tmp
 ```
-说明： ~和home是一个意思
+ps： ~和home是一个意思
 
 scp的使用参考[这里]({{ site.baseurl }}{% post_url linux/2017-12-26-how-to-copy-file-to-host-from-host-scp %})
 

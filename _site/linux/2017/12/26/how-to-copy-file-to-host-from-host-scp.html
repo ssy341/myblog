@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="如果从一个主机复制文件到另一个主机：scp">
-<meta property="og:url" content="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html">
+<meta property="og:url" content="http://www.thxopen.com/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html">
 
 
   <meta property="og:description" content="在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要讲的这两个命令，在两台主机上直接进行复制操作，有一种”山重水复疑无路，柳暗花明又一村”的感觉，我马上试试，果然好用。下面分享下这两个命令的用法：scp [-pr] [-l 速率] file [账号@]主机:目录名  &lt;== 上传scp [-pr] [-l 速率] [账号@]主机:file 目录名   &lt;== 下载# 选项与参数：# -p 保留文件原有的权限信息# -r 复制来源为目录时，可以复制整个目录（包含子目录）# -l 可以限制传输的速率，单位为 Kbits/s ，例如 [-l 800] 代表传输速率 100KKbytes/s   示例一：从远程服务器复制单个文件到本地目录scp ubuntua@hostname:/home/ubuntua/images/1.jpg /home/ubuntub/images/ 说明： 从hostname机器上的/home/ubuntua/images/的目录中下载 1.jpg 文件到本地/home/ubuntub/images/ 目录中  示例二：从远程复制目录到本地目录scp -r ubuntua@hostname:/home/ubuntua/images /home/ubuntub/说明： 从hostname机器上的/home/ubuntua/中下载images目录到本地的/home/ubuntub/目录来。  示例三：复制本地文件到远程机器指定目录scp /home/ubuntub/images/1.jpg ubuntua@hostname:/home/ubuntua/images说明： 复制本地/home/ubuntub/images/目录下的文件1.jpg 到远程机器hostname的/home/ubuntua/images目录  示例四：复制本地目录到远程机器指定目录scp -r /home/ubuntub/images ubuntua@hostname:/home/ubuntua说明： 上传本地目录 /home/ubuntub/images到远程机器hostname上/home/ubuntua的目录中rsync的使用参考这里参考：鸟哥私房菜：scpscp命令使用">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html">
+<link rel="canonical" href="http://www.thxopen.com/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -377,11 +388,11 @@ scp <span class="o">[</span><span class="nt">-pr</span><span class="o">]</span> 
     
       
       
-      <a href="http://localhost:4000/tags/#linux%E5%91%BD%E4%BB%A4" class="page__taxonomy-item" rel="tag">linux命令</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#linux%E5%91%BD%E4%BB%A4" class="page__taxonomy-item" rel="tag">linux命令</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#%E9%B8%9F%E5%93%A5%E7%A7%81%E6%88%BF%E8%8F%9C" class="page__taxonomy-item" rel="tag">鸟哥私房菜</a>
+      <a href="http://www.thxopen.com/tags/#%E9%B8%9F%E5%93%A5%E7%A7%81%E6%88%BF%E8%8F%9C" class="page__taxonomy-item" rel="tag">鸟哥私房菜</a>
     
     </span>
   </p>
@@ -402,7 +413,7 @@ scp <span class="o">[</span><span class="nt">-pr</span><span class="o">]</span> 
     
       
       
-      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+      <a href="http://www.thxopen.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
     
     </span>
   </p>
@@ -418,24 +429,24 @@ scp <span class="o">[</span><span class="nt">-pr</span><span class="o">]</span> 
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E5%A6%82%E6%9E%9C%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%B8%BB%E6%9C%BA%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%B8%BB%E6%9C%BA%EF%BC%9Ascp%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E5%A6%82%E6%9E%9C%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%B8%BB%E6%9C%BA%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%B8%BB%E6%9C%BA%EF%BC%9Ascp%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2017%2F12%2F26%2Fhow-to-copy-file-to-host-from-host-scp.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html" class="pagination--pager" title="如果从一个主机复制文件到另一个主机：rsync
+      <a href="http://www.thxopen.com/linux/2017/12/26/how-to-copy-file-to-host-from-host-rsync.html" class="pagination--pager" title="如果从一个主机复制文件到另一个主机：rsync
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" class="pagination--pager" title="如何查看磁盘使用情况 du df
+      <a href="http://www.thxopen.com/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" class="pagination--pager" title="如何查看磁盘使用情况 du df
 ">向后</a>
     
   </nav>
@@ -460,7 +471,36 @@ scp <span class="o">[</span><span class="nt">-pr</span><span class="o">]</span> 
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -484,7 +524,7 @@ scp <span class="o">[</span><span class="nt">-pr</span><span class="o">]</span> 
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -513,7 +553,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -526,33 +566,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -587,7 +600,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -597,15 +610,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

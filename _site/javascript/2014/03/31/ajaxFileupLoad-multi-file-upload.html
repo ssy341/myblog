@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="ajaxFileupLoad多文件上传">
-<meta property="og:url" content="http://localhost:4000/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
+<meta property="og:url" content="http://www.thxopen.com/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
 
 
   <meta property="og:description" content="打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？  一个是对之前大神的贡献表示感谢；  二个是自己知识的总结；  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。用过这个插件的都知道这个插件的基本用法，我就不废话，直接上代码。我需要实现多个文件上传，之前的做法是定义多个不同id的input，然后把ajaxfileuplod方法放在for循环里，这个方法是在网上看到的，我觉得不怎么好，后面在网上找到的，就高级点了，直接改源码（因为作者好久没有跟新了，也确实满足不了要求了）。接下来看看我是怎么改的。引用网上的做法：  1，看没有修改前的代码var oldElement = jQuery(&#39;#&#39; + fileElementId);  var newElement = jQuery(oldElement).clone();  jQuery(oldElement).attr(&#39;id&#39;, fileId);  jQuery(oldElement).before(newElement);  jQuery(oldElement).appendTo(form);很容易看出，这个就是根据id把input加到from里去，那么要实现多个文件上传，就改成下面的样子：if(typeof(fileElementId) == &#39;string&#39;){      fileElementId = [fileElementId];  }  for(var i in fileElementId){      var oldElement = jQuery(&#39;#&#39; + fileElementId[i]);      var newElement = jQuery(oldElement).clone();      jQuery(oldElement).attr(&#39;id&#39;, fileId);      jQuery(oldElement).before(newElement);      jQuery(oldElement).appendTo(form);  }这样改之后，初始化的代码就要这么写：$.ajaxFileUpload({      url:&#39;/ajax.php&#39;,      fileElementId:[&#39;id1&#39;,&#39;id2&#39;]//原先是fileElementId:’id’ 只能上传一个  });到这里，确实可以上传多个文件，但是对于我来说新问题又来，多个id，我的界面的文件不是固定的，是动态加载的，那么id要动态生成，我觉得太麻烦，为什么不取name呢？然后把以上代码改为如下：if (typeof(fileElementId) == &#39;string&#39;) {    fileElementId = [fileElementId];}for (var i in fileElementId) {    //按name取值      var oldElement = jQuery(&quot;input[name=&quot; + fileElementId[i] + &quot;]&quot;);    oldElement.each(function () {        var newElement = jQuery($(this)).clone();        jQuery(oldElement).attr(&#39;id&#39;, fileId);        jQuery(oldElement).before(newElement);        jQuery(oldElement).appendTo(form);    });}这样改了 那么就可以实现多组多个文件上传，接下来看我是怎么应用的。&lt;div&gt;    &lt;img id=&quot;loading&quot; src=&quot;scripts/ajaxFileUploader/loading.gif&quot; style=&quot;display:none;&quot;&gt;    &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;tableForm&quot; id=&quot;calculation_model&quot;&gt;        &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;多组多个文件&lt;/th&gt;        &lt;/tr&gt;        &lt;/thead&gt;        &lt;tbody&gt;        &lt;tr&gt;            &lt;td&gt;第一组&lt;/td&gt;            &lt;td&gt;第二组&lt;/td&gt;        &lt;/tr&gt;        &lt;tr&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;gridDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;            &lt;td&gt;&lt;input type=&quot;file&quot; name=&quot;caseDoc&quot; class=&quot;input&quot;&gt;&lt;/td&gt;        &lt;/tr&gt;        &lt;/tbody&gt;        &lt;tfoot&gt;        &lt;tr&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;up1&quot;&gt;Upload&lt;/button&gt;            &lt;/td&gt;            &lt;td&gt;                &lt;button class=&quot;button&quot; id=&quot;addInput&quot;&gt;添加一组&lt;/button&gt;            &lt;/td&gt;        &lt;/tr&gt;        &lt;/tfoot&gt;    &lt;/table&gt;&lt;/div&gt;          /**  * Created with IntelliJ IDEA.  * User: Administrator  * Date: 13-7-3  * Time: 上午9:20  * To change this template use File | Settings | File Templates.  */  $(document).ready(function () {      $(&quot;#up1&quot;).click(function(){          var temp = [&quot;gridDoc&quot;,&quot;caseDoc&quot;];          ajaxFileUpload(temp);      });        $(&quot;#addInput&quot;).click(function(){          addInputFile();      });    });    //动态添加一组文件  function addInputFile(){      $(&quot;#calculation_model&quot;).append(&quot; &lt;tr&gt;&quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39;  name=&#39;gridDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt;   &quot;+          &quot;&lt;td&gt;&lt;input type=&#39;file&#39; name=&#39;caseDoc&#39; class=&#39;input&#39;&gt;&lt;/td&gt; &quot;+          &quot;&lt;/tr&gt;&quot;);  }      //直接使用下载下来的文件里的demo代码  function ajaxFileUpload(id){      //starting setting some animation when the ajax starts and completes      $(&quot;#loading&quot;).ajaxStart(function(){              $(this).show();          }).ajaxComplete(function(){              $(this).hide();          });        /*      prepareing ajax file upload      url: the url of script file handling the uploaded files      fileElementId: the file type of input element id and it will be the index of  $_FILES Array()      dataType: it support json, xml      secureuri:use secure protocol      success: call back function when the ajax complete      error: callback function when the ajax failed       */      $.ajaxFileUpload({              url:&#39;upload.action&#39;,              //secureuri:false,              fileElementId:id,              dataType: &#39;json&#39;          }      )        return false;    }我action是用的struts2，它的上传是比较简单的，只要声明约定的名字，即可得到文件对象，和名称，代码如下：package com.ssy.action;import com.opensymphony.xwork2.ActionSupport;import org.apache.commons.io.FileUtils;import org.apache.struts2.util.ServletContextAware;import javax.servlet.ServletContext;import java.io.*;import java.text.SimpleDateFormat;import java.util.Date;import java.util.Random;/** * Created with IntelliJ IDEA. * User: Administrator * Date: 13-7-2 * Time: 下午4:08 * To change this template use File | Settings | File Templates. */public class Fileupload extends ActionSupport implements ServletContextAware {    private File[] gridDoc, caseDoc;    private String[] gridDocFileName, caseDocFileName;    private ServletContext context;    public String execute() {        for (int i = 0; i &lt; gridDocFileName.length; i++) {            System.out.println(gridDocFileName[i]);        }        for (int i = 0; i &lt; caseDocFileName.length; i++) {            System.out.println(caseDocFileName[i]);        }        //System.out.println(doc1FileName);          //System.out.println(doc2FileName);          String targetDirectory = context.getRealPath(&quot;/uploadFile&quot;);        /*         *这里我只取得  第一组的文件进行上传，第二组的类似         */        try {            for (int i = 0; i &lt; gridDoc.length; i++) {                String targetFileName = generateFileName(gridDocFileName[i]);                File target = new File(targetDirectory, targetFileName);                FileUtils.copyFile(gridDoc[i], target);            }        } catch (Exception e) {            e.printStackTrace();        }        return SUCCESS;    }    public File[] getGridDoc() {        return gridDoc;    }    public void setGridDoc(File[] gridDoc) {        this.gridDoc = gridDoc;    }    public File[] getCaseDoc() {        return caseDoc;    }    public void setCaseDoc(File[] caseDoc) {        this.caseDoc = caseDoc;    }    public String[] getGridDocFileName() {        return gridDocFileName;    }    public void setGridDocFileName(String[] gridDocFileName) {        this.gridDocFileName = gridDocFileName;    }    public String[] getCaseDocFileName() {        return caseDocFileName;    }    public void setCaseDocFileName(String[] caseDocFileName) {        this.caseDocFileName = caseDocFileName;    }    /**     * 用日期和随机数格式化文件名避免冲突     *     * @param fileName     * @return     */    private String generateFileName(String fileName) {        System.out.println(fileName);        SimpleDateFormat sf = new SimpleDateFormat(&quot;yyMMddHHmmss&quot;);        String formatDate = sf.format(new Date());        int random = new Random().nextInt(10000);        int position = fileName.lastIndexOf(&quot;.&quot;);        String extension = fileName.substring(position);        return formatDate + random + extension;    }}写到这里，我就有疑问了，之前的大神改的多文件，为什么还是取id，而且后台是怎么取的，我还是没怎么弄明白，我改的这个代码可行么？是不是存在bug呢？这个还有待考验，如果看出问题，请指出，共同学习修改后的js文件:ajaxfileupload.zip">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
+<link rel="canonical" href="http://www.thxopen.com/javascript/2014/03/31/ajaxFileupLoad-multi-file-upload.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -169,14 +169,25 @@
 <div itemscope itemtype="http://schema.org/Person">
 
   
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
 
   <div class="author__content">
     
-      <a href=""><h3 class="author__name" itemprop="name">单思义</h3></a>
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
     
     
       <p class="author__bio" itemprop="description">
-        空
+        好记性不如烂笔头
       </p>
     
   </div>
@@ -302,6 +313,13 @@
       
 
       <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              
+            </nav>
+          </aside>
         
         <p>打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？</p>
 
@@ -598,7 +616,7 @@
     
       
       
-      <a href="http://localhost:4000/tags/#ajaxfileupload" class="page__taxonomy-item" rel="tag">ajaxFileupload</a>
+      <a href="http://www.thxopen.com/tags/#ajaxfileupload" class="page__taxonomy-item" rel="tag">ajaxFileupload</a>
     
     </span>
   </p>
@@ -619,7 +637,7 @@
     
       
       
-      <a href="http://localhost:4000/categories/#javascript" class="page__taxonomy-item" rel="tag">javascript</a>
+      <a href="http://www.thxopen.com/categories/#javascript" class="page__taxonomy-item" rel="tag">javascript</a>
     
     </span>
   </p>
@@ -635,24 +653,24 @@
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=ajaxFileupLoad%E5%A4%9A%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%20http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=ajaxFileupLoad%E5%A4%9A%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%20http%3A%2F%2Fwww.thxopen.com%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fjavascript%2F2014%2F03%2F31%2FajaxFileupLoad-multi-file-upload.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/javascript/2014/03/31/Datatables-example-data-source.html" class="pagination--pager" title="DataTables官方例子引导-4种数据源
+      <a href="http://www.thxopen.com/javascript/2014/03/31/Datatables-example-data-source.html" class="pagination--pager" title="DataTables官方例子引导-4种数据源
 ">向前</a>
     
     
-      <a href="http://localhost:4000/jekyll/2014/04/17/jekyll-able-gbk.html" class="pagination--pager" title="jekyll支持中文解决办法
+      <a href="http://www.thxopen.com/jekyll/2014/04/17/jekyll-able-gbk.html" class="pagination--pager" title="jekyll支持中文解决办法
 ">向后</a>
     
   </nav>
@@ -677,7 +695,36 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
 </a>
       
     </h2>
@@ -701,7 +748,7 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" rel="permalink">在Ubuntu下安装Redis
 </a>
       
     </h2>
@@ -730,7 +777,7 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
+        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
 </a>
       
     </h2>
@@ -743,33 +790,6 @@ redis默认的访问端口是6379，避免端口被恶意程序使用，我们�
 
   第一步：添加源
     echo 'de...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="permalink">在Ubuntu下安装Nginx
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
-
-安装Nginx
-
-在Ubuntu下安装Nginx非常简单，只需要几行命令即可安装完成
-
-sudo apt-get install nginx
-
-
-默认安装后会自己启动，打开浏览器访问127.0.0.1即可看到nginx...</p>
   </article>
 </div>
         
@@ -804,7 +824,7 @@ sudo apt-get install nginx
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -814,15 +834,15 @@ sudo apt-get install nginx
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

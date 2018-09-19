@@ -3,7 +3,9 @@ categories: linux
 tags: [parted,鸟哥私房菜,mkfs,ext4,linux,fdisk]
 title: ubuntu server下建立分区表/分区/格式化/自动挂载
 date: 2014-3-30
+toc: false
 ---
+
 流程为：新建分区--》格式化分区--》挂载分区
 
 首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：

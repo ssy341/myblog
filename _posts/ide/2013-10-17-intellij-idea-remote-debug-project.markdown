@@ -1,5 +1,4 @@
 ---
-layout: single
 title: 在intellij idea下远程调试项目
 categories: ide
 tags: [intellij,远程调试,tomcat]
