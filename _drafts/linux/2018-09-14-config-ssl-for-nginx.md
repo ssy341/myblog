@@ -10,141 +10,90 @@ https://letsencrypt.org/getting-started/
 https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/
 https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx
 
-
-MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。
-
-## 安装MySQL
-
 ```bash
-sudo apt-get install mysql-server mysql-client
-```
 
-安装过程中会要求输入root用户的密码，记下自己输入的密码即可
+ubuntu@VM-0-14-ubuntu:~$ sudo certbot --nginx
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Error while running nginx -c /etc/nginx/nginx.conf -t.
 
+nginx: [emerg] unknown directive "localhost" in /etc/nginx/conf.d/server.conf:25
+nginx: configuration file /etc/nginx/nginx.conf test failed
 
-## 更改默认端口
+The nginx plugin is not working; there may be problems with your existing config                                                                                                                                                    uration.
+The error was: MisconfigurationError('Error while running nginx -c /etc/nginx/ng                                                                                                                                                    inx.conf -t.\n\nnginx: [emerg] unknown directive "localhost" in /etc/nginx/conf.                                                                                                                                                    d/server.conf:25\nnginx: configuration file /etc/nginx/nginx.conf test failed\n'                                                                                                                                                    ,)
+ubuntu@VM-0-14-ubuntu:~$ sudo vi /etc/nginx/conf.d/server.conf
+ubuntu@VM-0-14-ubuntu:~$ sudo certbot --nginx
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator nginx, Installer nginx
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel): keith@thxopen.com
+Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org
 
-mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf. You must
+agree in order to register with the ACME server at
+https://acme-v02.api.letsencrypt.org/directory
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(A)gree/(C)ancel: a
 
-编辑目录 `/etc/mysql/mysql.conf.d/mysqld.cnf` 下mysql的配置文件：
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Would you be willing to share your email address with the Electronic Frontier
+Foundation, a founding partner of the Let's Encrypt project and the non-profit
+organization that develops Certbot? We'd like to send you email about our work
+encrypting the web, EFF news, campaigns, and ways to support digital freedom.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: y
+Starting new HTTPS connection (1): supporters.eff.org
 
-```bash
-sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+Which names would you like to activate HTTPS for?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: woniu.320023.com
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate numbers separated by commas and/or spaces, or leave input
+blank to select all options shown (Enter 'c' to cancel): 1
+Obtaining a new certificate
+Performing the following challenges:
+http-01 challenge for woniu.320023.com
+Waiting for verification...
+Cleaning up challenges
+Deploying Certificate to VirtualHost /etc/nginx/conf.d/server.conf
 
-# * Basic Settings
-user            = mysql
-pid-file        = /var/run/mysqld/mysqld.pid
-socket          = /var/run/mysqld/mysqld.sock
-port            = 7777   #修改自己需要的端口
-basedir         = /usr
-datadir         = /var/lib/mysql
-tmpdir          = /tmp
-lc-messages-dir = /usr/share/mysql
-skip-external-locking
+Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: No redirect - Make no further changes to the webserver configuration.
+2: Redirect - Make all requests redirect to secure HTTPS access. Choose this for
+new sites, or if you're confident your site works on HTTPS. You can undo this
+change by editing your web server's configuration.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 1
 
-```
-这里演示把默认端口修改为7777，保存修改，重启mysql即可
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Congratulations! You have successfully enabled https://woniu.320023.com
 
-```bash
-sudo service mysql restart
-```
+You should test your configuration at:
+https://www.ssllabs.com/ssltest/analyze.html?d=woniu.320023.com
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-重启之后，查询端口来验证是否修改成功
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/woniu.320023.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/woniu.320023.com/privkey.pem
+   Your cert will expire on 2018-12-19. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot again
+   with the "certonly" option. To non-interactively renew *all* of
+   your certificates, run "certbot renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
 
-```bash
-netstat -nlt|grep 7777
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
 
-tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN
-```
-
-## 授权可以访问的客户端
-
-默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql
-
-首先登录到mysql，授权root用户可以从任意ip获得所有特权
-
-```bash
-mysql -uroot -p
-Enter password:
-
-mysql> grant all privileges on *.* to 'root'@'%' identified by '你的密码';
-mysql> flush privileges;
-mysql> exit;
-```
-
-ps：为了安全，你可以指定ip和操作权限
-
-然后，更改mysql配置文件允许从任意ip连接
-
-```bash
-sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
-
-#
-# Instead of skip-networking the default is now to listen only on
-# localhost which is more compatible and is not less secure.
-bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可
-
-sudo service mysql restart
-
-```
-把`127.0.0.1`修改为`0.0.0.0`即可，然后保存修改，重启mysql生效
-
-## 在console中使用mysql
-
-检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql
-
-```bash
-thxopen@Thxopen:~$ mysql -uroot -p
-Enter password:
-
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 6
-Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)
-
-Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql>
+ubuntu@VM-0-14-ubuntu:~$
 
 ```
-
-出现上述代表mysql安装成功，可以正常使用
-
-## 使用MySQL Workbench操作mysql数据
-
-[MySQL Workbench](https://www.mysql.com/products/workbench/) 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。
-支持在Windows, Linux 和 Mac OS X上使用。
-
-在官网上[下载](https://dev.mysql.com/downloads/workbench/)对应平台的安装包，安装即可使用。
-
-工具欢迎面如下图所示：
-
-![mysql workbench dashboard]({{site.baseurl}}/assets/images/post/linux/ubuntu/mysql workbench dashboard.png)
-
-界面看起来比较清爽，简洁，但是功能非常强大。
-
-可以通过【加号】按钮新建一个mysql连接，如下图所示：
-
-![mysql new connection]({{site.baseurl}}/assets/images/post/linux/ubuntu/mysql new connection.png)
-
-输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。
-
-进入MySQL Workbench主界面，如下图所示：
-
-![mysql sql console]({{site.baseurl}}/assets/images/post/linux/ubuntu/mysql sql console.png)
-
-主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域
-
-整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。
-
-
-[返回目录]({{ site.baseurl }}{% post_url linux/2018-02-27-install-java-ee-environment-on-ubuntu %})
-
-
-> Reference
-> - http://www.jianshu.com/p/3111290b87f4

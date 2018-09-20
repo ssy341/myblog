@@ -1,4 +1,18 @@
 <div class="page__footer-follow">
+    <ul class="social-icons">
+        {% if site.data.ui-text[site.locale].frendship_link %}
+        <li><strong>{{ site.data.ui-text[site.locale].frendship_link }}</strong></li>
+        {% endif %}
+
+        {% assign friendShipLink = site.data.friendshiplink['main'] %}
+        {% for link in friendShipLink %}
+        <li><a href="{{ link.url }}"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>{{ link.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+<div class="page__footer-follow">
   <ul class="social-icons">
     {% if site.data.ui-text[site.locale].follow_label %}
       <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
