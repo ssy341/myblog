@@ -82,6 +82,33 @@ sudo service mysql restart
 ```
 把`127.0.0.1`修改为`0.0.0.0`即可，然后保存修改，重启mysql生效
 
+
+## 开启日志
+
+mysql有一个二进制操作日志（Binary Logging），包含描述数据库更改的“事件”，例如表创建操作或对表数据的更改。
+
+这个日志可以在一定程度上恢复数据，参考 [在ubuntu下使用mysqlbinlog恢复drop后的数据][2018-08-28-mysqlbinlog-recovery-data] 了解如何通过日志恢复误删的数据。
+
+默认情况下，日志功能是关闭的，我们需要手动配置
+
+编辑目录 `/etc/mysql/mysql.conf.d/mysqld.cnf` 下mysql的配置文件：
+
+
+```bash
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# The following can be used as easy to replay backup logs or for replication.
+# note: if you are setting up a replication slave, see README.Debian about
+#       other settings you may need to change.
+server-id               = 1
+log_bin                 = /var/log/mysql/mysql-bin.log
+expire_logs_days        = 10
+max_binlog_size   = 100M
+
+```
+去掉 `server-id` 和 `log_bin` 前面的注释，保存重启mysql服务即可开启日志记录功能
+
+
 ## 在console中使用mysql
 
 检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql
@@ -141,3 +168,6 @@ mysql>
 
 > Reference
 > - http://www.jianshu.com/p/3111290b87f4
+
+
+[2018-08-28-mysqlbinlog-recovery-data]: {{ site.baseurl }}{% post_url database/2018-08-28-mysqlbinlog-recovery-data %}

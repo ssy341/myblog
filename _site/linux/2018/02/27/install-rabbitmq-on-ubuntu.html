@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>在Ubuntu下安装RabbitMQ - 单客欧朋</title>
-<meta name="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+<meta name="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：配置nginx通过80端口访问RabbitMQ web界面在ngxin配置文件里配置以下代码location /rabbitmq/ {    proxy_pass http://127.0.0.1:15672/;    rewrite ^/rabbitmq/(.*)$ /$1 break;    client_body_buffer_size 128k;    proxy_send_timeout   90;    proxy_read_timeout   90;    proxy_buffer_size    4k;    proxy_buffers     16 32k;    proxy_busy_buffers_size 64k;    proxy_temp_file_write_size 64k;    proxy_connect_timeout 30s;    proxy_set_header   Host   $host;    proxy_set_header   X-Real-IP  $remote_addr;    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;}location /rabbitmq/api/queues/ {    proxy_pass http://127.0.0.1:15672/api/queues/%2F/;}location /rabbitmq/api/exchanges/ {    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;}这样，原本要通过 http://www.example.com:15672 访问，现在可以直接使用 http://www.example.com/rabbitmq 访问web界面返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html">
 
 
-  <meta property="og:description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+  <meta property="og:description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：配置nginx通过80端口访问RabbitMQ web界面在ngxin配置文件里配置以下代码location /rabbitmq/ {    proxy_pass http://127.0.0.1:15672/;    rewrite ^/rabbitmq/(.*)$ /$1 break;    client_body_buffer_size 128k;    proxy_send_timeout   90;    proxy_read_timeout   90;    proxy_buffer_size    4k;    proxy_buffers     16 32k;    proxy_busy_buffers_size 64k;    proxy_temp_file_write_size 64k;    proxy_connect_timeout 30s;    proxy_set_header   Host   $host;    proxy_set_header   X-Real-IP  $remote_addr;    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;}location /rabbitmq/api/queues/ {    proxy_pass http://127.0.0.1:15672/api/queues/%2F/;}location /rabbitmq/api/exchanges/ {    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;}这样，原本要通过 http://www.example.com:15672 访问，现在可以直接使用 http://www.example.com/rabbitmq 访问web界面返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
 
 
 
@@ -299,7 +299,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="在Ubuntu下安装RabbitMQ">
-    <meta itemprop="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
+    <meta itemprop="description" content="RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。安装RabbitMQ  第一步：添加源    echo &#39;deb http://www.rabbitmq.com/debian/ testing main&#39; | sudo tee /etc/apt/sources.list.d/rabbitmq.list        第二步：添加秘钥    wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add        第三步：更新源    sudo apt-get update        第四步：安装    sudo apt-get install rabbitmq-server      开启WEB管理界面RabbitMQ默认没有打开WEB管理界面，需要手动操作sudo rabbitmq-plugins enable rabbitmq_management通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面使用默认用户guest，密码guest可以登录允许非本地访问管理界面打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以  第一步：添加用户    sudo rabbitmqctl add_user demo 123456sudo rabbitmqctl list_users        添加一个用户名demo，密码为123456的用户记录    第二步：设置权限    sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;sudo rabbitmqctl list_permissions -p /        设置demo用户可以从任意ip访问该管理界面    第三步：设置角色    sudo rabbitmqctl set_user_tags demo administratorsudo rabbitmqctl list_users        设置demo用户为管理员权限  完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：配置nginx通过80端口访问RabbitMQ web界面在ngxin配置文件里配置以下代码location /rabbitmq/ {    proxy_pass http://127.0.0.1:15672/;    rewrite ^/rabbitmq/(.*)$ /$1 break;    client_body_buffer_size 128k;    proxy_send_timeout   90;    proxy_read_timeout   90;    proxy_buffer_size    4k;    proxy_buffers     16 32k;    proxy_busy_buffers_size 64k;    proxy_temp_file_write_size 64k;    proxy_connect_timeout 30s;    proxy_set_header   Host   $host;    proxy_set_header   X-Real-IP  $remote_addr;    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;}location /rabbitmq/api/queues/ {    proxy_pass http://127.0.0.1:15672/api/queues/%2F/;}location /rabbitmq/api/exchanges/ {    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;}这样，原本要通过 http://www.example.com:15672 访问，现在可以直接使用 http://www.example.com/rabbitmq 访问web界面返回目录  Reference:      https://blog.csdn.net/rickey17/article/details/72756766    https://blog.haohtml.com/archives/15249  ">
     <meta itemprop="datePublished" content="February 27, 2018">
     
 
@@ -321,6 +321,7 @@
   <li><a href="#安装rabbitmq">安装RabbitMQ</a></li>
   <li><a href="#开启web管理界面">开启WEB管理界面</a></li>
   <li><a href="#允许非本地访问管理界面">允许非本地访问管理界面</a></li>
+  <li><a href="#配置nginx通过80端口访问rabbitmq-web界面">配置nginx通过80端口访问RabbitMQ web界面</a></li>
 </ul>
             </nav>
           </aside>
@@ -389,6 +390,38 @@
 <p>完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：</p>
 
 <p><img src="/assets/images/post/linux/ubuntu/rabbitmq_dashborad.png" alt="RabbitMQ管理界面" /></p>
+
+<h2 id="配置nginx通过80端口访问rabbitmq-web界面">配置nginx通过80端口访问RabbitMQ web界面</h2>
+
+<p>在ngxin配置文件里配置以下代码</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /rabbitmq/ <span class="o">{</span>
+    proxy_pass http://127.0.0.1:15672/<span class="p">;</span>
+    rewrite ^/rabbitmq/<span class="o">(</span>.<span class="k">*</span><span class="o">)</span><span class="nv">$ </span>/<span class="nv">$1</span> <span class="nb">break</span><span class="p">;</span>
+    client_body_buffer_size 128k<span class="p">;</span>
+    proxy_send_timeout   90<span class="p">;</span>
+    proxy_read_timeout   90<span class="p">;</span>
+    proxy_buffer_size    4k<span class="p">;</span>
+    proxy_buffers     16 32k<span class="p">;</span>
+    proxy_busy_buffers_size 64k<span class="p">;</span>
+    proxy_temp_file_write_size 64k<span class="p">;</span>
+    proxy_connect_timeout 30s<span class="p">;</span>
+    proxy_set_header   Host   <span class="nv">$host</span><span class="p">;</span>
+    proxy_set_header   X-Real-IP  <span class="nv">$remote_addr</span><span class="p">;</span>
+    proxy_set_header   X-Forwarded-For <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="o">}</span>
+
+location /rabbitmq/api/queues/ <span class="o">{</span>
+    proxy_pass http://127.0.0.1:15672/api/queues/%2F/<span class="p">;</span>
+<span class="o">}</span>
+
+location /rabbitmq/api/exchanges/ <span class="o">{</span>
+    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/<span class="p">;</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>这样，原本要通过 <code class="highlighter-rouge">http://www.example.com:15672</code> 访问，现在可以直接使用 <code class="highlighter-rouge">http://www.example.com/rabbitmq</code> 访问web界面</p>
 
 <p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
 

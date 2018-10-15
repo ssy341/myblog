@@ -74,6 +74,40 @@ sudo rabbitmqctl list_users
 
 ![RabbitMQ管理界面]({{ site.baseurl }}/assets/images/post/linux/ubuntu/rabbitmq_dashborad.png)
 
+## 配置nginx通过80端口访问RabbitMQ web界面
+
+
+在ngxin配置文件里配置以下代码
+
+```bash
+location /rabbitmq/ {
+    proxy_pass http://127.0.0.1:15672/;
+    rewrite ^/rabbitmq/(.*)$ /$1 break;
+    client_body_buffer_size 128k;
+    proxy_send_timeout   90;
+    proxy_read_timeout   90;
+    proxy_buffer_size    4k;
+    proxy_buffers     16 32k;
+    proxy_busy_buffers_size 64k;
+    proxy_temp_file_write_size 64k;
+    proxy_connect_timeout 30s;
+    proxy_set_header   Host   $host;
+    proxy_set_header   X-Real-IP  $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+location /rabbitmq/api/queues/ {
+    proxy_pass http://127.0.0.1:15672/api/queues/%2F/;
+}
+
+location /rabbitmq/api/exchanges/ {
+    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;
+}
+
+```
+
+这样，原本要通过 `http://www.example.com:15672` 访问，现在可以直接使用 `http://www.example.com/rabbitmq` 访问web界面
+
 
 [返回目录]({{ site.baseurl }}{% post_url linux/2018-02-27-install-java-ee-environment-on-ubuntu %})
 

@@ -1,0 +1,24 @@
+
+SELECT 
+    *
+FROM
+    INFORMATION_SCHEMA.KEY_COLUMN_USAGE t
+    
+    where constraint_name = 'FK6jih3xdu5led2rlhd647awi2o';
+    
+    
+    desc tb_user;
+    
+    show create table tb_user;
+    
+ 
+ alter table tb_user drop foreign key FKB9D38A2D8F9F08C1;
+ 
+ alter table tb_user drop column customer_id;
+ 
+ 
+ 
+ 
+ https://www.cnblogs.com/kcher90/archive/2013/02/06/2908109.html
+ 
+ https://www.cnblogs.com/zhanqi/archive/2011/01/05/1926608.html

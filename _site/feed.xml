@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2018-09-20T12:03:28+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">Spring Data JPA自动创建表同时生成表和列的注释</title><link href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="alternate" type="text/html" title="Spring Data JPA自动创建表同时生成表和列的注释" /><published>2018-09-19T00:00:00+08:00</published><updated>2018-09-19T00:00:00+08:00</updated><id>http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql</id><content type="html" xml:base="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html">&lt;h2 id=&quot;创建表格时同时带上注释&quot;&gt;创建表格时同时带上注释&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2018-10-15T16:10:59+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">Spring Data JPA自动创建表同时生成表和列的注释</title><link href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="alternate" type="text/html" title="Spring Data JPA自动创建表同时生成表和列的注释" /><published>2018-09-19T00:00:00+08:00</published><updated>2018-09-19T00:00:00+08:00</updated><id>http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql</id><content type="html" xml:base="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html">&lt;h2 id=&quot;创建表格时同时带上注释&quot;&gt;创建表格时同时带上注释&lt;/h2&gt;
 
 &lt;p&gt;一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样&lt;/p&gt;
 
@@ -1200,6 +1200,38 @@ PONG
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/rabbitmq_dashborad.png&quot; alt=&quot;RabbitMQ管理界面&quot; /&gt;&lt;/p&gt;
 
+&lt;h2 id=&quot;配置nginx通过80端口访问rabbitmq-web界面&quot;&gt;配置nginx通过80端口访问RabbitMQ web界面&lt;/h2&gt;
+
+&lt;p&gt;在ngxin配置文件里配置以下代码&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /rabbitmq/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    proxy_pass http://127.0.0.1:15672/&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    rewrite ^/rabbitmq/&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    client_body_buffer_size 128k&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_send_timeout   90&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_read_timeout   90&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_buffer_size    4k&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_buffers     16 32k&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_busy_buffers_size 64k&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_temp_file_write_size 64k&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_connect_timeout 30s&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_set_header   Host   &lt;span class=&quot;nv&quot;&gt;$host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_set_header   X-Real-IP  &lt;span class=&quot;nv&quot;&gt;$remote_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    proxy_set_header   X-Forwarded-For &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+location /rabbitmq/api/queues/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    proxy_pass http://127.0.0.1:15672/api/queues/%2F/&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+location /rabbitmq/api/exchanges/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这样，原本要通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://www.example.com:15672&lt;/code&gt; 访问，现在可以直接使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://www.example.com/rabbitmq&lt;/code&gt; 访问web界面&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -1208,7 +1240,7 @@ PONG
     &lt;li&gt;https://blog.csdn.net/rickey17/article/details/72756766&lt;/li&gt;
     &lt;li&gt;https://blog.haohtml.com/archives/15249&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="rabbitmq" /><summary type="html">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。 安装RabbitMQ 第一步：添加源 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list 第二步：添加秘钥 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add 第三步：更新源 sudo apt-get update 第四步：安装 sudo apt-get install rabbitmq-server 开启WEB管理界面 RabbitMQ默认没有打开WEB管理界面，需要手动操作 sudo rabbitmq-plugins enable rabbitmq_management 通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面 使用默认用户guest，密码guest可以登录 允许非本地访问管理界面 打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以 第一步：添加用户 sudo rabbitmqctl add_user demo 123456 sudo rabbitmqctl list_users 添加一个用户名demo，密码为123456的用户记录 第二步：设置权限 sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot; sudo rabbitmqctl list_permissions -p / 设置demo用户可以从任意ip访问该管理界面 第三步：设置角色 sudo rabbitmqctl set_user_tags demo administrator sudo rabbitmqctl list_users 设置demo用户为管理员权限 完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面： 返回目录 Reference: https://blog.csdn.net/rickey17/article/details/72756766 https://blog.haohtml.com/archives/15249</summary></entry><entry><title type="html">在Ubuntu下安装Nginx</title><link href="http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu下安装Nginx" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu.html">&lt;p&gt;Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="rabbitmq" /><summary type="html">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。 安装RabbitMQ 第一步：添加源 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list 第二步：添加秘钥 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add 第三步：更新源 sudo apt-get update 第四步：安装 sudo apt-get install rabbitmq-server 开启WEB管理界面 RabbitMQ默认没有打开WEB管理界面，需要手动操作 sudo rabbitmq-plugins enable rabbitmq_management 通过上面的命令即可开启，打开浏览器访问 http://127.0.0.1:15672 即可看到如下界面 使用默认用户guest，密码guest可以登录 允许非本地访问管理界面 打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以 第一步：添加用户 sudo rabbitmqctl add_user demo 123456 sudo rabbitmqctl list_users 添加一个用户名demo，密码为123456的用户记录 第二步：设置权限 sudo rabbitmqctl set_permissions -p &quot;/&quot; demo &quot;.*&quot; &quot;.*&quot; &quot;.*&quot; sudo rabbitmqctl list_permissions -p / 设置demo用户可以从任意ip访问该管理界面 第三步：设置角色 sudo rabbitmqctl set_user_tags demo administrator sudo rabbitmqctl list_users 设置demo用户为管理员权限 完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面： 配置nginx通过80端口访问RabbitMQ web界面 在ngxin配置文件里配置以下代码 location /rabbitmq/ { proxy_pass http://127.0.0.1:15672/; rewrite ^/rabbitmq/(.*)$ /$1 break; client_body_buffer_size 128k; proxy_send_timeout 90; proxy_read_timeout 90; proxy_buffer_size 4k; proxy_buffers 16 32k; proxy_busy_buffers_size 64k; proxy_temp_file_write_size 64k; proxy_connect_timeout 30s; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; } location /rabbitmq/api/queues/ { proxy_pass http://127.0.0.1:15672/api/queues/%2F/; } location /rabbitmq/api/exchanges/ { proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/; } 这样，原本要通过 http://www.example.com:15672 访问，现在可以直接使用 http://www.example.com/rabbitmq 访问web界面 返回目录 Reference: https://blog.csdn.net/rickey17/article/details/72756766 https://blog.haohtml.com/archives/15249</summary></entry><entry><title type="html">在Ubuntu下安装Nginx</title><link href="http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu下安装Nginx" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-nginx-on-ubuntu.html">&lt;p&gt;Nginx是一个异步框架的 Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。&lt;/p&gt;
 
 &lt;h2 id=&quot;安装nginx&quot;&gt;安装Nginx&lt;/h2&gt;
 
@@ -1400,6 +1432,29 @@ bind-address            &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0.0.0.0  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;把&lt;code class=&quot;highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt;修改为&lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt;即可，然后保存修改，重启mysql生效&lt;/p&gt;
 
+&lt;h2 id=&quot;开启日志&quot;&gt;开启日志&lt;/h2&gt;
+
+&lt;p&gt;mysql有一个二进制操作日志（Binary Logging），包含描述数据库更改的“事件”，例如表创建操作或对表数据的更改。&lt;/p&gt;
+
+&lt;p&gt;这个日志可以在一定程度上恢复数据，参考 &lt;a href=&quot;/database/2018/08/28/mysqlbinlog-recovery-data.html&quot;&gt;在ubuntu下使用mysqlbinlog恢复drop后的数据&lt;/a&gt; 了解如何通过日志恢复误删的数据。&lt;/p&gt;
+
+&lt;p&gt;默认情况下，日志功能是关闭的，我们需要手动配置&lt;/p&gt;
+
+&lt;p&gt;编辑目录 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/mysql/mysql.conf.d/mysqld.cnf&lt;/code&gt; 下mysql的配置文件：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+&lt;span class=&quot;c&quot;&gt;# The following can be used as easy to replay backup logs or for replication.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# note: if you are setting up a replication slave, see README.Debian about&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#       other settings you may need to change.&lt;/span&gt;
+server-id               &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 1
+log_bin                 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/log/mysql/mysql-bin.log
+expire_logs_days        &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 10
+max_binlog_size   &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 100M
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;去掉 &lt;code class=&quot;highlighter-rouge&quot;&gt;server-id&lt;/code&gt; 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;log_bin&lt;/code&gt; 前面的注释，保存重启mysql服务即可开启日志记录功能&lt;/p&gt;
+
 &lt;h2 id=&quot;在console中使用mysql&quot;&gt;在console中使用mysql&lt;/h2&gt;
 
 &lt;p&gt;检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql&lt;/p&gt;
@@ -1459,7 +1514,125 @@ mysql&amp;gt;
   &lt;ul&gt;
     &lt;li&gt;http://www.jianshu.com/p/3111290b87f4&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="nginx" /><summary type="html">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。 安装MySQL sudo apt-get install mysql-server mysql-client 安装过程中会要求输入root用户的密码，记下自己输入的密码即可 更改默认端口 mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击 编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件： sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf # * Basic Settings user = mysql pid-file = /var/run/mysqld/mysqld.pid socket = /var/run/mysqld/mysqld.sock port = 7777 #修改自己需要的端口 basedir = /usr datadir = /var/lib/mysql tmpdir = /tmp lc-messages-dir = /usr/share/mysql skip-external-locking 这里演示把默认端口修改为7777，保存修改，重启mysql即可 sudo service mysql restart 重启之后，查询端口来验证是否修改成功 netstat -nlt|grep 7777 tcp 0 0 0.0.0.0:7777 0.0.0.0:* LISTEN 授权可以访问的客户端 默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql 首先登录到mysql，授权root用户可以从任意ip获得所有特权 mysql -uroot -p Enter password: mysql&amp;gt; grant all privileges on *.* to 'root'@'%' identified by '你的密码'; mysql&amp;gt; flush privileges; mysql&amp;gt; exit; ps：为了安全，你可以指定ip和操作权限 然后，更改mysql配置文件允许从任意ip连接 sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf # # Instead of skip-networking the default is now to listen only on # localhost which is more compatible and is not less secure. bind-address = 0.0.0.0 #把127.0.0.1修改为0.0.0.0即可 sudo service mysql restart 把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效 在console中使用mysql 检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql thxopen@Thxopen:~$ mysql -uroot -p Enter password: Welcome to the MySQL monitor. Commands end with ; or \g. Your MySQL connection id is 6 Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu) Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates. Other names may be trademarks of their respective owners. Type 'help;' or '\h' for help. Type '\c' to clear the current input statement. mysql&amp;gt; 出现上述代表mysql安装成功，可以正常使用 使用MySQL Workbench操作mysql数据 MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。 支持在Windows, Linux 和 Mac OS X上使用。 在官网上下载对应平台的安装包，安装即可使用。 工具欢迎面如下图所示： 界面看起来比较清爽，简洁，但是功能非常强大。 可以通过【加号】按钮新建一个mysql连接，如下图所示： 输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。 进入MySQL Workbench主界面，如下图所示： 主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域 整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。 返回目录 Reference http://www.jianshu.com/p/3111290b87f4</summary></entry><entry><title type="html">在Ubuntu下安装JAVA开发环境</title><link href="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu下安装JAVA开发环境" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html">&lt;p&gt;JDK即Java Development Kit，java开发工具包，是java开发人员开发中需要用到的软件开发工具包。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="nginx" /><summary type="html">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。 安装MySQL sudo apt-get install mysql-server mysql-client 安装过程中会要求输入root用户的密码，记下自己输入的密码即可 更改默认端口 mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击 编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件： sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf # * Basic Settings user = mysql pid-file = /var/run/mysqld/mysqld.pid socket = /var/run/mysqld/mysqld.sock port = 7777 #修改自己需要的端口 basedir = /usr datadir = /var/lib/mysql tmpdir = /tmp lc-messages-dir = /usr/share/mysql skip-external-locking 这里演示把默认端口修改为7777，保存修改，重启mysql即可 sudo service mysql restart 重启之后，查询端口来验证是否修改成功 netstat -nlt|grep 7777 tcp 0 0 0.0.0.0:7777 0.0.0.0:* LISTEN 授权可以访问的客户端 默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql 首先登录到mysql，授权root用户可以从任意ip获得所有特权 mysql -uroot -p Enter password: mysql&amp;gt; grant all privileges on *.* to 'root'@'%' identified by '你的密码'; mysql&amp;gt; flush privileges; mysql&amp;gt; exit; ps：为了安全，你可以指定ip和操作权限 然后，更改mysql配置文件允许从任意ip连接 sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf # # Instead of skip-networking the default is now to listen only on # localhost which is more compatible and is not less secure. bind-address = 0.0.0.0 #把127.0.0.1修改为0.0.0.0即可 sudo service mysql restart 把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效 开启日志 mysql有一个二进制操作日志（Binary Logging），包含描述数据库更改的“事件”，例如表创建操作或对表数据的更改。 这个日志可以在一定程度上恢复数据，参考 在ubuntu下使用mysqlbinlog恢复drop后的数据 了解如何通过日志恢复误删的数据。 默认情况下，日志功能是关闭的，我们需要手动配置 编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件： sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf # The following can be used as easy to replay backup logs or for replication. # note: if you are setting up a replication slave, see README.Debian about # other settings you may need to change. server-id = 1 log_bin = /var/log/mysql/mysql-bin.log expire_logs_days = 10 max_binlog_size = 100M 去掉 server-id 和 log_bin 前面的注释，保存重启mysql服务即可开启日志记录功能 在console中使用mysql 检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql thxopen@Thxopen:~$ mysql -uroot -p Enter password: Welcome to the MySQL monitor. Commands end with ; or \g. Your MySQL connection id is 6 Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu) Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates. Other names may be trademarks of their respective owners. Type 'help;' or '\h' for help. Type '\c' to clear the current input statement. mysql&amp;gt; 出现上述代表mysql安装成功，可以正常使用 使用MySQL Workbench操作mysql数据 MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。 支持在Windows, Linux 和 Mac OS X上使用。 在官网上下载对应平台的安装包，安装即可使用。 工具欢迎面如下图所示： 界面看起来比较清爽，简洁，但是功能非常强大。 可以通过【加号】按钮新建一个mysql连接，如下图所示： 输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。 进入MySQL Workbench主界面，如下图所示： 主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域 整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。 返回目录 Reference http://www.jianshu.com/p/3111290b87f4</summary></entry><entry><title type="html">在Ubuntu下安装jenkins</title><link href="http://www.thxopen.com/linux/2018/02/27/install-jenkins-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu下安装jenkins" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-jenkins-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-jenkins-on-ubuntu.html">&lt;p&gt;Jenkins是一款由Java编写的开源的持续集成工具。在与Oracle发生争执后，项目从Hudson项目复刻。 Jenkins提供了软件开发的持续集成服务。
+它运行在Servlet容器中（例如Apache Tomcat）。它支持软件配置管理（SCM）工具（包括AccuRev SCM、CVS、Subversion、Git、Perforce、Clearcase和RTC），
+可以执行基于Apache Ant和Apache Maven的项目，以及任意的Shell脚本和Windows批处理命令。&lt;/p&gt;
+
+&lt;h2 id=&quot;安装jenkins&quot;&gt;安装Jenkins&lt;/h2&gt;
+
+&lt;p&gt;jenkins官网提供了在线安装的方式，软件包集成了jetty服务，安装即可访问，非常方便&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在安装jenkins之前，确定已经配置了java环境，不同的jenkins版本需要的java环境也不一样&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;2.54 (2017-04) 或者更新的版本: 需要 Java 8 支持&lt;/li&gt;
+    &lt;li&gt;1.612 (2015-05) 或者更新的版本: 需要 Java 7 支持&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;添加key到系统
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; - https://pkg.jenkins.io/debian-stable/jenkins.io.key | &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-key add -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;添加资源到&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/apt/sources.list&lt;/code&gt;
+为了方便管理不同软件的安装源，我们新建一个文件&lt;code class=&quot;highlighter-rouge&quot;&gt;jenkins.list&lt;/code&gt;，存放在 &lt;code class=&quot;highlighter-rouge&quot;&gt;sources.list.d&lt;/code&gt; 目录下
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'deb https://pkg.jenkins.io/debian-stable binary/'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;sudo tee&lt;/span&gt; /etc/apt/sources.list.d/jenkins.list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;更新本地包，然后安装jenkins
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;jenkins
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;配置端口&quot;&gt;配置端口&lt;/h2&gt;
+
+&lt;p&gt;默认情况下，jenkins使用的是8080端口，如果端口没有被其他的程序占用，则可以直接在浏览器访问&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080&lt;/code&gt;，开始使用jenkins。
+如果端口被其他程序占用，可以通过修改jenkins的配置文件（在 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/default/&lt;/code&gt; 目录下），更改端口&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vi /etc/default/jenkins
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;打开文件，文件尾部部分，如下所示&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+&lt;span class=&quot;c&quot;&gt;# port for HTTP connector (default 8080; disable with -1)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;HTTP_PORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8080
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;把&lt;code class=&quot;highlighter-rouge&quot;&gt;8080&lt;/code&gt;修改成自己想要的，保存退出，重新启动服务&lt;/p&gt;
+
+&lt;p&gt;停止jenkins服务（可能会要求你输入当前用户的密码）&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/jenkins stop
+
+Correct java version found
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;....] Stopping jenkins &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;via systemctl&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: jenkins.service&lt;span class=&quot;o&quot;&gt;====&lt;/span&gt; AUTHENTICATING FOR org.freedesktop.systemd1.manage-units &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt;
+Authentication is required to stop &lt;span class=&quot;s1&quot;&gt;'jenkins.service'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Authenticating as: ubuntu,,, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Password:
+
+&lt;span class=&quot;o&quot;&gt;====&lt;/span&gt; AUTHENTICATION COMPLETE &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; ok
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;重新启动jenkins服务，同样需要输入密码&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/jenkins start
+Correct java version found
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;....] Starting jenkins &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;via systemctl&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: jenkins.service&lt;span class=&quot;o&quot;&gt;====&lt;/span&gt; AUTHENTICATING FOR org.freedesktop.systemd1.manage-units &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt;
+Authentication is required to start &lt;span class=&quot;s1&quot;&gt;'jenkins.service'&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Authenticating as: ubuntu,,, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Password:
+
+&lt;span class=&quot;o&quot;&gt;====&lt;/span&gt; AUTHENTICATION COMPLETE &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; ok
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;初始化jenkins&quot;&gt;初始化jenkins&lt;/h2&gt;
+&lt;p&gt;为了确保管理员安全地安装 Jenkins，首次访问jenkins会要求输入密码才能继续，密码存放在 &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/1.png&quot; alt=&quot;install-jenkins1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;查看密码，输入到密码框进行下一步&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;点击继续后，会有一个等待时间，然后进入新手入门向导界面，如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/2.png&quot; alt=&quot;install-jenkins2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里我们选择默认选项，推荐安装插件，确定后进入安装界面，如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/3.png&quot; alt=&quot;install-jenkins3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;插件安装大概要持续一会儿，慢慢等待安装完成。插件安装完成之后需要配置一个管理员用户，创建一个账户，保存下一步。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/4.png&quot; alt=&quot;install-jenkins4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来进行实例配置，我们使用默认给出的地址即可，他是jenkins访问的根路径，直接保存并完成。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/5.png&quot; alt=&quot;install-jenkins5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;大功告成，jenkins配置完成，可以开始使用了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/linux/ubuntu/install-jenkins/6.png&quot; alt=&quot;install-jenkins6&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ps: 点击开始使用后页面是空白的，把jenkins服务重启一下，然后重新访问即可&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Reference&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;https://pkg.jenkins.io/debian-stable/&lt;/li&gt;
+    &lt;li&gt;https://zh.wikipedia.org/wiki/Jenkins_(%E8%BD%AF%E4%BB%B6)&lt;/li&gt;
+    &lt;li&gt;https://stackoverflow.com/questions/38966105/jenkins-setup-wizard-blank-page&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="jenkins" /><summary type="html">Jenkins是一款由Java编写的开源的持续集成工具。在与Oracle发生争执后，项目从Hudson项目复刻。 Jenkins提供了软件开发的持续集成服务。 它运行在Servlet容器中（例如Apache Tomcat）。它支持软件配置管理（SCM）工具（包括AccuRev SCM、CVS、Subversion、Git、Perforce、Clearcase和RTC）， 可以执行基于Apache Ant和Apache Maven的项目，以及任意的Shell脚本和Windows批处理命令。 安装Jenkins jenkins官网提供了在线安装的方式，软件包集成了jetty服务，安装即可访问，非常方便 在安装jenkins之前，确定已经配置了java环境，不同的jenkins版本需要的java环境也不一样 2.54 (2017-04) 或者更新的版本: 需要 Java 8 支持 1.612 (2015-05) 或者更新的版本: 需要 Java 7 支持 添加key到系统 wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add - 添加资源到/etc/apt/sources.list 为了方便管理不同软件的安装源，我们新建一个文件jenkins.list，存放在 sources.list.d 目录下 echo 'deb https://pkg.jenkins.io/debian-stable binary/' | sudo tee /etc/apt/sources.list.d/jenkins.list 更新本地包，然后安装jenkins sudo apt-get update sudo apt-get install jenkins 配置端口 默认情况下，jenkins使用的是8080端口，如果端口没有被其他的程序占用，则可以直接在浏览器访问http://127.0.0.1:8080，开始使用jenkins。 如果端口被其他程序占用，可以通过修改jenkins的配置文件（在 /etc/default/ 目录下），更改端口 sudo vi /etc/default/jenkins 打开文件，文件尾部部分，如下所示 ... # port for HTTP connector (default 8080; disable with -1) HTTP_PORT=8080 ... 把8080修改成自己想要的，保存退出，重新启动服务 停止jenkins服务（可能会要求你输入当前用户的密码） /etc/init.d/jenkins stop Correct java version found [....] Stopping jenkins (via systemctl): jenkins.service==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units === Authentication is required to stop 'jenkins.service'. Authenticating as: ubuntu,,, (ubuntu) Password: ==== AUTHENTICATION COMPLETE === . ok 重新启动jenkins服务，同样需要输入密码 /etc/init.d/jenkins start Correct java version found [....] Starting jenkins (via systemctl): jenkins.service==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units === Authentication is required to start 'jenkins.service'. Authenticating as: ubuntu,,, (ubuntu) Password: ==== AUTHENTICATION COMPLETE === . ok 初始化jenkins 为了确保管理员安全地安装 Jenkins，首次访问jenkins会要求输入密码才能继续，密码存放在 /var/lib/jenkins/secrets/initialAdminPassword 查看密码，输入到密码框进行下一步 sudo cat /var/lib/jenkins/secrets/initialAdminPassword 点击继续后，会有一个等待时间，然后进入新手入门向导界面，如下图所示： 这里我们选择默认选项，推荐安装插件，确定后进入安装界面，如下图所示： 插件安装大概要持续一会儿，慢慢等待安装完成。插件安装完成之后需要配置一个管理员用户，创建一个账户，保存下一步。 接下来进行实例配置，我们使用默认给出的地址即可，他是jenkins访问的根路径，直接保存并完成。 大功告成，jenkins配置完成，可以开始使用了 ps: 点击开始使用后页面是空白的，把jenkins服务重启一下，然后重新访问即可 返回目录 Reference https://pkg.jenkins.io/debian-stable/ https://zh.wikipedia.org/wiki/Jenkins_(%E8%BD%AF%E4%BB%B6) https://stackoverflow.com/questions/38966105/jenkins-setup-wizard-blank-page</summary></entry><entry><title type="html">在Ubuntu下安装JAVA开发环境</title><link href="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu下安装JAVA开发环境" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html">&lt;p&gt;JDK即Java Development Kit，java开发工具包，是java开发人员开发中需要用到的软件开发工具包。&lt;/p&gt;
 
 &lt;h2 id=&quot;安装jdk&quot;&gt;安装JDK&lt;/h2&gt;
 
@@ -1512,21 +1685,4 @@ Java HotSpot&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;TM&lt;span class=&quot
     &lt;li&gt;http://www.cnblogs.com/a2211009/p/4265225.html&lt;/li&gt;
     &lt;li&gt;http://blog.csdn.net/yuzaipiaofei/article/details/7281723&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="jdk" /><category term="java" /><summary type="html">JDK即Java Development Kit，java开发工具包，是java开发人员开发中需要用到的软件开发工具包。 安装JDK 在Ubuntu下安装java开发环境有两种途径： 通过apt-get在线安装 下载tar包，自行解压安装 本文介绍的是第一种方式，使用apt-get安装java开发环境 第一步：添加源 sudo add-apt-repository ppa:webupd8team/java 第二步：更新源 sudo apt-get update 第三步：安装jdk，这里选择的是jdk 8 sudo apt-get install oracle-java8-installer 安装过程中，会提示同意条款，输入y即可 第四步：检查是否安装成功 java -version 控制台输出如下，表示安装成功 java version &quot;1.8.0_161&quot; Java(TM) SE Runtime Environment (build 1.8.0_161-b12) Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode) 返回目录 Reference http://www.cnblogs.com/a2211009/p/4265225.html http://blog.csdn.net/yuzaipiaofei/article/details/7281723</summary></entry><entry><title type="html">在Ubuntu上安装常用的和Java相关的工具</title><link href="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html" rel="alternate" type="text/html" title="在Ubuntu上安装常用的和Java相关的工具" /><published>2018-02-27T00:00:00+08:00</published><updated>2018-02-27T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu</id><content type="html" xml:base="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">&lt;p&gt;最近工作中经常需要在新服务器上搭建环境，项目中用到的工具有Tomcat、RabbitMQ、Nginx、Redis、MySQL。&lt;/p&gt;
-
-&lt;p&gt;还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。&lt;/p&gt;
-
-&lt;p&gt;在此纪录下来，方便自己也方便他人。&lt;/p&gt;
-
-&lt;p&gt;本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;/linux/2018/02/27/install-java-on-ubuntu.html&quot;&gt;在Ubuntu下安装JAVA开发环境&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/linux/2018/02/27/install-rabbitmq-on-ubuntu.html&quot;&gt;在Ubuntu下安装RabbitMQ&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/linux/2018/02/27/install-nginx-on-ubuntu.html&quot;&gt;在Ubuntu下安装Nginx&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/linux/2018/02/27/install-mysql-on-ubuntu.html&quot;&gt;在Ubuntu下安装MySQL&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/linux/2018/02/27/install-redis-on-ubuntu.html&quot;&gt;在Ubuntu下安装Redis&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发，
-比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="tomcat" /><category term="rabbitmq" /><category term="nginx" /><category term="redis" /><category term="jdk" /><category term="mysql" /><summary type="html">最近工作中经常需要在新服务器上搭建环境，项目中用到的工具有Tomcat、RabbitMQ、Nginx、Redis、MySQL。 还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。 在此纪录下来，方便自己也方便他人。 本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。 在Ubuntu下安装JAVA开发环境 在Ubuntu下安装RabbitMQ 在Ubuntu下安装Nginx 在Ubuntu下安装MySQL 在Ubuntu下安装Redis 上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发， 比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="jdk" /><category term="java" /><summary type="html">JDK即Java Development Kit，java开发工具包，是java开发人员开发中需要用到的软件开发工具包。 安装JDK 在Ubuntu下安装java开发环境有两种途径： 通过apt-get在线安装 下载tar包，自行解压安装 本文介绍的是第一种方式，使用apt-get安装java开发环境 第一步：添加源 sudo add-apt-repository ppa:webupd8team/java 第二步：更新源 sudo apt-get update 第三步：安装jdk，这里选择的是jdk 8 sudo apt-get install oracle-java8-installer 安装过程中，会提示同意条款，输入y即可 第四步：检查是否安装成功 java -version 控制台输出如下，表示安装成功 java version &quot;1.8.0_161&quot; Java(TM) SE Runtime Environment (build 1.8.0_161-b12) Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode) 返回目录 Reference http://www.cnblogs.com/a2211009/p/4265225.html http://blog.csdn.net/yuzaipiaofei/article/details/7281723</summary></entry></feed>
