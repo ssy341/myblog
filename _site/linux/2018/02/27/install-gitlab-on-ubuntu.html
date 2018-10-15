@@ -1,0 +1,873 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>在Ubuntu下安装Gitlab - 单客欧朋</title>
+<meta name="description" content="GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。安装Gitlab  1，安装必要的依赖sudo apt-get install -y curl openssh-server ca-certificates  ps: -y 参数代表默认同意安装，不需要再手动输入y继续安装接下来，为了发送提醒邮件，需要安装Postfix。如果你想使用其他方案发送邮件请跳过此步骤，在gitlab安装完成之后配置额外的smtp服务参考»sudo apt-get install -y postfix安装postfix的时候，会出现配置界面，如下所示：Package configuration┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐│ Please select the mail server configuration type that best meets your needs.  ││                                                                               ││  No configuration:                                                            ││   Should be chosen to leave the current configuration unchanged.              ││  Internet site:                                                               ││   Mail is sent and received directly using SMTP.                              ││  Internet with smarthost:                                                     ││   Mail is received directly using SMTP or by running a utility such           ││   as fetchmail. Outgoing mail is sent using a smarthost.                      ││  Satellite system:                                                            ││   All mail is sent to another machine, called a &#39;smarthost&#39;, for delivery.    ││  Local only:                                                                  ││   The only delivered mail is the mail for local users. There is no network.   ││                                                                               ││ General type of mail configuration:                                           ││                                                                               ││                            No configuration                                   ││                            Internet Site                                      ││                            Internet with smarthost                            ││                            Satellite system                                   ││                            Local only                                         ││                                                                               ││                                                                               ││                     &lt;Ok&gt;                         &lt;Cancel&gt;                     ││                                                                               │└───────────────────────────────────────────────────────────────────────────────┘选择【Internet Site】选项完成本页配置。下一步配置mail_name，如下图所示：Package configuration ┌────────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────────┐ │ The &quot;mail name&quot; is the domain name used to &quot;qualify&quot; _ALL_ mail addresses without a domain name. This includes  │ │ mail to and from &lt;root&gt;: please do not make your machine send out mail from root@example.org unless             │ │ root@example.org has told you to.                                                                               │ │                                                                                                                 │ │ This name will also be used by other programs. It should be the single, fully qualified domain name (FQDN).     │ │                                                                                                                 │ │ Thus, if a mail address on the local host is foo@example.org, the correct value for this option would be        │ │ example.org.                                                                                                    │ │                                                                                                                 │ │ System mail name:                                                                                               │ │                                                                                                                 │ │ localhost.localdomain                                                                                           │ │                                                                                                                 │ │                                &lt;Ok&gt;                                    &lt;Cancel&gt;                                 │ │                                                                                                                 │ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘实际使用中不需要用到邮件通知，所以这里使用默认的地址，回车完成postfix的安装配置。  2，配置软件源由于官网的资源安装会很慢，推荐使用国内的镜像去安装，网上推荐的使用清华大学的镜像信任 GitLab 的 GPG 公钥:curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null添加清华大学的镜像到/etc/apt/sources.listecho &#39;deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main&#39; | sudo tee /etc/apt/sources.list.d/gitlab.listps: 如果是Ubuntu 14.04就把xenial换成trusty，附一张对照表            系统版本      Codename      支持平台                  14.04      trusty      x86_64, i386, aarch64/arm64              16.04      xenial      x86_64, i386        3，安装 gitlab-ce ，虽然换了国内的镜像，但是软件大小有400M，还是需要安装一会儿    sudo apt-get updatesudo apt-get install gitlab-ce      安装完成后出现如下界面：       *.                  *.      ***                 ***     *****               *****    .******             *******    ********            ********   ,,,,,,,,,***********,,,,,,,,,  ,,,,,,,,,,,*********,,,,,,,,,,,  .,,,,,,,,,,,*******,,,,,,,,,,,,      ,,,,,,,,,*****,,,,,,,,,.         ,,,,,,,****,,,,,,            .,,,***,,,,                ,*,.     _______ __  __          __    / ____(_) /_/ /   ____ _/ /_   / / __/ / __/ /   / __ `/ __ \  / /_/ / / /_/ /___/ /_/ / /_/ /  \____/_/\__/_____/\__,_/_.___/Thank you for installing GitLab!GitLab was unable to detect a valid hostname for your instance.Please configure a URL for your GitLab instance by setting `external_url`configuration in /etc/gitlab/gitlab.rb file.Then, you can start your GitLab instance by running the following command:  sudo gitlab-ctl reconfigureFor a comprehensive list of configuration options please see the Omnibus GitLab readmehttps://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md配置Gitlab  4，配置gitlab实例访问路径编辑gitlab配置文件sudo vi /etc/gitlab/gitlab.rb## GitLab configuration settings##! This file is generated during initial installation and **is not** modified##! during upgrades.##! Check out the latest version of this file to know about the different##! settings that can be configured by this file, which may be found at:##! https://gitlab.com/gitlab-org/omnibus-gitlab/raw/master/files/gitlab-config-template/gitlab.rb.template## GitLab URL##! URL on which GitLab will be reachable.##! For more details on configuring external_url see:##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlabexternal_url &#39;http://111.111.111.111/gitlab&#39;把 gitlab.example.com 修改为自己主机的ip或者域名（如果是绑定了域名），由于gitlab默认使用的80端口，这里我们使用nginx代理转发一下在gitlab里配置nginx的监听端口，打开gitlab的配置文件sudo vi /etc/gitlab/gitlab.rb大概在文件中间部分，948行，有如下配置，去掉#注释，修改nil为8888 946 ##! **Override only if you use a reverse proxy** 947 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port 948 nginx[&#39;listen_port&#39;] = 8888 949配置Nginx代理保存文件退出。接下来配置nginx，打开nginx配置文件sudo vi /etc/nginx/conf.d/default.conf在文件里添加如下配置：upstream git {    server  localhost:8888;}server {    listen 80;    server_name 111.111.111.111;    location /gitlab {        # 设置最大允许上传单个的文件大小        client_max_body_size 1024m;        proxy_redirect off;        #以下确保 gitlab中项目的 url 是域名而不是 http://git，不可缺少        proxy_set_header Host $host;        proxy_set_header X-Real-IP $remote_addr;        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # 反向代理到 gitlab 内置的 nginx        proxy_pass http://git/gitlab;        index index.html index.htm;    }}保存退出，重新加载nginx配置sudo nginx -s reload重新加载gitlab配置并重启sudo gitlab-ctl reconfiguresudo gitlab-ctl restart打开必要的服务sudo service sshd startsudo service postfix start查看gitlab运行状态sudo gitlab-ctl statusrun: alertmanager: (pid 26373) 1361s; run: log: (pid 26390) 1361srun: gitaly: (pid 26289) 1362s; run: log: (pid 26306) 1362srun: gitlab-monitor: (pid 26314) 1362s; run: log: (pid 26337) 1361srun: gitlab-workhorse: (pid 32531) 125s; run: log: (pid 26280) 1362srun: logrotate: (pid 25729) 1411s; run: log: (pid 26282) 1362srun: nginx: (pid 32549) 125s; run: log: (pid 26281) 1362srun: node-exporter: (pid 25949) 1399s; run: log: (pid 26388) 1361srun: postgres-exporter: (pid 26397) 1360s; run: log: (pid 26487) 1360srun: postgresql: (pid 25351) 1462s; run: log: (pid 26333) 1362srun: prometheus: (pid 26346) 1361s; run: log: (pid 26366) 1361srun: redis: (pid 25267) 1468s; run: log: (pid 26255) 1363srun: redis-exporter: (pid 26034) 1391s; run: log: (pid 26338) 1361srun: sidekiq: (pid 32456) 137s; run: log: (pid 26258) 1363srun: unicorn: (pid 32631) 115s; run: log: (pid 26334) 1362s打开浏览器，访问 http://111.111.111.111/gitlab 开始使用  Reference      https://zh.wikipedia.org/wiki/Gitlab    https://about.gitlab.com/installation/#ubuntu    https://www.jianshu.com/p/a86a1529d253    https://docs.gitlab.com/omnibus/settings/smtp.html    https://www.jianshu.com/p/4a5877d1e14b    https://www.zybuluo.com/lovemiffy/note/418758  ">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="在Ubuntu下安装Gitlab">
+<meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-gitlab-on-ubuntu.html">
+
+
+  <meta property="og:description" content="GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。安装Gitlab  1，安装必要的依赖sudo apt-get install -y curl openssh-server ca-certificates  ps: -y 参数代表默认同意安装，不需要再手动输入y继续安装接下来，为了发送提醒邮件，需要安装Postfix。如果你想使用其他方案发送邮件请跳过此步骤，在gitlab安装完成之后配置额外的smtp服务参考»sudo apt-get install -y postfix安装postfix的时候，会出现配置界面，如下所示：Package configuration┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐│ Please select the mail server configuration type that best meets your needs.  ││                                                                               ││  No configuration:                                                            ││   Should be chosen to leave the current configuration unchanged.              ││  Internet site:                                                               ││   Mail is sent and received directly using SMTP.                              ││  Internet with smarthost:                                                     ││   Mail is received directly using SMTP or by running a utility such           ││   as fetchmail. Outgoing mail is sent using a smarthost.                      ││  Satellite system:                                                            ││   All mail is sent to another machine, called a &#39;smarthost&#39;, for delivery.    ││  Local only:                                                                  ││   The only delivered mail is the mail for local users. There is no network.   ││                                                                               ││ General type of mail configuration:                                           ││                                                                               ││                            No configuration                                   ││                            Internet Site                                      ││                            Internet with smarthost                            ││                            Satellite system                                   ││                            Local only                                         ││                                                                               ││                                                                               ││                     &lt;Ok&gt;                         &lt;Cancel&gt;                     ││                                                                               │└───────────────────────────────────────────────────────────────────────────────┘选择【Internet Site】选项完成本页配置。下一步配置mail_name，如下图所示：Package configuration ┌────────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────────┐ │ The &quot;mail name&quot; is the domain name used to &quot;qualify&quot; _ALL_ mail addresses without a domain name. This includes  │ │ mail to and from &lt;root&gt;: please do not make your machine send out mail from root@example.org unless             │ │ root@example.org has told you to.                                                                               │ │                                                                                                                 │ │ This name will also be used by other programs. It should be the single, fully qualified domain name (FQDN).     │ │                                                                                                                 │ │ Thus, if a mail address on the local host is foo@example.org, the correct value for this option would be        │ │ example.org.                                                                                                    │ │                                                                                                                 │ │ System mail name:                                                                                               │ │                                                                                                                 │ │ localhost.localdomain                                                                                           │ │                                                                                                                 │ │                                &lt;Ok&gt;                                    &lt;Cancel&gt;                                 │ │                                                                                                                 │ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘实际使用中不需要用到邮件通知，所以这里使用默认的地址，回车完成postfix的安装配置。  2，配置软件源由于官网的资源安装会很慢，推荐使用国内的镜像去安装，网上推荐的使用清华大学的镜像信任 GitLab 的 GPG 公钥:curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null添加清华大学的镜像到/etc/apt/sources.listecho &#39;deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main&#39; | sudo tee /etc/apt/sources.list.d/gitlab.listps: 如果是Ubuntu 14.04就把xenial换成trusty，附一张对照表            系统版本      Codename      支持平台                  14.04      trusty      x86_64, i386, aarch64/arm64              16.04      xenial      x86_64, i386        3，安装 gitlab-ce ，虽然换了国内的镜像，但是软件大小有400M，还是需要安装一会儿    sudo apt-get updatesudo apt-get install gitlab-ce      安装完成后出现如下界面：       *.                  *.      ***                 ***     *****               *****    .******             *******    ********            ********   ,,,,,,,,,***********,,,,,,,,,  ,,,,,,,,,,,*********,,,,,,,,,,,  .,,,,,,,,,,,*******,,,,,,,,,,,,      ,,,,,,,,,*****,,,,,,,,,.         ,,,,,,,****,,,,,,            .,,,***,,,,                ,*,.     _______ __  __          __    / ____(_) /_/ /   ____ _/ /_   / / __/ / __/ /   / __ `/ __ \  / /_/ / / /_/ /___/ /_/ / /_/ /  \____/_/\__/_____/\__,_/_.___/Thank you for installing GitLab!GitLab was unable to detect a valid hostname for your instance.Please configure a URL for your GitLab instance by setting `external_url`configuration in /etc/gitlab/gitlab.rb file.Then, you can start your GitLab instance by running the following command:  sudo gitlab-ctl reconfigureFor a comprehensive list of configuration options please see the Omnibus GitLab readmehttps://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md配置Gitlab  4，配置gitlab实例访问路径编辑gitlab配置文件sudo vi /etc/gitlab/gitlab.rb## GitLab configuration settings##! This file is generated during initial installation and **is not** modified##! during upgrades.##! Check out the latest version of this file to know about the different##! settings that can be configured by this file, which may be found at:##! https://gitlab.com/gitlab-org/omnibus-gitlab/raw/master/files/gitlab-config-template/gitlab.rb.template## GitLab URL##! URL on which GitLab will be reachable.##! For more details on configuring external_url see:##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlabexternal_url &#39;http://111.111.111.111/gitlab&#39;把 gitlab.example.com 修改为自己主机的ip或者域名（如果是绑定了域名），由于gitlab默认使用的80端口，这里我们使用nginx代理转发一下在gitlab里配置nginx的监听端口，打开gitlab的配置文件sudo vi /etc/gitlab/gitlab.rb大概在文件中间部分，948行，有如下配置，去掉#注释，修改nil为8888 946 ##! **Override only if you use a reverse proxy** 947 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port 948 nginx[&#39;listen_port&#39;] = 8888 949配置Nginx代理保存文件退出。接下来配置nginx，打开nginx配置文件sudo vi /etc/nginx/conf.d/default.conf在文件里添加如下配置：upstream git {    server  localhost:8888;}server {    listen 80;    server_name 111.111.111.111;    location /gitlab {        # 设置最大允许上传单个的文件大小        client_max_body_size 1024m;        proxy_redirect off;        #以下确保 gitlab中项目的 url 是域名而不是 http://git，不可缺少        proxy_set_header Host $host;        proxy_set_header X-Real-IP $remote_addr;        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # 反向代理到 gitlab 内置的 nginx        proxy_pass http://git/gitlab;        index index.html index.htm;    }}保存退出，重新加载nginx配置sudo nginx -s reload重新加载gitlab配置并重启sudo gitlab-ctl reconfiguresudo gitlab-ctl restart打开必要的服务sudo service sshd startsudo service postfix start查看gitlab运行状态sudo gitlab-ctl statusrun: alertmanager: (pid 26373) 1361s; run: log: (pid 26390) 1361srun: gitaly: (pid 26289) 1362s; run: log: (pid 26306) 1362srun: gitlab-monitor: (pid 26314) 1362s; run: log: (pid 26337) 1361srun: gitlab-workhorse: (pid 32531) 125s; run: log: (pid 26280) 1362srun: logrotate: (pid 25729) 1411s; run: log: (pid 26282) 1362srun: nginx: (pid 32549) 125s; run: log: (pid 26281) 1362srun: node-exporter: (pid 25949) 1399s; run: log: (pid 26388) 1361srun: postgres-exporter: (pid 26397) 1360s; run: log: (pid 26487) 1360srun: postgresql: (pid 25351) 1462s; run: log: (pid 26333) 1362srun: prometheus: (pid 26346) 1361s; run: log: (pid 26366) 1361srun: redis: (pid 25267) 1468s; run: log: (pid 26255) 1363srun: redis-exporter: (pid 26034) 1391s; run: log: (pid 26338) 1361srun: sidekiq: (pid 32456) 137s; run: log: (pid 26258) 1363srun: unicorn: (pid 32631) 115s; run: log: (pid 26334) 1362s打开浏览器，访问 http://111.111.111.111/gitlab 开始使用  Reference      https://zh.wikipedia.org/wiki/Gitlab    https://about.gitlab.com/installation/#ubuntu    https://www.jianshu.com/p/a86a1529d253    https://docs.gitlab.com/omnibus/settings/smtp.html    https://www.jianshu.com/p/4a5877d1e14b    https://www.zybuluo.com/lovemiffy/note/418758  ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-02-27T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://www.thxopen.com/linux/2018/02/27/install-gitlab-on-ubuntu.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://www.thxopen.com",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://www.thxopen.com/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        好记性不如烂笔头
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="在Ubuntu下安装Gitlab">
+    <meta itemprop="description" content="GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。安装Gitlab  1，安装必要的依赖sudo apt-get install -y curl openssh-server ca-certificates  ps: -y 参数代表默认同意安装，不需要再手动输入y继续安装接下来，为了发送提醒邮件，需要安装Postfix。如果你想使用其他方案发送邮件请跳过此步骤，在gitlab安装完成之后配置额外的smtp服务参考»sudo apt-get install -y postfix安装postfix的时候，会出现配置界面，如下所示：Package configuration┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐│ Please select the mail server configuration type that best meets your needs.  ││                                                                               ││  No configuration:                                                            ││   Should be chosen to leave the current configuration unchanged.              ││  Internet site:                                                               ││   Mail is sent and received directly using SMTP.                              ││  Internet with smarthost:                                                     ││   Mail is received directly using SMTP or by running a utility such           ││   as fetchmail. Outgoing mail is sent using a smarthost.                      ││  Satellite system:                                                            ││   All mail is sent to another machine, called a &#39;smarthost&#39;, for delivery.    ││  Local only:                                                                  ││   The only delivered mail is the mail for local users. There is no network.   ││                                                                               ││ General type of mail configuration:                                           ││                                                                               ││                            No configuration                                   ││                            Internet Site                                      ││                            Internet with smarthost                            ││                            Satellite system                                   ││                            Local only                                         ││                                                                               ││                                                                               ││                     &lt;Ok&gt;                         &lt;Cancel&gt;                     ││                                                                               │└───────────────────────────────────────────────────────────────────────────────┘选择【Internet Site】选项完成本页配置。下一步配置mail_name，如下图所示：Package configuration ┌────────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────────┐ │ The &quot;mail name&quot; is the domain name used to &quot;qualify&quot; _ALL_ mail addresses without a domain name. This includes  │ │ mail to and from &lt;root&gt;: please do not make your machine send out mail from root@example.org unless             │ │ root@example.org has told you to.                                                                               │ │                                                                                                                 │ │ This name will also be used by other programs. It should be the single, fully qualified domain name (FQDN).     │ │                                                                                                                 │ │ Thus, if a mail address on the local host is foo@example.org, the correct value for this option would be        │ │ example.org.                                                                                                    │ │                                                                                                                 │ │ System mail name:                                                                                               │ │                                                                                                                 │ │ localhost.localdomain                                                                                           │ │                                                                                                                 │ │                                &lt;Ok&gt;                                    &lt;Cancel&gt;                                 │ │                                                                                                                 │ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘实际使用中不需要用到邮件通知，所以这里使用默认的地址，回车完成postfix的安装配置。  2，配置软件源由于官网的资源安装会很慢，推荐使用国内的镜像去安装，网上推荐的使用清华大学的镜像信任 GitLab 的 GPG 公钥:curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null添加清华大学的镜像到/etc/apt/sources.listecho &#39;deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main&#39; | sudo tee /etc/apt/sources.list.d/gitlab.listps: 如果是Ubuntu 14.04就把xenial换成trusty，附一张对照表            系统版本      Codename      支持平台                  14.04      trusty      x86_64, i386, aarch64/arm64              16.04      xenial      x86_64, i386        3，安装 gitlab-ce ，虽然换了国内的镜像，但是软件大小有400M，还是需要安装一会儿    sudo apt-get updatesudo apt-get install gitlab-ce      安装完成后出现如下界面：       *.                  *.      ***                 ***     *****               *****    .******             *******    ********            ********   ,,,,,,,,,***********,,,,,,,,,  ,,,,,,,,,,,*********,,,,,,,,,,,  .,,,,,,,,,,,*******,,,,,,,,,,,,      ,,,,,,,,,*****,,,,,,,,,.         ,,,,,,,****,,,,,,            .,,,***,,,,                ,*,.     _______ __  __          __    / ____(_) /_/ /   ____ _/ /_   / / __/ / __/ /   / __ `/ __ \  / /_/ / / /_/ /___/ /_/ / /_/ /  \____/_/\__/_____/\__,_/_.___/Thank you for installing GitLab!GitLab was unable to detect a valid hostname for your instance.Please configure a URL for your GitLab instance by setting `external_url`configuration in /etc/gitlab/gitlab.rb file.Then, you can start your GitLab instance by running the following command:  sudo gitlab-ctl reconfigureFor a comprehensive list of configuration options please see the Omnibus GitLab readmehttps://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md配置Gitlab  4，配置gitlab实例访问路径编辑gitlab配置文件sudo vi /etc/gitlab/gitlab.rb## GitLab configuration settings##! This file is generated during initial installation and **is not** modified##! during upgrades.##! Check out the latest version of this file to know about the different##! settings that can be configured by this file, which may be found at:##! https://gitlab.com/gitlab-org/omnibus-gitlab/raw/master/files/gitlab-config-template/gitlab.rb.template## GitLab URL##! URL on which GitLab will be reachable.##! For more details on configuring external_url see:##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlabexternal_url &#39;http://111.111.111.111/gitlab&#39;把 gitlab.example.com 修改为自己主机的ip或者域名（如果是绑定了域名），由于gitlab默认使用的80端口，这里我们使用nginx代理转发一下在gitlab里配置nginx的监听端口，打开gitlab的配置文件sudo vi /etc/gitlab/gitlab.rb大概在文件中间部分，948行，有如下配置，去掉#注释，修改nil为8888 946 ##! **Override only if you use a reverse proxy** 947 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port 948 nginx[&#39;listen_port&#39;] = 8888 949配置Nginx代理保存文件退出。接下来配置nginx，打开nginx配置文件sudo vi /etc/nginx/conf.d/default.conf在文件里添加如下配置：upstream git {    server  localhost:8888;}server {    listen 80;    server_name 111.111.111.111;    location /gitlab {        # 设置最大允许上传单个的文件大小        client_max_body_size 1024m;        proxy_redirect off;        #以下确保 gitlab中项目的 url 是域名而不是 http://git，不可缺少        proxy_set_header Host $host;        proxy_set_header X-Real-IP $remote_addr;        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # 反向代理到 gitlab 内置的 nginx        proxy_pass http://git/gitlab;        index index.html index.htm;    }}保存退出，重新加载nginx配置sudo nginx -s reload重新加载gitlab配置并重启sudo gitlab-ctl reconfiguresudo gitlab-ctl restart打开必要的服务sudo service sshd startsudo service postfix start查看gitlab运行状态sudo gitlab-ctl statusrun: alertmanager: (pid 26373) 1361s; run: log: (pid 26390) 1361srun: gitaly: (pid 26289) 1362s; run: log: (pid 26306) 1362srun: gitlab-monitor: (pid 26314) 1362s; run: log: (pid 26337) 1361srun: gitlab-workhorse: (pid 32531) 125s; run: log: (pid 26280) 1362srun: logrotate: (pid 25729) 1411s; run: log: (pid 26282) 1362srun: nginx: (pid 32549) 125s; run: log: (pid 26281) 1362srun: node-exporter: (pid 25949) 1399s; run: log: (pid 26388) 1361srun: postgres-exporter: (pid 26397) 1360s; run: log: (pid 26487) 1360srun: postgresql: (pid 25351) 1462s; run: log: (pid 26333) 1362srun: prometheus: (pid 26346) 1361s; run: log: (pid 26366) 1361srun: redis: (pid 25267) 1468s; run: log: (pid 26255) 1363srun: redis-exporter: (pid 26034) 1391s; run: log: (pid 26338) 1361srun: sidekiq: (pid 32456) 137s; run: log: (pid 26258) 1363srun: unicorn: (pid 32631) 115s; run: log: (pid 26334) 1362s打开浏览器，访问 http://111.111.111.111/gitlab 开始使用  Reference      https://zh.wikipedia.org/wiki/Gitlab    https://about.gitlab.com/installation/#ubuntu    https://www.jianshu.com/p/a86a1529d253    https://docs.gitlab.com/omnibus/settings/smtp.html    https://www.jianshu.com/p/4a5877d1e14b    https://www.zybuluo.com/lovemiffy/note/418758  ">
+    <meta itemprop="datePublished" content="February 27, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">在Ubuntu下安装Gitlab
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#安装gitlab">安装Gitlab</a></li>
+  <li><a href="#配置gitlab">配置Gitlab</a></li>
+  <li><a href="#配置nginx代理">配置Nginx代理</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。</p>
+
+<h2 id="安装gitlab">安装Gitlab</h2>
+
+<ul>
+  <li>1，安装必要的依赖</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> curl openssh-server ca-certificates
+</code></pre></div></div>
+
+<blockquote>
+  <p>ps: -y 参数代表默认同意安装，不需要再手动输入y继续安装</p>
+</blockquote>
+
+<p>接下来，为了发送提醒邮件，需要安装<code class="highlighter-rouge">Postfix</code>。如果你想使用其他方案发送邮件请跳过此步骤，在gitlab安装完成之后配置额外的smtp服务
+<a href="https://docs.gitlab.com/omnibus/settings/smtp.html">参考»</a></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> postfix
+</code></pre></div></div>
+<p>安装postfix的时候，会出现配置界面，如下所示：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Package configuration
+┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐
+│ Please <span class="k">select </span>the mail server configuration <span class="nb">type </span>that best meets your needs.  │
+│                                                                               │
+│  No configuration:                                                            │
+│   Should be chosen to leave the current configuration unchanged.              │
+│  Internet site:                                                               │
+│   Mail is sent and received directly using SMTP.                              │
+│  Internet with smarthost:                                                     │
+│   Mail is received directly using SMTP or by running a utility such           │
+│   as fetchmail. Outgoing mail is sent using a smarthost.                      │
+│  Satellite system:                                                            │
+│   All mail is sent to another machine, called a <span class="s1">'smarthost'</span>, <span class="k">for </span>delivery.    │
+│  Local only:                                                                  │
+│   The only delivered mail is the mail <span class="k">for </span><span class="nb">local </span>users. There is no network.   │
+│                                                                               │
+│ General <span class="nb">type </span>of mail configuration:                                           │
+│                                                                               │
+│                            No configuration                                   │
+│                            Internet Site                                      │
+│                            Internet with smarthost                            │
+│                            Satellite system                                   │
+│                            Local only                                         │
+│                                                                               │
+│                                                                               │
+│                     &lt;Ok&gt;                         &lt;Cancel&gt;                     │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+<p>选择【Internet Site】选项完成本页配置。下一步配置mail_name，如下图所示：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Package configuration
+ ┌────────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────────┐
+ │ The <span class="s2">"mail name"</span> is the domain name used to <span class="s2">"qualify"</span> _ALL_ mail addresses without a domain name. This includes  │
+ │ mail to and from &lt;root&gt;: please <span class="k">do </span>not make your machine send out mail from root@example.org unless             │
+ │ root@example.org has told you to.                                                                               │
+ │                                                                                                                 │
+ │ This name will also be used by other programs. It should be the single, fully qualified domain name <span class="o">(</span>FQDN<span class="o">)</span><span class="nb">.</span>     │
+ │                                                                                                                 │
+ │ Thus, <span class="k">if </span>a mail address on the <span class="nb">local </span>host is foo@example.org, the correct value <span class="k">for </span>this option would be        │
+ │ example.org.                                                                                                    │
+ │                                                                                                                 │
+ │ System mail name:                                                                                               │
+ │                                                                                                                 │
+ │ localhost.localdomain                                                                                           │
+ │                                                                                                                 │
+ │                                &lt;Ok&gt;                                    &lt;Cancel&gt;                                 │
+ │                                                                                                                 │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<p>实际使用中不需要用到邮件通知，所以这里使用默认的地址，回车完成postfix的安装配置。</p>
+
+<ul>
+  <li>2，配置软件源
+由于官网的资源安装会很慢，推荐使用国内的镜像去安装，网上推荐的使用<a href="https://mirror.tuna.tsinghua.edu.cn/help/gitlab-ce/">清华大学的镜像</a></li>
+</ul>
+
+<p>信任 GitLab 的 GPG 公钥:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | <span class="nb">sudo </span>apt-key add - &amp;&gt;/dev/null
+</code></pre></div></div>
+<p>添加清华大学的镜像到<code class="highlighter-rouge">/etc/apt/sources.list</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main'</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/gitlab.list
+</code></pre></div></div>
+<p>ps: 如果是Ubuntu 14.04就把<code class="highlighter-rouge">xenial</code>换成<code class="highlighter-rouge">trusty</code>，附一张对照表</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>系统版本</th>
+      <th>Codename</th>
+      <th>支持平台</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>14.04</td>
+      <td>trusty</td>
+      <td>x86_64, i386, aarch64/arm64</td>
+    </tr>
+    <tr>
+      <td>16.04</td>
+      <td>xenial</td>
+      <td>x86_64, i386</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>3，安装 gitlab-ce ，虽然换了国内的镜像，但是软件大小有400M，还是需要安装一会儿
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>gitlab-ce
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>安装完成后出现如下界面：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       <span class="k">*</span><span class="nb">.</span>                  <span class="k">*</span><span class="nb">.</span>
+      <span class="k">***</span>                 <span class="k">***</span>
+     <span class="k">*****</span>               <span class="k">*****</span>
+    .<span class="k">******</span>             <span class="k">*******</span>
+    <span class="k">********</span>            <span class="k">********</span>
+   ,,,,,,,,,<span class="k">***********</span>,,,,,,,,,
+  ,,,,,,,,,,,<span class="k">*********</span>,,,,,,,,,,,
+  .,,,,,,,,,,,<span class="k">*******</span>,,,,,,,,,,,,
+      ,,,,,,,,,<span class="k">*****</span>,,,,,,,,,.
+         ,,,,,,,<span class="k">****</span>,,,,,,
+            .,,,<span class="k">***</span>,,,,
+                ,<span class="k">*</span>,.
+
+
+
+     _______ __  __          __
+    / ____<span class="o">(</span>_<span class="o">)</span> /_/ /   ____ _/ /_
+   / / __/ / __/ /   / __ <span class="sb">`</span>/ __ <span class="se">\</span>
+  / /_/ / / /_/ /___/ /_/ / /_/ /
+  <span class="se">\_</span>___/_/<span class="se">\_</span>_/_____/<span class="se">\_</span>_,_/_.___/
+
+
+Thank you <span class="k">for </span>installing GitLab!
+GitLab was unable to detect a valid <span class="nb">hostname </span><span class="k">for </span>your instance.
+Please configure a URL <span class="k">for </span>your GitLab instance by setting <span class="sb">`</span>external_url<span class="sb">`</span>
+configuration <span class="k">in</span> /etc/gitlab/gitlab.rb file.
+Then, you can start your GitLab instance by running the following <span class="nb">command</span>:
+  <span class="nb">sudo </span>gitlab-ctl reconfigure
+
+For a comprehensive list of configuration options please see the Omnibus GitLab readme
+https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md
+
+</code></pre></div></div>
+
+<h2 id="配置gitlab">配置Gitlab</h2>
+
+<ul>
+  <li>4，配置gitlab实例访问路径</li>
+</ul>
+
+<p>编辑gitlab配置文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi /etc/gitlab/gitlab.rb
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## GitLab configuration settings</span>
+<span class="c">##! This file is generated during initial installation and **is not** modified</span>
+<span class="c">##! during upgrades.</span>
+<span class="c">##! Check out the latest version of this file to know about the different</span>
+<span class="c">##! settings that can be configured by this file, which may be found at:</span>
+<span class="c">##! https://gitlab.com/gitlab-org/omnibus-gitlab/raw/master/files/gitlab-config-template/gitlab.rb.template</span>
+
+
+<span class="c">## GitLab URL</span>
+<span class="c">##! URL on which GitLab will be reachable.</span>
+<span class="c">##! For more details on configuring external_url see:</span>
+<span class="c">##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab</span>
+external_url <span class="s1">'http://111.111.111.111/gitlab'</span>
+
+</code></pre></div></div>
+
+<p>把 <code class="highlighter-rouge">gitlab.example.com</code> 修改为自己主机的ip或者域名（如果是绑定了域名），由于gitlab默认使用的80端口，这里我们使用nginx代理转发一下</p>
+
+<p>在gitlab里配置nginx的监听端口，打开gitlab的配置文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi /etc/gitlab/gitlab.rb
+</code></pre></div></div>
+<p>大概在文件中间部分，948行，有如下配置，去掉#注释，修改<code class="highlighter-rouge">nil</code>为<code class="highlighter-rouge">8888</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 946 <span class="c">##! **Override only if you use a reverse proxy**</span>
+ 947 <span class="c">##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port</span>
+ 948 nginx[<span class="s1">'listen_port'</span><span class="o">]</span> <span class="o">=</span> 8888
+ 949
+</code></pre></div></div>
+
+<h2 id="配置nginx代理">配置Nginx代理</h2>
+
+<p>保存文件退出。接下来配置nginx，打开nginx配置文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi /etc/nginx/conf.d/default.conf
+</code></pre></div></div>
+
+<p>在文件里添加如下配置：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+upstream git <span class="o">{</span>
+    server  localhost:8888<span class="p">;</span>
+<span class="o">}</span>
+
+server <span class="o">{</span>
+    listen 80<span class="p">;</span>
+    server_name 111.111.111.111<span class="p">;</span>
+
+    location /gitlab <span class="o">{</span>
+        <span class="c"># 设置最大允许上传单个的文件大小</span>
+        client_max_body_size 1024m<span class="p">;</span>
+        proxy_redirect off<span class="p">;</span>
+        <span class="c">#以下确保 gitlab中项目的 url 是域名而不是 http://git，不可缺少</span>
+        proxy_set_header Host <span class="nv">$host</span><span class="p">;</span>
+        proxy_set_header X-Real-IP <span class="nv">$remote_addr</span><span class="p">;</span>
+        proxy_set_header X-Forwarded-For <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+        <span class="c"># 反向代理到 gitlab 内置的 nginx</span>
+        proxy_pass http://git/gitlab<span class="p">;</span>
+        index index.html index.htm<span class="p">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>保存退出，重新加载nginx配置</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nginx <span class="nt">-s</span> reload
+</code></pre></div></div>
+
+<p>重新加载gitlab配置并重启</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>gitlab-ctl reconfigure
+<span class="nb">sudo </span>gitlab-ctl restart
+</code></pre></div></div>
+
+<p>打开必要的服务</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service sshd start
+<span class="nb">sudo </span>service postfix start
+</code></pre></div></div>
+
+<p>查看gitlab运行状态</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>gitlab-ctl status
+run: alertmanager: <span class="o">(</span>pid 26373<span class="o">)</span> 1361s<span class="p">;</span> run: log: <span class="o">(</span>pid 26390<span class="o">)</span> 1361s
+run: gitaly: <span class="o">(</span>pid 26289<span class="o">)</span> 1362s<span class="p">;</span> run: log: <span class="o">(</span>pid 26306<span class="o">)</span> 1362s
+run: gitlab-monitor: <span class="o">(</span>pid 26314<span class="o">)</span> 1362s<span class="p">;</span> run: log: <span class="o">(</span>pid 26337<span class="o">)</span> 1361s
+run: gitlab-workhorse: <span class="o">(</span>pid 32531<span class="o">)</span> 125s<span class="p">;</span> run: log: <span class="o">(</span>pid 26280<span class="o">)</span> 1362s
+run: logrotate: <span class="o">(</span>pid 25729<span class="o">)</span> 1411s<span class="p">;</span> run: log: <span class="o">(</span>pid 26282<span class="o">)</span> 1362s
+run: nginx: <span class="o">(</span>pid 32549<span class="o">)</span> 125s<span class="p">;</span> run: log: <span class="o">(</span>pid 26281<span class="o">)</span> 1362s
+run: node-exporter: <span class="o">(</span>pid 25949<span class="o">)</span> 1399s<span class="p">;</span> run: log: <span class="o">(</span>pid 26388<span class="o">)</span> 1361s
+run: postgres-exporter: <span class="o">(</span>pid 26397<span class="o">)</span> 1360s<span class="p">;</span> run: log: <span class="o">(</span>pid 26487<span class="o">)</span> 1360s
+run: postgresql: <span class="o">(</span>pid 25351<span class="o">)</span> 1462s<span class="p">;</span> run: log: <span class="o">(</span>pid 26333<span class="o">)</span> 1362s
+run: prometheus: <span class="o">(</span>pid 26346<span class="o">)</span> 1361s<span class="p">;</span> run: log: <span class="o">(</span>pid 26366<span class="o">)</span> 1361s
+run: redis: <span class="o">(</span>pid 25267<span class="o">)</span> 1468s<span class="p">;</span> run: log: <span class="o">(</span>pid 26255<span class="o">)</span> 1363s
+run: redis-exporter: <span class="o">(</span>pid 26034<span class="o">)</span> 1391s<span class="p">;</span> run: log: <span class="o">(</span>pid 26338<span class="o">)</span> 1361s
+run: sidekiq: <span class="o">(</span>pid 32456<span class="o">)</span> 137s<span class="p">;</span> run: log: <span class="o">(</span>pid 26258<span class="o">)</span> 1363s
+run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<span class="p">;</span> run: log: <span class="o">(</span>pid 26334<span class="o">)</span> 1362s
+
+</code></pre></div></div>
+
+<p>打开浏览器，访问 <code class="highlighter-rouge">http://111.111.111.111/gitlab</code> 开始使用</p>
+
+<blockquote>
+  <p>Reference</p>
+  <ul>
+    <li>https://zh.wikipedia.org/wiki/Gitlab</li>
+    <li>https://about.gitlab.com/installation/#ubuntu</li>
+    <li>https://www.jianshu.com/p/a86a1529d253</li>
+    <li>https://docs.gitlab.com/omnibus/settings/smtp.html</li>
+    <li>https://www.jianshu.com/p/4a5877d1e14b</li>
+    <li>https://www.zybuluo.com/lovemiffy/note/418758</li>
+  </ul>
+</blockquote>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://www.thxopen.com/tags/#gitlab" class="page__taxonomy-item" rel="tag">Gitlab</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://www.thxopen.com/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://www.thxopen.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2018-02-27T00:00:00+08:00">February 27, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85Gitlab%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://www.thxopen.com/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" class="pagination--pager" title="初探oss-事件通知（http endpoint）
+">向前</a>
+    
+    
+      <a href="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html" class="pagination--pager" title="在Ubuntu上安装常用的和Java相关的工具
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="permalink">Spring Data JPA自动创建表同时生成表和列的注释
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
+
+一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
+
+
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html" rel="permalink">像使用mybatis一样使用spring data jpa
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">简介
+
+自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。
+虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extra
+
+...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">背景
+
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+    <ul class="social-icons">
+        
+        <li><strong>友情链接:</strong></li>
+        
+
+        
+        
+        <li><a href="http://www.datatables.club"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>DataTables中文网</a></li>
+        
+        <li><a href="https://www.nrjs.cn/"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>牛人js</a></li>
+        
+    </ul>
+</div>
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>
