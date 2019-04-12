@@ -42,33 +42,45 @@ sudo rabbitmq-plugins enable rabbitmq_management
 
 ![RabbitMQ登录界面]({{ site.baseurl }}/assets/images/post/linux/ubuntu/rabbitmq_login.png)
 
-使用默认用户guest，密码guest可以登录
+使用默认用户`guest`，密码`guest`可以登录
 
 
 ## 允许非本地访问管理界面
 
 打开管理界面的功能开关后，虽然guest用户可以访问，但远程访问还需要配置用户才能可以
 
-- 第一步：添加用户
+
+- 第一步：配置vhost
+语法：add_vhost <vhostname>
+```bash
+sudo rabbitmqctl add_vhost demo_vhost
+sudo rabbitmqctl list_vhosts
+```
+rabbitmq默认创建了`/`vhost，也可以自己创建一个新的vhost来区分，这里可以直接使用默认的
+
+- 第二步：添加用户
+语法：add_user <username> <password>
 ```bash
 sudo rabbitmqctl add_user demo 123456
 sudo rabbitmqctl list_users
 ```
 添加一个用户名demo，密码为123456的用户记录
 
-- 第二步：设置权限
+- 第三步：设置权限
+语法：set_permissions [-p <vhost>] <user> <conf> <write> <read>
 ```bash
 sudo rabbitmqctl set_permissions -p "/" demo ".*" ".*" ".*"
 sudo rabbitmqctl list_permissions -p /
 ```
-设置demo用户可以从任意ip访问该管理界面
+设置demo用户可以操作 `/` vhost 下的资源，比如queue
 
-- 第三步：设置角色
+- 第四步：设置角色
+语法：set_user_tags <user> <role>
 ```bash
 sudo rabbitmqctl set_user_tags demo administrator
 sudo rabbitmqctl list_users
 ```
-设置demo用户为管理员权限
+设置demo用户为 administrator (管理员权限)
 
 完成上面操作之后即可使用demo用户登录，登录成功之后可以看到如下界面：
 
@@ -80,30 +92,33 @@ sudo rabbitmqctl list_users
 在ngxin配置文件里配置以下代码
 
 ```bash
-location /rabbitmq/ {
-    proxy_pass http://127.0.0.1:15672/;
-    rewrite ^/rabbitmq/(.*)$ /$1 break;
-    client_body_buffer_size 128k;
-    proxy_send_timeout   90;
-    proxy_read_timeout   90;
-    proxy_buffer_size    4k;
-    proxy_buffers     16 32k;
-    proxy_busy_buffers_size 64k;
-    proxy_temp_file_write_size 64k;
-    proxy_connect_timeout 30s;
-    proxy_set_header   Host   $host;
-    proxy_set_header   X-Real-IP  $remote_addr;
-    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+server{
+    server_name www.example.com;
+    listen 80;
+    location /rabbitmq/ {
+        proxy_pass http://127.0.0.1:15672/;
+        rewrite ^/rabbitmq/(.*)$ /$1 break;
+        client_body_buffer_size 128k;
+        proxy_send_timeout   90;
+        proxy_read_timeout   90;
+        proxy_buffer_size    4k;
+        proxy_buffers     16 32k;
+        proxy_busy_buffers_size 64k;
+        proxy_temp_file_write_size 64k;
+        proxy_connect_timeout 30s;
+        proxy_set_header   Host   $host;
+        proxy_set_header   X-Real-IP  $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    
+    location /rabbitmq/api/queues/ {
+        proxy_pass http://127.0.0.1:15672/api/queues/%2F/;
+    }
+    
+    location /rabbitmq/api/exchanges/ {
+        proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;
+    }
 }
-
-location /rabbitmq/api/queues/ {
-    proxy_pass http://127.0.0.1:15672/api/queues/%2F/;
-}
-
-location /rabbitmq/api/exchanges/ {
-    proxy_pass http://127.0.0.1:15672/api/exchanges/%2F/;
-}
-
 ```
 
 这样，原本要通过 `http://www.example.com:15672` 访问，现在可以直接使用 `http://www.example.com/rabbitmq` 访问web界面

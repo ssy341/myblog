@@ -42,12 +42,11 @@ skip-external-locking
 sudo service mysql restart
 ```
 
-重启之后，查询端口来验证是否修改成功
+重启之后，通过`netstat`命令查询端口来验证是否修改成功
 
 ```bash
-netstat -nlt|grep 7777
-
-tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN
+sudo netstat -nltp|grep 7777
+tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN      226042/mysqld
 ```
 
 ## 授权可以访问的客户端

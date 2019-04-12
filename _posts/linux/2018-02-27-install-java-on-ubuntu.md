@@ -22,6 +22,11 @@ JDK即Java Development Kit，java开发工具包，是java开发人员开发中�
 sudo add-apt-repository ppa:webupd8team/java
 ```
 
+> ps: 如果提示 sudo: add-apt-repository: command not found 先执行下面命令
+> sudo apt-get install python-software-properties
+> sudo apt-get update
+
+
 - 第二步：更新源
 ```bash
 sudo apt-get update

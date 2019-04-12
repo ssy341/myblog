@@ -1,0 +1,668 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ubuntu server下安装Virtualbox增强插件-实现文件夹共享 - 单客欧朋</title>
+<meta name="description" content="由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="ubuntu server下安装Virtualbox增强插件-实现文件夹共享">
+<meta property="og:url" content="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html">
+
+
+  <meta property="og:description" content="由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-11-05T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        好记性不如烂笔头
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ubuntu server下安装Virtualbox增强插件-实现文件夹共享">
+    <meta itemprop="description" content="由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。">
+    <meta itemprop="datePublished" content="November 05, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">ubuntu server下安装Virtualbox增强插件-实现文件夹共享
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#一安装virtualbox增强插件">一，安装virtualbox增强插件</a></li>
+  <li><a href="#二配置增强插件">二，配置增强插件</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。
+为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</p>
+
+<p>启动ubuntu server虚拟机，按照以下步骤安装virtualbox增强插件</p>
+
+<h2 id="一安装virtualbox增强插件">一，安装virtualbox增强插件</h2>
+
+<ul>
+  <li>
+    <p>1，左上角找到【Devices】- 【Insert Guest Additions CD Image…】
+<img src="/assets/images/post/mac/development/installadditions/1.png" alt="1" /></p>
+  </li>
+  <li>2，执行下面命令挂载CD
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount /dev/cdrom /media/cdrom
+</code></pre></div>    </div>
+    <p>挂载成功，进入目录可以看到<code class="highlighter-rouge">VBoxLinuxAdditions.run</code>安装脚本</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /media/cdrom
+32Bit  AUTORUN.INF  cert  runasroot.sh  VBoxLinuxAdditions.run    VBoxWindowsAdditions-amd64.exe  VBoxWindowsAdditions-x86.exe
+64Bit  autorun.sh   OS2   TRANS.TBL     VBoxSolarisAdditions.pkg  VBoxWindowsAdditions.exe
+</code></pre></div>    </div>
+  </li>
+  <li>3，安装VirtualBox guest additions所需要的依赖
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>build-essential linux-headers-<span class="sb">`</span><span class="nb">uname</span> <span class="nt">-r</span><span class="sb">`</span>
+</code></pre></div>    </div>
+  </li>
+  <li>4，执行<code class="highlighter-rouge">VBoxLinuxAdditions.run</code>脚本
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> /media/cdrom/VBoxLinuxAdditions.run
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="二配置增强插件">二，配置增强插件</h2>
+
+<ul>
+  <li>
+    <p>5，配置共享文件夹，【Devices】 - 【Shared Folders】 - 【Shared Folders Settings…】
+<img src="/assets/images/post/mac/development/installadditions/5.png" alt="5" /></p>
+
+    <ul>
+      <li>
+        <p>5-1,添加一个共享目录，点击右边的【➕】按钮
+  <img src="/assets/images/post/mac/development/installadditions/5-1.png" alt="8" /></p>
+      </li>
+      <li>
+        <p>5-2，选择本地的一个目录，【Folder Name】填写<code class="highlighter-rouge">wwwroot</code>（或者其他名称），然后勾选【Make Permanent】固定分配，点击【ok】
+  <img src="/assets/images/post/mac/development/installadditions/5-2.png" alt="9" /></p>
+      </li>
+      <li>
+        <p>5-3，保存共享文件夹配置，点击【ok】<br />
+  <img src="/assets/images/post/mac/development/installadditions/5-3.png" alt="10" /></p>
+      </li>
+    </ul>
+  </li>
+  <li>5，重启vm
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>shutdown <span class="nt">-r</span> now
+</code></pre></div>    </div>
+  </li>
+  <li>6，待重启完毕，创建共享文件夹的挂载点
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> ~/wwwroot
+</code></pre></div>    </div>
+  </li>
+  <li>7，把共享文件夹挂载到上一步创建的目录
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount <span class="nt">-t</span> vboxsf <span class="nt">-o</span> <span class="nv">uid</span><span class="o">=</span>1000,gid<span class="o">=</span>1000 wwwroot ~/wwwroot
+</code></pre></div>    </div>
+    <blockquote>
+      <p>ps:uid和gid的值为当前用户的，这样就可以用当前登录的用户访问共享文件夹里的内容，不然挂载的文件默认用户是root，组也是root组。
+通过命令<code class="highlighter-rouge">id</code>查看当前用户对应的信息</p>
+    </blockquote>
+  </li>
+  <li>8，现在可以在vm内访问主机共享的文件夹类容
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/wwwroot
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><a href="/mac/2018/11/01/windows-to-mac-skills.html">返回目录</a></p>
+
+<blockquote>
+  <p>Reference:
+https://gist.github.com/estorgio/1d679f962e8209f8a9232f7593683265
+https://ubuntuforums.org/showthread.php?t=1398340</p>
+</blockquote>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ubuntu-server" class="page__taxonomy-item" rel="tag">ubuntu server</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#virtualbox" class="page__taxonomy-item" rel="tag">virtualbox</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#%E6%96%87%E4%BB%B6%E5%A4%B9%E5%85%B1%E4%BA%AB" class="page__taxonomy-item" rel="tag">文件夹共享</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#mac" class="page__taxonomy-item" rel="tag">mac</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2018-11-05T00:00:00+08:00">November 05, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=ubuntu+server%E4%B8%8B%E5%AE%89%E8%A3%85Virtualbox%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E5%85%B1%E4%BA%AB%20http%3A%2F%2Flocalhost%3A4000%2Fmac%2F2018%2F11%2F05%2Finstall-virtualbox-additions-for-ubuntu-server.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fmac%2F2018%2F11%2F05%2Finstall-virtualbox-additions-for-ubuntu-server.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fmac%2F2018%2F11%2F05%2Finstall-virtualbox-additions-for-ubuntu-server.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmac%2F2018%2F11%2F05%2Finstall-virtualbox-additions-for-ubuntu-server.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html" class="pagination--pager" title="在虚拟机里安装Ubuntu Server 16
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-windows.html" class="pagination--pager" title="windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/java/2019/04/12/limit-message-size-in-logback.html" rel="permalink">使用logback限制日志打印内容长度
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">简介
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="permalink">在虚拟机里安装windows10
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
+macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows，
+他们...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-windows.html" rel="permalink">windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
+首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html" rel="permalink">在虚拟机里安装Ubuntu Server 16
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。
+虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。
+对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+    <ul class="social-icons">
+        
+        <li><strong>友情链接:</strong></li>
+        
+
+        
+        
+        <li><a href="http://www.datatables.club"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>DataTables中文网</a></li>
+        
+        <li><a href="https://www.nrjs.cn/"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>牛人js</a></li>
+        
+    </ul>
+</div>
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <!-- start custom comments snippet -->
+
+<!-- end custom comments snippet -->
+
+
+
+
+  </body>
+</html>
