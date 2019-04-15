@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>ubuntu server 恢复模式下修改/etc/fstab文件 - 单客欧朋</title>
-<meta name="description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，其中有一句 no recovery nomodeset，把它替换为rw single init=/bin/bash然后按ctrl+x进入系统，接下里的操作都是在root下进行vi /etc/fatab修改完后保存退出，重启系统即可参考：ubuntu 进入单用户模式，修改sudoers权限，修改root密码">
+<meta name="description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://www.thxopen.com/linux/2014/03/30/Linux-recover-etc-fstab.html">
 
 
-  <meta property="og:description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，其中有一句 no recovery nomodeset，把它替换为rw single init=/bin/bash然后按ctrl+x进入系统，接下里的操作都是在root下进行vi /etc/fatab修改完后保存退出，重启系统即可参考：ubuntu 进入单用户模式，修改sudoers权限，修改root密码">
+  <meta property="og:description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件">
 
 
 
@@ -299,7 +299,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="ubuntu server 恢复模式下修改/etc/fstab文件">
-    <meta itemprop="description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，其中有一句 no recovery nomodeset，把它替换为rw single init=/bin/bash然后按ctrl+x进入系统，接下里的操作都是在root下进行vi /etc/fatab修改完后保存退出，重启系统即可参考：ubuntu 进入单用户模式，修改sudoers权限，修改root密码">
+    <meta itemprop="description" content="由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件">
     <meta itemprop="datePublished" content="March 30, 2014">
     
 
@@ -416,6 +416,35 @@
     </div>
 
     
+      <div class="page__comments">
+  
+  
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+      <section id="custom-comments">
+
+        <div id="gitalk-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script src="/assets/js/md5.js"></script>
+
+        <script>
+            const gitalk = new Gitalk({
+                clientID: '7bebf50c943165d34c25',
+                clientSecret: '1450558ddd30817d1ed9b26f8c0c3a4638022035',
+                repo: 'myblog',
+                owner: 'ssy341',
+                admin: ['ssy341'],
+                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+                distractionFreeMode: false  // Facebook-like distraction free mode
+            })
+
+            gitalk.render('gitalk-container')
+        </script>
+      </section>
+  
+</div>
+    
   </article>
 
   
@@ -433,45 +462,14 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="permalink">Spring Data JPA自动创建表同时生成表和列的注释
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
-
-一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
-
-
-import lombok.Data;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-/...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html" rel="permalink">像使用mybatis一样使用spring data jpa
+        <a href="http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback.html" rel="permalink">使用logback限制日志打印内容长度
 </a>
       
     </h2>
     
     <p class="archive__item-excerpt" itemprop="description">简介
 
-自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。
-虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extra
-
-...</p>
+</p>
   </article>
 </div>
         
@@ -484,23 +482,14 @@ import javax.persistence.Table;
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+        <a href="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="permalink">在虚拟机里安装windows10
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">起因
-
-使用mysql数据库，在插入数据时，抛出以下异常
-
-Unknown column 'NaN' in 'field list'
-
-
-字面上意思：未知的列’NaN’在字段列表中
-
-我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
-
-再看关键字N...</p>
+    <p class="archive__item-excerpt" itemprop="description">见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
+macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows，
+他们...</p>
   </article>
 </div>
         
@@ -513,23 +502,42 @@ Unknown column 'NaN' in 'field list'
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+        <a href="http://www.thxopen.com/mac/2018/11/05/install-virtualbox-additions-for-windows.html" rel="permalink">windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">背景
+    <p class="archive__item-excerpt" itemprop="description">为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
+首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。
 
-我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+</p>
+  </article>
+</div>
+        
+          
 
-在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
 
-同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html" rel="permalink">ubuntu server下安装Virtualbox增强插件-实现文件夹共享
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。
+为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。
+
+</p>
   </article>
 </div>
         
       </div>
     </div>
+  
   
 </div>
 
@@ -579,7 +587,7 @@ Unknown column 'NaN' in 'field list'
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2019 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
@@ -595,6 +603,12 @@ Unknown column 'NaN' in 'field list'
 <script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
 <script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
+
+
+
+    <!-- start custom comments snippet -->
+
+<!-- end custom comments snippet -->
 
 
 
