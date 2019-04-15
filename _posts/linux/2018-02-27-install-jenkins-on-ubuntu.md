@@ -118,6 +118,44 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 > ps: 点击开始使用后页面是空白的，把jenkins服务重启一下，然后重新访问即可
 
+## 升级jenkins
+
+apt-get安装方式简化了软件安装以及软件启动和停止，但实际就是用内置的web服务加上jenkins.war，默认情况下这个文件在
+`/usr/share/jenkins/` 目录，如果要对其升级，只需要替换这个文件即可。为了保险起见，你可以备份这个文件，然后在
+[jenkins下载](https://jenkins.io/download/)页面找到 **Generic Java package (.war)** ，把下载下来的文件
+放到`/usr/share/jenkins/` 目录，下载好了重新启动完成升级操作。
+
+停止jenkins
+```bash
+$ sudo service jenkins stop
+```
+备份jenkins之前的版本
+```bash
+$ sudo mv /usr/share/jenkins/jenkins.war /usr/share/jenkins/jenkins_backup.war
+```
+下载最新版
+```bash
+$ cd /usr/share/jenkins/
+$ sudo wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+
+--2019-04-15 16:13:28--  http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+Resolving mirrors.jenkins.io (mirrors.jenkins.io)... 52.202.51.185
+Connecting to mirrors.jenkins.io (mirrors.jenkins.io)|52.202.51.185|:80... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: http://ftp-nyc.osuosl.org/pub/jenkins/war-stable/2.164.2/jenkins.war [following]
+--2019-04-15 16:13:29--  http://ftp-nyc.osuosl.org/pub/jenkins/war-stable/2.164.2/jenkins.war
+Resolving ftp-nyc.osuosl.org (ftp-nyc.osuosl.org)... 64.50.233.100, 2600:3404:200:237::2
+Connecting to ftp-nyc.osuosl.org (ftp-nyc.osuosl.org)|64.50.233.100|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 77330993 (74M) [application/x-java-archive]
+Saving to: ‘jenkins.war’
+
+```
+启动jenkins
+```bash
+$ sudo service jenkins start
+```
+
 
 [返回目录]({{ site.baseurl }}{% post_url linux/2018-02-27-install-java-ee-environment-on-ubuntu %})
 
