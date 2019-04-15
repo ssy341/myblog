@@ -8,6 +8,9 @@ tags: [mac,wheel,direction]
 
 如何修改滚轮的方向和windows保持一致呢？
 
+<!--more-->
+
+
 【系统偏好设置】 - 【鼠标】 - 【滚动方向：自然】，取消勾选即可
 
 ![系统偏好设置]({{ site.baseurl }}/assets/images/post/mac/hardware/mac-wheel-config/1.png)

@@ -7,6 +7,9 @@ tags: [virtualbox,windows10,文件夹共享,共享剪贴板,文件拖拽]
 为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
 首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。
 
+<!--more-->
+
+
 ## 一，安装virtualbox增强插件
 
 - 1，左上角找到【Devices】- 【Insert Guest Additions CD Image...】

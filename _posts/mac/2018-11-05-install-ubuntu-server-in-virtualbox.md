@@ -8,6 +8,9 @@ tags: [ubuntu,mac,virtualbox]
 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。
 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。
 
+<!--more-->
+
+
 ## 准备工作
 
 - [virtualbox](https://www.virtualbox.org/)（虚拟机软件）

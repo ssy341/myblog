@@ -7,6 +7,9 @@ tags: [virtualbox,ubuntu server,文件夹共享]
 由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。
 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。
 
+<!--more-->
+
+
 启动ubuntu server虚拟机，按照以下步骤安装virtualbox增强插件
 
 ## 一，安装virtualbox增强插件
