@@ -321,6 +321,7 @@
   <li><a href="#安装jenkins">安装Jenkins</a></li>
   <li><a href="#配置端口">配置端口</a></li>
   <li><a href="#初始化jenkins">初始化jenkins</a></li>
+  <li><a href="#升级jenkins">升级jenkins</a></li>
 </ul>
             </nav>
           </aside>
@@ -433,6 +434,40 @@ Password:
 <blockquote>
   <p>ps: 点击开始使用后页面是空白的，把jenkins服务重启一下，然后重新访问即可</p>
 </blockquote>
+
+<h2 id="升级jenkins">升级jenkins</h2>
+
+<p>apt-get安装方式简化了软件安装以及软件启动和停止，但实际就是用内置的web服务加上jenkins.war，默认情况下这个文件在
+<code class="highlighter-rouge">/usr/share/jenkins/</code> 目录，如果要对其升级，只需要替换这个文件即可。为了保险起见，你可以备份这个文件，然后在
+<a href="https://jenkins.io/download/">jenkins下载</a>页面找到 <strong>Generic Java package (.war)</strong> ，把下载下来的文件
+放到<code class="highlighter-rouge">/usr/share/jenkins/</code> 目录，下载好了重新启动完成升级操作。</p>
+
+<p>停止jenkins</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>service jenkins stop
+</code></pre></div></div>
+<p>备份jenkins之前的版本</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo mv</span> /usr/share/jenkins/jenkins.war /usr/share/jenkins/jenkins_backup.war
+</code></pre></div></div>
+<p>下载最新版</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/share/jenkins/
+<span class="nv">$ </span><span class="nb">sudo </span>wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+
+<span class="nt">--2019-04-15</span> 16:13:28--  http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+Resolving mirrors.jenkins.io <span class="o">(</span>mirrors.jenkins.io<span class="o">)</span>... 52.202.51.185
+Connecting to mirrors.jenkins.io <span class="o">(</span>mirrors.jenkins.io<span class="o">)</span>|52.202.51.185|:80... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: http://ftp-nyc.osuosl.org/pub/jenkins/war-stable/2.164.2/jenkins.war <span class="o">[</span>following]
+<span class="nt">--2019-04-15</span> 16:13:29--  http://ftp-nyc.osuosl.org/pub/jenkins/war-stable/2.164.2/jenkins.war
+Resolving ftp-nyc.osuosl.org <span class="o">(</span>ftp-nyc.osuosl.org<span class="o">)</span>... 64.50.233.100, 2600:3404:200:237::2
+Connecting to ftp-nyc.osuosl.org <span class="o">(</span>ftp-nyc.osuosl.org<span class="o">)</span>|64.50.233.100|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 77330993 <span class="o">(</span>74M<span class="o">)</span> <span class="o">[</span>application/x-java-archive]
+Saving to: ‘jenkins.war’
+
+</code></pre></div></div>
+<p>启动jenkins</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>service jenkins start
+</code></pre></div></div>
 
 <p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
 
