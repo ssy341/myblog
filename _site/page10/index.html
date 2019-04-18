@@ -313,6 +313,31 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/linux/2014/03/26/Linux-tar-zip.html" rel="permalink">linux 文件解压、压缩 tar zip
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">tar/zip 解压
+tar xvfz jdk.tar.gz
+zip -r 1.zip a.txt rule
+unzip yasuo.zip
+unzip abc\?.zip` ?表示一个字符，如果用*表示任意多个字符
+unzip -v large.zip
+unzip -t large.zip
+unzip -j m...</p>
+  </article>
+</div>
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/linux/2014/03/26/Linux-file.html" rel="permalink">linux 文件操作命令 rmdir mkdir rm
 </a>
       
@@ -324,7 +349,11 @@
 ● -p 选项
 如果一个目录及其子目录都是空的，其中在删除最子目录的时候，使用-p选项，则这些相关的目录都会被删除掉。
 
-</p>
+mkdir filename 新建文件夹
+
+rmdir filename 删除目录
+
+rm -rf filename 删除文件/...</p>
   </article>
 </div>
 
@@ -344,7 +373,13 @@
     
     <p class="archive__item-excerpt" itemprop="description">首先看如下代码
 
-</p>
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+ 
+public class StrTest {
+    @Test
+    public void sterTst(){
+        String ste...</p>
   </article>
 </div>
 
@@ -364,6 +399,7 @@
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
+如果记不起命令了，直接输入 help
 </p>
   </article>
 </div>
@@ -384,31 +420,21 @@
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
-</p>
-  </article>
-</div>
+如果记不起命令了，直接输入 help
 
-  
+列出当前目录下的文件：ls
 
+ls -l 
+列出文件的详细信息
 
+ls -tl 
+按时间排序列出文件
 
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/javascript/2013/12/19/clear_error.html" rel="permalink">方法命名务必避开关键字
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">我在js里定义了如下方法
-function clear(){
-    alert(123);
-}
-
-
-</p>
+ls -trl
+把最近修改的文件列在最后
+通用的做法
+ls -l |sort +[r]n
+n用日期所在列的 列...</p>
   </article>
 </div>
 

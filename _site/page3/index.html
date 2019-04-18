@@ -313,6 +313,34 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="permalink">Spring Data JPA自动创建表同时生成表和列的注释
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
+
+一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
+
+
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/...</p>
+  </article>
+</div>
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html" rel="permalink">像使用mybatis一样使用spring data jpa
 </a>
       
@@ -320,7 +348,10 @@
     
     <p class="archive__item-excerpt" itemprop="description">简介
 
-</p>
+自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。
+虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extra
+
+...</p>
   </article>
 </div>
 
@@ -340,7 +371,16 @@
     
     <p class="archive__item-excerpt" itemprop="description">起因
 
-</p>
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
   </article>
 </div>
 
@@ -360,7 +400,11 @@
     
     <p class="archive__item-excerpt" itemprop="description">背景
 
-</p>
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
   </article>
 </div>
 
@@ -380,28 +424,16 @@
     
     <p class="archive__item-excerpt" itemprop="description">Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
 
-</p>
-  </article>
-</div>
+安装Redis
 
-  
+sudo apt-get install redis-server
 
 
+更改默认的端口
 
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/linux/2018/02/27/install-rabbitmq-on-ubuntu.html" rel="permalink">在Ubuntu下安装RabbitMQ
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 
-的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。
+redis默认的访问端口是6379，避免端口被恶意程序使用，我们修改redis的默认端口
 
-</p>
+打开配置文件/e...</p>
   </article>
 </div>
 

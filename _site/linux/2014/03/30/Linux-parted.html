@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>ubuntu server下建立分区表/分区/格式化/自动挂载 - 单客欧朋</title>
-<meta name="description" content="流程为：新建分区–》格式化分区–》挂载分区">
+<meta name="description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://www.thxopen.com/linux/2014/03/30/Linux-parted.html">
 
 
-  <meta property="og:description" content="流程为：新建分区–》格式化分区–》挂载分区">
+  <meta property="og:description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
 
 
 
@@ -299,7 +299,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="ubuntu server下建立分区表/分区/格式化/自动挂载">
-    <meta itemprop="description" content="流程为：新建分区–》格式化分区–》挂载分区">
+    <meta itemprop="description" content="流程为：新建分区–》格式化分区–》挂载分区首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：MBR分区（主引导记录）表：支持最大卷：2T （T; terabytes,1TB=1024GB）分区的设限：最多4个主分区或3个主分区加一个扩展分区。GPT分区（GUID分区表）表：支持最大卷：18EB，（E：exabytes,1EB=1024TB）每个磁盘最多支持128个分区第一：新建分区在linux下有fdisk和parted命令，由于fdisk不支持gpt，需要使用parted来对硬盘进行接下来的操作（ps：使用fdisk命令，会有下面的警告信息：WARNING: GPT (GUID Partition Table) detected on ‘/dev/sda’! The util fdisk doesn’t support GPT. Use GNU Parted.)  以下所有操作本人已经操作过，显示的信息略有不同。数据无价，操作前请备份好数据。不过首先要通过fdisk查看当前系统识别的硬盘smotive@ubuntu-nas:~$ sudo fdisk -l[sudo] password for smotive: Disk /dev/sda: 320.1 GB, 320072933376 bytes255 heads, 63 sectors/track, 38913 cylinders, total 625142448 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 4096 bytesI/O size (minimum/optimal): 4096 bytes / 4096 bytesDisk identifier: 0x000109ef   设备 启动      起点          终点     块数   Id  系统/dev/sda1   *        2048   617381887   308689920   83  Linux/dev/sda2       617383934   625141759     3878913    5  扩展Partition 2 does not start on physical sector boundary./dev/sda5       617383936   625141759     3878912   82  Linux 交换 / SolarisWARNING: GPT (GUID Partition Table) detected on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU Parted.Disk /dev/sdb: 500.1 GB, 500107862016 bytes255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectorsUnits = 扇区 of 1 * 512 = 512 bytesSector size (logical/physical): 512 bytes / 512 bytesI/O size (minimum/optimal): 512 bytes / 512 bytesDisk identifier: 0xd87cd87c   设备 启动      起点          终点     块数   Id  系统/dev/sdb1               1   976773167   488386583+  ee  GPT	  --这里显示不同，是因为我已经操作过了，对照完成下面的操作即可 ,/dev/sdb1 在下面将会用到可以看出系统识别了两个硬盘 /dev/sda &amp; /dev/sdb,现在我要把/dev/sdb 进行建立分区表，分区和格式化并让系统自动挂载smotive@ubuntu-nas:~$ sudo parted /dev/sdbGNU Parted 2.3使用 /dev/sdb欢迎使用 GNU Parted! 输入 &#39;help&#39;可获得命令列表.(parted)  mklabel gpt 此时会提示你此操作会删掉所有数据，是否继续，这里输入yes，执行完成后，再输入打印命令，查看已经建立好分区表的硬盘信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary     --在实际操作过程这个是暂时不会显示，这里由于我的硬盘已经执行过操作了接下来分区，输入如下命令mkpart primary 0 -1这个代表把整个硬盘作为一个分区使用，在执行的时候会提示你是否继续，这里选择yes，之后会警告，分区后的对齐不能达到最佳性能，忽略or取消，这里忽略，然后再打印信息(parted) printModel: ATA WDC WD5000AADS-0 (scsi)磁盘 /dev/sdb: 500GBSector size (logical/physical): 512B/512B分区表：gpt数字  开始：  End    大小   文件系统  Name     标志 1    17.4kB  500GB  500GB  ext4      primary   --分区完后这里即显示，但是文件系统还是空白，接下来需要格式化才行到这里，建立分区表，分区就完成了，退出parted(parted)quit                                                             Information: You may need to update /etc/fstab. --这里的提示就是下面要说的系统启动自动挂载，需要修改   /etc/fstab这个文件现在来格式化硬盘，一块硬盘需要格式化了，才能被系统使用，根据fdisk -l 列出的信息，我需要格式化的设备名称为/dev/sdb1,具体参考上面的信息mkfs.ext4 /dev/sdb1  --把硬盘格式化为ext4的文件系统格式 接下来会自动完成，等待提示成功即可。接下来就是挂载硬盘到系统，windows会有c d e f盘之分，而linux是按文件夹的名称才区别设备的，既然系统要使用这块硬盘，那么就需要建立一个文件夹来和这个硬盘进行关联我在我的主目录下创建一个文件夹mkdir /home/smotive/wd500然后挂载硬盘mount /dev/sdb1 /home/smotive/wd500然后再查看系统挂载信息smotive@ubuntu-nas:~$ df -h文件系统        容量  已用  可用 已用% 挂载点/dev/sda1       290G  2.3G  273G    1% /udev            1.8G  4.0K  1.8G    1% /devtmpfs           731M  420K  730M    1% /runnone            5.0M     0  5.0M    0% /run/locknone            1.8G     0  1.8G    0% /run/shmcgroup          1.8G     0  1.8G    0% /sys/fs/cgroup/dev/sdb1       459G   70M  435G    1% /home/smotive/wd500  --此时硬盘已经挂载到系统，可以存放文件使用了接下来修改/etc/fstab文件让系统重启后自动挂载硬盘，打开文件# /etc/fstab: static file system information.## Use &#39;blkid&#39; to print the universally unique identifier for a# device; this may be used with UUID= as a more robust way to name devices# that works even if disks are added and removed. See fstab(5).## &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;proc            /proc           proc    nodev,noexec,nosuid 0       0# / was on /dev/sda1 during installationUUID=6ffe07b3-2c5f-4a82-b3b0-bed73c0efe47 /               ext4    errors=remount-ro 0       1# swap was on /dev/sda5 during installationUUID=9eaf6d20-c2cf-407b-b06b-fc93c486634c none            swap    sw              0       0/dev/sdb1       /home/smotive/wd500     ext4    defaults        0       2  #第一列：设备名或者设备卷标名，（/dev/sda10 或者 LABEL=/）#第二列：设备挂载目录        （例如上面的“/”或者“/mnt/D/”）#第三列：设备文件系统       （例如上面的“ext3”或者“vfat”）#第四列：挂载参数     （看帮助man mount）#第五列：指明是否要备份。（0为不备份，1为要备份，一般根分区要备份）#第六列：指明自检顺序。 （0为不自检，1或者2为要自检，如果是根分区要设为1，其他分区只能是2）修改好后保存退出修改完/etc/fstab时，应该用 mount -a将所以设备挂载进行测试 ，这时mount读取/etc/fstab中内容进行挂载，如果/etc/fstab的条目无错误，则mount -a后无显示，表示挂载成功；如有错误，则根据提示排查。我第一次操作由于挂载目录写错导致不能开机，后再网上寻找办法，进入恢复模式修改，具体看这里恢复模式下修改/etc/fatab文件大功告成，以上为本人学习鸟哥私房菜的笔记，同时也参考了网上的资料，希望能给大家带来帮助参考：第八章、Linux 磁盘与文件系统管理ext4介绍Linux 下添加硬盘/新建分区（fdisk + mkfs.ext4 + mount）parted创建GPT分区（fdisk不支持创建GPT分区，GPT支持大于2TB分区，MBR不支持）一次添加硬盘分区并修改/etc/fstab引起的故障">
     <meta itemprop="datePublished" content="March 30, 2014">
     
 
@@ -583,6 +583,19 @@ proc            /proc           proc    nodev,noexec,nosuid 0       0
   
 
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+      <section>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- myblog -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2101546703939638"
+             data-ad-slot="1759638498"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </section>
       <section id="custom-comments">
 
         <div id="gitalk-container"></div>
@@ -624,6 +637,34 @@ proc            /proc           proc    nodev,noexec,nosuid 0       0
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="permalink">使用Docker安装oracle 11g
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">简介
+
+Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。
+
+借助docker，安装oracle不再困难，只需要几步即可。
+
+需要注意，在参考本文章之前，需要具备操作docker的基础，怎么使用docker，可以参考这里
+
+安装
+
+一、准备工作...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback.html" rel="permalink">使用logback限制日志打印内容长度
 </a>
       
@@ -631,7 +672,14 @@ proc            /proc           proc    nodev,noexec,nosuid 0       0
     
     <p class="archive__item-excerpt" itemprop="description">简介
 
-</p>
+好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便
+的打印日志。
+
+@Slf4j
+public class LogExampleOther {
+  
+  public static void main(String... args) {
+    l...</p>
   </article>
 </div>
         
@@ -671,27 +719,6 @@ macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有
     
     <p class="archive__item-excerpt" itemprop="description">为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
 首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。
-
-</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html" rel="permalink">ubuntu server下安装Virtualbox增强插件-实现文件夹共享
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。
-为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。
 
 </p>
   </article>

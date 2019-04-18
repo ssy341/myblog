@@ -174,6 +174,16 @@
     
     <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
 
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
 </p>
   </article>
 </div>
@@ -194,7 +204,9 @@
     
     <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
 
-</p>
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
   </article>
 </div>
     
@@ -214,7 +226,9 @@
     
     <p class="archive__item-excerpt" itemprop="description">rsync这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。
 
-</p>
+
+  rsync 可以作为一个相当棒的异地备援系统的备份指令！ 因为 rsync 可以达到类似『镜相 (mirror) 』的功能！
+rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的速度快，而且他在...</p>
   </article>
 </div>
     
@@ -263,7 +277,11 @@ unzip -j m...</p>
 ● -p 选项
 如果一个目录及其子目录都是空的，其中在删除最子目录的时候，使用-p选项，则这些相关的目录都会被删除掉。
 
-</p>
+mkdir filename 新建文件夹
+
+rmdir filename 删除目录
+
+rm -rf filename 删除文件/...</p>
   </article>
 </div>
     
@@ -283,6 +301,7 @@ unzip -j m...</p>
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
+如果记不起命令了，直接输入 help
 </p>
   </article>
 </div>
@@ -303,7 +322,21 @@ unzip -j m...</p>
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
-</p>
+如果记不起命令了，直接输入 help
+
+列出当前目录下的文件：ls
+
+ls -l 
+列出文件的详细信息
+
+ls -tl 
+按时间排序列出文件
+
+ls -trl
+把最近修改的文件列在最后
+通用的做法
+ls -l |sort +[r]n
+n用日期所在列的 列...</p>
   </article>
 </div>
     

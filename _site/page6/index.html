@@ -313,6 +313,36 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/linux/2017/12/26/how-to-look-up-disk-use-du-df.html" rel="permalink">如何查看磁盘使用情况 du df
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
+
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
+</p>
+  </article>
+</div>
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/linux/2017/12/26/how-to-copy-file-to-host-from-host-scp.html" rel="permalink">如果从一个主机复制文件到另一个主机：scp
 </a>
       
@@ -320,7 +350,9 @@
     
     <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
 
-</p>
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
   </article>
 </div>
 
@@ -340,7 +372,9 @@
     
     <p class="archive__item-excerpt" itemprop="description">rsync这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。
 
-</p>
+
+  rsync 可以作为一个相当棒的异地备援系统的备份指令！ 因为 rsync 可以达到类似『镜相 (mirror) 』的功能！
+rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的速度快，而且他在...</p>
   </article>
 </div>
 
@@ -360,7 +394,13 @@
     
     <p class="archive__item-excerpt" itemprop="description">使用下面的查询语句获得表格详细的信息
 
-</p>
+SHOW TABLE STATUS FROM `DatabaseName` WHERE `name` LIKE 'TableName' ;
+
+
+使用下面的查询语句获得表格具体的信息
+
+SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCH...</p>
   </article>
 </div>
 
@@ -380,27 +420,10 @@
     
     <p class="archive__item-excerpt" itemprop="description">CREATE DATABASE 的语法：
 
-</p>
-  </article>
-</div>
-
-  
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/life/2014/06/09/thinking.html" rel="permalink">8年前的我
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
+CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+[create_specification [, create_specification] ...]
+create_specification:
+[DEFAULT] ...</p>
   </article>
 </div>
 

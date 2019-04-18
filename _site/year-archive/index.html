@@ -310,6 +310,34 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="permalink">使用Docker安装oracle 11g
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">简介
+
+Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。
+
+借助docker，安装oracle不再困难，只需要几步即可。
+
+需要注意，在参考本文章之前，需要具备操作docker的基础，怎么使用docker，可以参考这里
+
+安装
+
+一、准备工作...</p>
+  </article>
+</div>
+
+
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback.html" rel="permalink">使用logback限制日志打印内容长度
 </a>
       
@@ -317,7 +345,14 @@
     
     <p class="archive__item-excerpt" itemprop="description">简介
 
-</p>
+好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便
+的打印日志。
+
+@Slf4j
+public class LogExampleOther {
+  
+  public static void main(String... args) {
+    l...</p>
   </article>
 </div>
 
@@ -422,6 +457,8 @@ macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有
     
     <p class="archive__item-excerpt" itemprop="description">触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器
 
+不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：
+
 </p>
   </article>
 </div>
@@ -463,6 +500,8 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">说到鼠标滚轮，这应该是每个从windows转向mac后要遇到的问题，因为两个操作是反的，如果习惯了windows的操作方式，使用mac的时候会很不习惯。
 
+如何修改滚轮的方向和windows保持一致呢？
+
 </p>
   </article>
 </div>
@@ -482,6 +521,9 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     </h2>
     
     <p class="archive__item-excerpt" itemprop="description">前言
+
+从工作以来一直都是使用windows系统，随着工作时间的增长，身边还有使用mac的。都说开发使用mac是绝配，我也没有体验过，只是听说，直到自己
+真实体验了mac后，一发不可收拾，系统的流畅，让我欲罢不能。
 
 </p>
   </article>
@@ -503,7 +545,15 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
 
-</p>
+一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
+
+
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/...</p>
   </article>
 </div>
 
@@ -523,7 +573,10 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">简介
 
-</p>
+自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。
+虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extra
+
+...</p>
   </article>
 </div>
 
@@ -543,7 +596,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">起因
 
-</p>
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
   </article>
 </div>
 
@@ -563,7 +625,11 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">背景
 
-</p>
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
   </article>
 </div>
 
@@ -583,7 +649,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
 
-</p>
+安装Redis
+
+sudo apt-get install redis-server
+
+
+更改默认的端口
+
+redis默认的访问端口是6379，避免端口被恶意程序使用，我们修改redis的默认端口
+
+打开配置文件/e...</p>
   </article>
 </div>
 
@@ -604,7 +679,11 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     <p class="archive__item-excerpt" itemprop="description">RabbitMQ是一套开源（MPL）的消息队列服务软件，是由 LShift 提供的一个 Advanced Message Queuing Protocol (AMQP) 
 的开源实现，由以高性能、健壮以及可伸缩性出名的 Erlang 写成。
 
-</p>
+安装RabbitMQ
+
+
+  第一步：添加源
+    echo 'de...</p>
   </article>
 </div>
 
@@ -624,7 +703,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">Nginx是一个异步框架的Web服务器，也可以用作反向代理，负载平衡器 和 HTTP缓存。
 
-</p>
+方法一：apt-get安装
+
+第一步：安装Nginx
+
+在Ubuntu下在线安装Nginx非常简单，只需要一行命令即可
+
+sudo apt-get install nginx
+
+
+默认安装后会自己启动，打开浏览器访问12...</p>
   </article>
 </div>
 
@@ -644,7 +732,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。
 
-</p>
+安装MySQL
+
+sudo apt-get install mysql-server mysql-client
+
+
+安装过程中会要求输入root用户的密码，记下自己输入的密码即可
+
+更改默认端口
+
+mysql...</p>
   </article>
 </div>
 
@@ -664,7 +761,11 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">MongoDB是专为可扩展性，高性能和高可用性而设计的面向文档的数据库
 
-</p>
+一、安装MongoDB
+
+
+  1，添加公钥
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F3688...</p>
   </article>
 </div>
 
@@ -703,7 +804,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">JDK即Java Development Kit，java开发工具包，是java开发人员开发中需要用到的软件开发工具包。
 
-</p>
+安装JDK
+
+在Ubuntu下安装java开发环境有两种途径：
+
+
+  通过apt-get在线安装
+  下载tar包，自行解压安装
+
+
+本文介绍的是第一种方式，使用apt-get安装java...</p>
   </article>
 </div>
 
@@ -723,7 +833,10 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。
 
-</p>
+还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。
+
+在此纪录下来，方便自己也方便他人。
+...</p>
   </article>
 </div>
 
@@ -743,7 +856,17 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。
 
-</p>
+安装Gitlab
+
+
+  1，安装必要的依赖
+
+
+sudo apt-get install -y curl openssh-server ca-certificates
+
+
+
+  p...</p>
   </article>
 </div>
 
@@ -763,7 +886,11 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">初识oss
 
-</p>
+it技术更新换代太快了，我们的思想也必须跟上才行。
+
+最近项目里需要用到文件上传，我想想挺简单的啊，关于spring mvc文件上传网上的示例太多了啊，抄一抄，三下五除二就弄好了。
+
+好景不长，文件上传问题太多了，虽然从头到尾只出了两个问题，但是用户体验太差了，该怎么办呢？又要支持大文件，又要支持批...</p>
   </article>
 </div>
 
@@ -783,7 +910,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">回顾
 
-</p>
+在很早之前我已经写过一篇关于 在intellij idea下远程调试项目 的文章，时隔几年，又遇到同样的情况，
+再参考自己写的东西已经不适用了，我总结了一下，可能是以下几个问题
+
+  之前没有写清楚
+  时隔久远，已经更新了，不再适用当前
+  没有完全理解，草率就记了，知其然不知其所以然
+  ……
+
+
+发...</p>
   </article>
 </div>
 
@@ -806,6 +942,16 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">查看某目录占用空间情况
 
+du -smh folder_name
+
+
+查看磁盘占用
+df -hT
+
+
+列出某目录下文件占用空间情况
+du -smh *
+
 </p>
   </article>
 </div>
@@ -826,7 +972,9 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">在linux下复制文件通常使用cp命令完成，今天介绍另外两个命令scp,rsync
 
-</p>
+在操作服务器的时候，要求把a服务器的文件备份到b服务器上来，最开始想的就是通过ftp先把文件下载的本地，然后
+上传到另一个服务器，由于文件太大，放弃了这个想法，开始搜索其他办法，在查看了鸟哥私房菜工具书后，得知今天要
+讲的这两个...</p>
   </article>
 </div>
 
@@ -846,7 +994,9 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">rsync这个命令仅仅用来复制文件，是有点大材小用了，在我了解之后，它的用途太强大了。
 
-</p>
+
+  rsync 可以作为一个相当棒的异地备援系统的备份指令！ 因为 rsync 可以达到类似『镜相 (mirror) 』的功能！
+rsync 最早是想要取代 rcp 这个指令的，因为 rsync 不但传输的速度快，而且他在...</p>
   </article>
 </div>
 
@@ -866,7 +1016,13 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">使用下面的查询语句获得表格详细的信息
 
-</p>
+SHOW TABLE STATUS FROM `DatabaseName` WHERE `name` LIKE 'TableName' ;
+
+
+使用下面的查询语句获得表格具体的信息
+
+SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCH...</p>
   </article>
 </div>
 
@@ -889,7 +1045,10 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">CREATE DATABASE 的语法：
 
-</p>
+CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+[create_specification [, create_specification] ...]
+create_specification:
+[DEFAULT] ...</p>
   </article>
 </div>
 
@@ -912,7 +1071,15 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">
 
-</p>
+高考结束了，每当这个时候我也会想起自己那个时候高考，那真是不堪回首！不好的就让它过去吧，美好的明天在向我招手
+
+今天翻以前空间里的日志，看到一篇《寻找目标》，原文如下
+
+
+  我的目标，你离我还有多远 ­？
+我去问沙子，它告诉我，­还远着呢，要加把劲­；
+我去问骆驼，它告诉我，就在前面，继续努力吧 ；­
+我去...</p>
   </article>
 </div>
 
@@ -932,7 +1099,12 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     
     <p class="archive__item-excerpt" itemprop="description">在这之前我有一个疑问，自己没弄懂，如果你知道，请求你在下面留下你的见解，非常感谢！
 
-</p>
+问题就是freenas有必要安装在硬盘上么？官方提供了三种安装方法:
+
+
+  iso-刻录在光盘上然后安装在其他介质上面，比如硬盘、闪存；
+  img，直接用工具写入到u盘上，u盘插上主机，从u盘启动即可运行freenas；
+ ...</p>
   </article>
 </div>
 
@@ -951,6 +1123,10 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     </h2>
     
     <p class="archive__item-excerpt" itemprop="description">
+
+
+  jekyll[‘dʒekil; ‘dʒi:kil] - 官方解释为”把你的纯文本转换为静态网页和blog”,可以读”杰克”或者”吉克’。
+
 
 </p>
   </article>
@@ -991,6 +1167,9 @@ hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是
     </h2>
     
     <p class="archive__item-excerpt" itemprop="description">首先移除默认源
+
+$ gem sources --remove https://rubygems.org/
+
 
 </p>
   </article>
@@ -1075,7 +1254,13 @@ Configuration file: F:/xxx/_config.yml
     
     <p class="archive__item-excerpt" itemprop="description">打开google 搜索 ‘ajaxFileupload’ ‘多文件上传’ 可以搜到许许多多类似的，那我为什么还要写一下呢？
 
-</p>
+
+  一个是对之前大神的贡献表示感谢；
+  二个是自己知识的总结；
+  三个是自己在原有的基础上改动了下，在此记录，可能帮助其他朋友。
+
+
+用过这个插件的都知道这个插件的基本用法，我就不废...</p>
   </article>
 </div>
 
@@ -1135,7 +1320,8 @@ Configuration file: F:/xxx/_config.yml
     
     <p class="archive__item-excerpt" itemprop="description">由于自己操作不慎，在修改挂载目录信息的时候少些了一个字母，导致系统不能启动，下面介绍怎么在恢复模式下修改/etc/fstab文件
 
-</p>
+首先进入ubuntu server的启动选项，一共四个，第二个就是恢复模式，根据下面的提示，按e键进入启动参数的编辑模式，
+其中有一句 no recovery nomodeset，把...</p>
   </article>
 </div>
 
@@ -1155,7 +1341,14 @@ Configuration file: F:/xxx/_config.yml
     
     <p class="archive__item-excerpt" itemprop="description">流程为：新建分区–》格式化分区–》挂载分区
 
-</p>
+首先弄明白分区的定义，我在网上找到MBR和GPT分区的介绍：
+
+MBR分区（主引导记录）表：
+支持最大卷：2T （T; terabytes,1TB=1024GB）
+分区的设限：最多4个主分区或3个主分区加一个扩展分区。
+
+GPT分区（GUID分区表）表：
+支持最大卷：...</p>
   </article>
 </div>
 
@@ -1176,7 +1369,11 @@ Configuration file: F:/xxx/_config.yml
     <p class="archive__item-excerpt" itemprop="description">一路配置过来，安装keystone glance nova 最后能打开主页面，我输入登录名和密码提示我没有授权任何project
 下面是我执行的 keystone_data.sh
 
-</p>
+#!/bin/sh
+#
+# Keystone Datas
+#
+# Description: Fill Keystone with d...</p>
   </article>
 </div>
 
@@ -1247,7 +1444,11 @@ unzip -j m...</p>
 ● -p 选项
 如果一个目录及其子目录都是空的，其中在删除最子目录的时候，使用-p选项，则这些相关的目录都会被删除掉。
 
-</p>
+mkdir filename 新建文件夹
+
+rmdir filename 删除目录
+
+rm -rf filename 删除文件/...</p>
   </article>
 </div>
 
@@ -1267,7 +1468,13 @@ unzip -j m...</p>
     
     <p class="archive__item-excerpt" itemprop="description">首先看如下代码
 
-</p>
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+ 
+public class StrTest {
+    @Test
+    public void sterTst(){
+        String ste...</p>
   </article>
 </div>
 
@@ -1290,6 +1497,7 @@ unzip -j m...</p>
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
+如果记不起命令了，直接输入 help
 </p>
   </article>
 </div>
@@ -1310,7 +1518,21 @@ unzip -j m...</p>
     
     <p class="archive__item-excerpt" itemprop="description">如果不清楚命令的具体用法，可以在命令后跟上 --help
 
-</p>
+如果记不起命令了，直接输入 help
+
+列出当前目录下的文件：ls
+
+ls -l 
+列出文件的详细信息
+
+ls -tl 
+按时间排序列出文件
+
+ls -trl
+把最近修改的文件列在最后
+通用的做法
+ls -l |sort +[r]n
+n用日期所在列的 列...</p>
   </article>
 </div>
 
@@ -1378,7 +1600,11 @@ function clear(){
     
     <p class="archive__item-excerpt" itemprop="description">git clone git@github.com:ssy341/myblog.git  克隆项目到本地（项目名称即为文件夹名称）
 
-</p>
+git remote add origin git@github.com:你的github用户名/你的github项目名.git
+
+git branch 查看当前分支
+
+git pu...</p>
   </article>
 </div>
 
@@ -1400,6 +1626,7 @@ function clear(){
 $.fn.jquery
 
 即可显示jquery的版本
+
 </p>
   </article>
 </div>
@@ -1443,7 +1670,13 @@ $.fn.jquery
     
     <p class="archive__item-excerpt" itemprop="description">今天要介绍的可真是悲惨啊，废话不说，先来张图，让我们一起可怜可怜她
 
-</p>
+
+
+屏幕是笔记本最最脆弱的地方，所以大家不要用一阳指去点点点她，要是修得正果，你的屏幕就会像这样 可能比这更厉害。
+
+不过我不知道我朋友这个是怎么弄的。
+
+拿到本本，先打开电脑，静静等待，最后听到熟悉的windows启动的声音，证明电脑其他地方...</p>
   </article>
 </div>
 
@@ -1463,7 +1696,12 @@ $.fn.jquery
     
     <p class="archive__item-excerpt" itemprop="description">现象：电脑运行一段时间屏幕黑掉
 
-</p>
+初步判断：由于电脑已有几年，再加上夏天温度高，导致显卡芯片温度太高，致芯片烧毁，运行不稳定，或者是排线松动
+
+判断依据:
+
+打开电脑，运行一段时间，发现屏幕黑暗，然后重新关机，致电脑恢复平常温度，再开机，正常，过一会儿再出现黑屏，通过安装温度检测软件，
+得知显卡的温度并不是很高，...</p>
   </article>
 </div>
 

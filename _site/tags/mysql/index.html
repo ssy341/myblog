@@ -174,7 +174,15 @@
     
     <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
 
-</p>
+一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
+
+
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/...</p>
   </article>
 </div>
     
@@ -194,7 +202,16 @@
     
     <p class="archive__item-excerpt" itemprop="description">起因
 
-</p>
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
   </article>
 </div>
     
@@ -214,7 +231,11 @@
     
     <p class="archive__item-excerpt" itemprop="description">背景
 
-</p>
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
   </article>
 </div>
     
@@ -234,7 +255,10 @@
     
     <p class="archive__item-excerpt" itemprop="description">工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。
 
-</p>
+还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。
+
+在此纪录下来，方便自己也方便他人。
+...</p>
   </article>
 </div>
     
@@ -254,7 +278,13 @@
     
     <p class="archive__item-excerpt" itemprop="description">使用下面的查询语句获得表格详细的信息
 
-</p>
+SHOW TABLE STATUS FROM `DatabaseName` WHERE `name` LIKE 'TableName' ;
+
+
+使用下面的查询语句获得表格具体的信息
+
+SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCH...</p>
   </article>
 </div>
     
@@ -274,7 +304,10 @@
     
     <p class="archive__item-excerpt" itemprop="description">CREATE DATABASE 的语法：
 
-</p>
+CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+[create_specification [, create_specification] ...]
+create_specification:
+[DEFAULT] ...</p>
   </article>
 </div>
     
