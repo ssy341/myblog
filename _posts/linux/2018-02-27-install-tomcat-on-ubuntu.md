@@ -150,5 +150,7 @@ thxopen@Thxopen:~$ sudo vi /home/thxopen/app/tomcat-demo-8888/conf/server.xml
 /etc/init.d/tomcat-8888 restart
 ```
 
+[返回目录]({{ site.baseurl }}{% post_url linux/2018-02-27-install-java-ee-environment-on-ubuntu %})
+
 
 [tomcat.tar.gz]: https://tomcat.apache.org/download-80.cgi
