@@ -13,14 +13,16 @@ Tomcat是Java语言里常用的一个WEB应用服务器容器，把开发好的�
 
 第一部分介绍怎么安装到主机，第二部分介绍安装好之后怎么配置。
 
+<!--more-->
+
 ## 安装Tomcat
 
 在Ubuntu上安装Tomcat有两种方式：
 
-- 在线安装
-- 本地安装
+- 在线安装，通过apt-get方式
+- 本地安装，下载压缩包手动配置
 
-这里介绍的是在线安装，本地安装以后再更新。在线安装只要主机能够连上网络，就能很方便安装好Tomcat。
+这里介绍的是本地安装，在线安装以后再更新。在线安装只要主机能够连上网络，就能很方便安装好Tomcat。
 
 第一步：进入到用户目录，可以直接安装在用户目录下，也可以在用户目录下新建文件夹，这里我放在用户目录下的app文件夹里
 ```bash
@@ -89,6 +91,64 @@ thxopen@Thxopen:~/app/tomcat-demo-8888$ls
 bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps  work
 ```
 ps：这里我把tomcat重命名为tomcat-demo-8888，这样很直观就能看出这个tomcat是运行什么应用端口是多少，建议大家也根据实际情况重命名，当出现多个tomcat时是很有帮助的
+
+
+## 配置tomcat
+
+1、配置启动文件
+进入`/home/thxopen/app/tomcat-demo-8888/bin`目录，把`catalina.sh`文件复制一份，重命名为`tomcat-8888`
+
+```bash
+thxopen@Thxopen:~$ sudo cp /home/thxopen/app/tomcat-demo-8888/bin/catalina.sh /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
+```
+
+打开`tomcat-8888`文件，在文件大概110行左右配置上java环境和tomcat所在目录
+
+```bash
+thxopen@Thxopen:~$ sudo vi /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
+
+# -----------------------------------------------------------------------------
+
+JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
+CATALINA_HOME=/home/thxopen/app/tomcat-demo-8888
+
+# OS specific support.  $var _must_ be set to either true or false.
+```
+
+保存后把修改好的文件移动到`/etc/init.d`目录下
+
+```bash
+thxopen@Thxopen:~$ sudo mv /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888 /etc/init.d/
+```
+
+2、配置端口
+
+在目录`/home/thxopen/app/tomcat-demo-8888/conf`下打开`server.xml`文件，在文件大概70行左右配置上自己想要的端口
+
+```bash
+thxopen@Thxopen:~$ sudo vi /home/thxopen/app/tomcat-demo-8888/conf/server.xml
+ 
+<!-- A "Connector" represents an endpoint by which requests are received
+     and responses are returned. Documentation at :
+     Java HTTP Connector: /docs/config/http.html
+     Java AJP  Connector: /docs/config/ajp.html
+     APR (HTTP/AJP) Connector: /docs/apr.html
+     Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
+-->
+<Connector port="8888" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+               
+```
+这里修改为8888端口，保存文件退出即可
+
+通过上面的配置，使用如下命令即可操作tomcat
+
+```bash
+/etc/init.d/tomcat-8888 start
+/etc/init.d/tomcat-8888 stop
+/etc/init.d/tomcat-8888 restart
+```
 
 
 [tomcat.tar.gz]: https://tomcat.apache.org/download-80.cgi

@@ -9,19 +9,19 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>在Ubuntu上安装常用的和Java相关的工具 - 单客欧朋</title>
-<meta name="description" content="工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。在此纪录下来，方便自己也方便他人。本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。  在Ubuntu下安装JAVA开发环境  在Ubuntu下安装Tomcat  在Ubuntu下安装RabbitMQ  在Ubuntu下安装Nginx  在Ubuntu下安装MySQL  在Ubuntu下安装Redis  在Ubuntu下安装MongoDB  在Ubuntu下安装Jenkins  在Ubuntu下安装Gitlab上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发，比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助">
+<!-- begin _includes/seo.html --><title>在Ubuntu下安装Tomcat - 单客欧朋</title>
+<meta name="description" content="Tomcat是Java语言里常用的一个WEB应用服务器容器，把开发好的应用程序部署进去，我们就可以通过浏览器访问到应用了。本篇文章通过两个部分介绍Tomcat  安装  配置第一部分介绍怎么安装到主机，第二部分介绍安装好之后怎么配置。">
 
 
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
-<meta property="og:title" content="在Ubuntu上安装常用的和Java相关的工具">
-<meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">
+<meta property="og:title" content="在Ubuntu下安装Tomcat">
+<meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-tomcat-on-ubuntu.html">
 
 
-  <meta property="og:description" content="工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。在此纪录下来，方便自己也方便他人。本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。  在Ubuntu下安装JAVA开发环境  在Ubuntu下安装Tomcat  在Ubuntu下安装RabbitMQ  在Ubuntu下安装Nginx  在Ubuntu下安装MySQL  在Ubuntu下安装Redis  在Ubuntu下安装MongoDB  在Ubuntu下安装Jenkins  在Ubuntu下安装Gitlab上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发，比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助">
+  <meta property="og:description" content="Tomcat是Java语言里常用的一个WEB应用服务器容器，把开发好的应用程序部署进去，我们就可以通过浏览器访问到应用了。本篇文章通过两个部分介绍Tomcat  安装  配置第一部分介绍怎么安装到主机，第二部分介绍安装好之后怎么配置。">
 
 
 
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">
+<link rel="canonical" href="http://www.thxopen.com/linux/2018/02/27/install-tomcat-on-ubuntu.html">
 
 
 
@@ -298,15 +298,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="在Ubuntu上安装常用的和Java相关的工具">
-    <meta itemprop="description" content="工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。在此纪录下来，方便自己也方便他人。本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。  在Ubuntu下安装JAVA开发环境  在Ubuntu下安装Tomcat  在Ubuntu下安装RabbitMQ  在Ubuntu下安装Nginx  在Ubuntu下安装MySQL  在Ubuntu下安装Redis  在Ubuntu下安装MongoDB  在Ubuntu下安装Jenkins  在Ubuntu下安装Gitlab上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发，比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助">
+    <meta itemprop="headline" content="在Ubuntu下安装Tomcat">
+    <meta itemprop="description" content="Tomcat是Java语言里常用的一个WEB应用服务器容器，把开发好的应用程序部署进去，我们就可以通过浏览器访问到应用了。本篇文章通过两个部分介绍Tomcat  安装  配置第一部分介绍怎么安装到主机，第二部分介绍安装好之后怎么配置。">
     <meta itemprop="datePublished" content="February 27, 2018">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">在Ubuntu上安装常用的和Java相关的工具
+          <h1 class="page__title" itemprop="headline">在Ubuntu下安装Tomcat
 </h1>
           
         </header>
@@ -314,28 +314,156 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>工作中经常需要在新服务器上搭建环境，项目中用到的工具有RabbitMQ、Nginx、Redis、MySQL、MongoDB、Jenkins、Gitlab。</p>
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#安装tomcat">安装Tomcat</a></li>
+  <li><a href="#配置tomcat">配置tomcat</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Tomcat是Java语言里常用的一个WEB应用服务器容器，把开发好的应用程序部署进去，我们就可以通过浏览器访问到应用了。</p>
 
-<p>还别说，这几个工具把他安装好配置好，需要花的时间还是挺长的。在多次安装和配置过程中我也遇到一些问题，也总结了些经验。</p>
-
-<p>在此纪录下来，方便自己也方便他人。</p>
-
-<p>本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。</p>
+<p>本篇文章通过两个部分介绍Tomcat</p>
 
 <ul>
-  <li><a href="/linux/2018/02/27/install-java-on-ubuntu.html">在Ubuntu下安装JAVA开发环境</a></li>
-  <li><a href="/linux/2018/02/27/install-tomcat-on-ubuntu.html">在Ubuntu下安装Tomcat</a></li>
-  <li><a href="/linux/2018/02/27/install-rabbitmq-on-ubuntu.html">在Ubuntu下安装RabbitMQ</a></li>
-  <li><a href="/linux/2018/02/27/install-nginx-on-ubuntu.html">在Ubuntu下安装Nginx</a></li>
-  <li><a href="/linux/2018/02/27/install-mysql-on-ubuntu.html">在Ubuntu下安装MySQL</a></li>
-  <li><a href="/linux/2018/02/27/install-redis-on-ubuntu.html">在Ubuntu下安装Redis</a></li>
-  <li><a href="/linux/2018/02/27/install-mongodb-on-ubuntu.html">在Ubuntu下安装MongoDB</a></li>
-  <li><a href="/linux/2018/02/27/install-jenkins-on-ubuntu.html">在Ubuntu下安装Jenkins</a></li>
-  <li><a href="/linux/2018/02/27/install-gitlab-on-ubuntu.html">在Ubuntu下安装Gitlab</a></li>
+  <li>安装</li>
+  <li>配置</li>
 </ul>
 
-<p>上面的方法同样适用 Win10 带的子系统 Bash on Windows ，都是Ubuntu，本人电脑就是直接在子系统里安装这些软件用来开发，
-比起安装虚拟机要方便很多，希望这一系列文章对大家有所帮助</p>
+<p>第一部分介绍怎么安装到主机，第二部分介绍安装好之后怎么配置。</p>
+
+<!--more-->
+
+<h2 id="安装tomcat">安装Tomcat</h2>
+
+<p>在Ubuntu上安装Tomcat有两种方式：</p>
+
+<ul>
+  <li>在线安装，通过apt-get方式</li>
+  <li>本地安装，下载压缩包手动配置</li>
+</ul>
+
+<p>这里介绍的是本地安装，在线安装以后再更新。在线安装只要主机能够连上网络，就能很方便安装好Tomcat。</p>
+
+<p>第一步：进入到用户目录，可以直接安装在用户目录下，也可以在用户目录下新建文件夹，这里我放在用户目录下的app文件夹里</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">mkdir </span>app
+thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">ls
+</span>app
+</code></pre></div></div>
+<p>ps: <code class="highlighter-rouge">~</code> 代表/home/用户名 路径</p>
+
+<p>第二步：下载Tomcat到app目录，本次选择Tomcat-8.5.29作为演示</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$cd</span> app
+thxopen@Thxopen:~/app<span class="nv">$ </span>wget http://mirrors.shu.edu.cn/apache/tomcat/tomcat-8/v8.5.29/bin/apache-tomcat-8.5.29.tar.gz
+<span class="nt">--2018-02-27</span> 22:22:15--  http://mirrors.shu.edu.cn/apache/tomcat/tomcat-8/v8.5.29/bin/apache-tomcat-8.5.29.tar.gz
+正在解析主机 mirrors.shu.edu.cn <span class="o">(</span>mirrors.shu.edu.cn<span class="o">)</span>... 202.121.199.235
+正在连接 mirrors.shu.edu.cn <span class="o">(</span>mirrors.shu.edu.cn<span class="o">)</span>|202.121.199.235|:80... 已连接。
+已发出 HTTP 请求，正在等待回应...
+200 OK
+长度： 9532698 <span class="o">(</span>9.1M<span class="o">)</span> <span class="o">[</span>application/x-gzip]
+正在保存至: “apache-tomcat-8.5.29.tar.gz”
+
+apache-tomcat-8.5.29.tar.gz  100%[<span class="o">================================================&gt;]</span>   9.09M   886KB/s    <span class="k">in </span>11s
+
+2018-02-27 22:23:10 <span class="o">(</span>853 KB/s<span class="o">)</span> - 已保存 “apache-tomcat-8.5.29.tar.gz” <span class="o">[</span>9532698/9532698]<span class="o">)</span>
+thxopen@Thxopen:~/app<span class="nv">$ls</span>
+apache-tomcat-8.5.29.tar.gz
+</code></pre></div></div>
+<p>ps: 可能会出现地址无法访问，是正常的，下载地址不定时会有变动，如出现不能下载的情况，前往<a href="https://tomcat.apache.org/download-80.cgi">官网下载页面</a>复制新的下载地址</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/tomcat.tar.gz.jpg" alt="tomcat.tar.gz" /></p>
+
+<p>右键复制链接地址，替换上面命令wget 后面的url地址即可</p>
+
+<p>第三步：解压并更改Tomcat的名称</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~/app<span class="nv">$ </span><span class="nb">tar </span>vxf apache-tomcat-8.5.29.tar.gz
+apache-tomcat-8.5.29/conf/
+apache-tomcat-8.5.29/conf/catalina.policy
+apache-tomcat-8.5.29/conf/catalina.properties
+apache-tomcat-8.5.29/conf/context.xml
+apache-tomcat-8.5.29/conf/jaspic-providers.xml
+apache-tomcat-8.5.29/conf/jaspic-providers.xsd
+apache-tomcat-8.5.29/conf/logging.properties
+apache-tomcat-8.5.29/conf/server.xml
+apache-tomcat-8.5.29/conf/tomcat-users.xml
+apache-tomcat-8.5.29/conf/tomcat-users.xsd
+apache-tomcat-8.5.29/conf/web.xml
+...
+apache-tomcat-8.5.29/bin/catalina.sh
+apache-tomcat-8.5.29/bin/configtest.sh
+apache-tomcat-8.5.29/bin/daemon.sh
+apache-tomcat-8.5.29/bin/digest.sh
+apache-tomcat-8.5.29/bin/setclasspath.sh
+apache-tomcat-8.5.29/bin/shutdown.sh
+apache-tomcat-8.5.29/bin/startup.sh
+apache-tomcat-8.5.29/bin/tool-wrapper.sh
+apache-tomcat-8.5.29/bin/version.sh
+thxopen@Thxopen:~/app<span class="nv">$ </span><span class="nb">ls
+</span>apache-tomcat-8.5.29  apache-tomcat-8.5.29.tar.gz
+thxopen@Thxopen:~/app<span class="nv">$ </span><span class="nb">mv </span>apache-tomcat-8.5.29 tomcat-demo-8888
+thxopen@Thxopen:~/app<span class="nv">$ </span><span class="nb">ls
+</span>apache-tomcat-8.5.29.tar.gz  tomcat-demo-8888
+thxopen@Thxopen:~/app<span class="nv">$cd</span> tomcat-demo-8888/
+thxopen@Thxopen:~/app/tomcat-demo-8888<span class="nv">$ls</span>
+bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps  work
+</code></pre></div></div>
+<p>ps：这里我把tomcat重命名为tomcat-demo-8888，这样很直观就能看出这个tomcat是运行什么应用端口是多少，建议大家也根据实际情况重命名，当出现多个tomcat时是很有帮助的</p>
+
+<h2 id="配置tomcat">配置tomcat</h2>
+
+<p>1、配置启动文件
+进入<code class="highlighter-rouge">/home/thxopen/app/tomcat-demo-8888/bin</code>目录，把<code class="highlighter-rouge">catalina.sh</code>文件复制一份，重命名为<code class="highlighter-rouge">tomcat-8888</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo cp</span> /home/thxopen/app/tomcat-demo-8888/bin/catalina.sh /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
+</code></pre></div></div>
+
+<p>打开<code class="highlighter-rouge">tomcat-8888</code>文件，在文件大概110行左右配置上java环境和tomcat所在目录</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo </span>vi /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
+
+<span class="c"># -----------------------------------------------------------------------------</span>
+
+<span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-oracle/jre
+<span class="nv">CATALINA_HOME</span><span class="o">=</span>/home/thxopen/app/tomcat-demo-8888
+
+<span class="c"># OS specific support.  $var _must_ be set to either true or false.</span>
+</code></pre></div></div>
+
+<p>保存后把修改好的文件移动到<code class="highlighter-rouge">/etc/init.d</code>目录下</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo mv</span> /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888 /etc/init.d/
+</code></pre></div></div>
+
+<p>2、配置端口</p>
+
+<p>在目录<code class="highlighter-rouge">/home/thxopen/app/tomcat-demo-8888/conf</code>下打开<code class="highlighter-rouge">server.xml</code>文件，在文件大概70行左右配置上自己想要的端口</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo </span>vi /home/thxopen/app/tomcat-demo-8888/conf/server.xml
+ 
+&lt;<span class="o">!</span><span class="nt">--</span> A <span class="s2">"Connector"</span> represents an endpoint by which requests are received
+     and responses are returned. Documentation at :
+     Java HTTP Connector: /docs/config/http.html
+     Java AJP  Connector: /docs/config/ajp.html
+     APR <span class="o">(</span>HTTP/AJP<span class="o">)</span> Connector: /docs/apr.html
+     Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
+<span class="nt">--</span><span class="o">&gt;</span>
+&lt;Connector <span class="nv">port</span><span class="o">=</span><span class="s2">"8888"</span> <span class="nv">protocol</span><span class="o">=</span><span class="s2">"HTTP/1.1"</span>
+           <span class="nv">connectionTimeout</span><span class="o">=</span><span class="s2">"20000"</span>
+           <span class="nv">redirectPort</span><span class="o">=</span><span class="s2">"8443"</span> /&gt;
+               
+</code></pre></div></div>
+<p>这里修改为8888端口，保存文件退出即可</p>
+
+<p>通过上面的配置，使用如下命令即可操作tomcat</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/init.d/tomcat-8888 start
+/etc/init.d/tomcat-8888 stop
+/etc/init.d/tomcat-8888 restart
+</code></pre></div></div>
 
 
         
@@ -357,35 +485,7 @@
     
       
       
-      <a href="http://www.thxopen.com/tags/#gitlab" class="page__taxonomy-item" rel="tag">gitlab</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#jdk" class="page__taxonomy-item" rel="tag">jdk</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#jenkins" class="page__taxonomy-item" rel="tag">jenkins</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#mongodb" class="page__taxonomy-item" rel="tag">mongodb</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#mysql" class="page__taxonomy-item" rel="tag">mysql</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#rabbitmq" class="page__taxonomy-item" rel="tag">rabbitmq</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://www.thxopen.com/tags/#redis" class="page__taxonomy-item" rel="tag">redis</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#tomcat" class="page__taxonomy-item" rel="tag">tomcat</a><span class="sep">, </span>
     
       
       
@@ -426,24 +526,24 @@
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8A%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E7%9A%84%E5%92%8CJava%E7%9B%B8%E5%85%B3%E7%9A%84%E5%B7%A5%E5%85%B7%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-java-ee-environment-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85Tomcat%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-tomcat-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-java-ee-environment-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-tomcat-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-java-ee-environment-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-tomcat-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-java-ee-environment-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-tomcat-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://www.thxopen.com/linux/2018/02/27/install-gitlab-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Gitlab
+      <a href="http://www.thxopen.com/linux/2018/02/27/install-redis-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装Redis
 ">向前</a>
     
     
-      <a href="http://www.thxopen.com/linux/2018/02/27/install-java-on-ubuntu.html" class="pagination--pager" title="在Ubuntu下安装JAVA开发环境
+      <a href="http://www.thxopen.com/database/2018/08/28/mysqlbinlog-recovery-data.html" class="pagination--pager" title="在ubuntu下使用mysqlbinlog恢复drop后的数据
 ">向后</a>
     
   </nav>

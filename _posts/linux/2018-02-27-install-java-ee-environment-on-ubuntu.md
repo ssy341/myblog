@@ -14,6 +14,7 @@ toc: false
 本篇为目录，列出标题，我在单独的文章里再详细介绍每个工具的安装和使用。
 
 - [在Ubuntu下安装JAVA开发环境][install-java-on-ubuntu] 
+- [在Ubuntu下安装Tomcat][install-tomcat-on-ubuntu] 
 - [在Ubuntu下安装RabbitMQ][install-rabbitmq-on-ubuntu] 
 - [在Ubuntu下安装Nginx][install-nginx-on-ubuntu] 
 - [在Ubuntu下安装MySQL][install-mysql-on-ubuntu] 
@@ -35,3 +36,4 @@ toc: false
 [install-jenkins-on-ubuntu]: {{ site.baseurl }}{% post_url linux/2018-02-27-install-jenkins-on-ubuntu %}
 [install-gitlab-on-ubuntu]: {{ site.baseurl }}{% post_url linux/2018-02-27-install-gitlab-on-ubuntu %}
 [install-mongodb-on-ubuntu]: {{ site.baseurl }}{% post_url linux/2018-02-27-install-mongodb-on-ubuntu %}
+[install-tomcat-on-ubuntu]: {{ site.baseurl }}{% post_url linux/2018-02-27-install-tomcat-on-ubuntu %}
