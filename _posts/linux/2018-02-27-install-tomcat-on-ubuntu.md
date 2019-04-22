@@ -108,8 +108,9 @@ thxopen@Thxopen:~$ sudo cp /home/thxopen/app/tomcat-demo-8888/bin/catalina.sh /h
 thxopen@Thxopen:~$ sudo vi /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
 
 # -----------------------------------------------------------------------------
-
+# config java_home path
 JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
+# config tomcat path
 CATALINA_HOME=/home/thxopen/app/tomcat-demo-8888
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -121,7 +122,39 @@ CATALINA_HOME=/home/thxopen/app/tomcat-demo-8888
 thxopen@Thxopen:~$ sudo mv /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888 /etc/init.d/
 ```
 
-2、配置端口
+2、配置环境变量
+
+根据`catalina.sh`文件里的注释：
+
+```bash
+# -----------------------------------------------------------------------------
+# Control Script for the CATALINA Server
+#
+# Environment Variable Prerequisites
+#
+#   Do not set the variables in this script. Instead put them into a script
+#   setenv.sh in CATALINA_BASE/bin to keep your customizations separate.
+#
+
+```
+不要直接在`catalina.sh`设置变量，而是要在`CATALINA_BASE/bin`目录下的`setenv.sh`文件里设置
+
+
+正常启动停止tomcat我们还需要设置`CATALINA_PID`变量，下面是对此变量的解释
+
+```bash
+#   CATALINA_PID    (Optional) Path of the file which should contains the pid
+#                   of the catalina startup java process, when start (fork) is
+#                   used
+```
+
+在`CATALINA_BASE/bin`目录下新建`setenv.sh`文件
+
+```bash
+echo CATALINA_PID=/home/thxopen/app/tomcat-demo-8888/tomcat.pid > setenv.sh
+```
+
+3、配置端口
 
 在目录`/home/thxopen/app/tomcat-demo-8888/conf`下打开`server.xml`文件，在文件大概70行左右配置上自己想要的端口
 
