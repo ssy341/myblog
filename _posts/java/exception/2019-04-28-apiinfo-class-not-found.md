@@ -106,6 +106,8 @@ intellij idea编译能通过，但是启动tomcat的时候却报类找不到，�
 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键`put into /WEB_INFO/lib`，
 再次启动tomcat，问题得到解决。
 
+![]({{site.baseurl}}/assets/images/post/java/artifacts.png)
+
 ## 总结
 
 intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中

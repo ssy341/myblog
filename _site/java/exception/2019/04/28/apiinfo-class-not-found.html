@@ -425,6 +425,8 @@
 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键<code class="highlighter-rouge">put into /WEB_INFO/lib</code>，
 再次启动tomcat，问题得到解决。</p>
 
+<p><img src="/assets/images/post/java/artifacts.png" alt="" /></p>
+
 <h2 id="总结">总结</h2>
 
 <p>intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中
