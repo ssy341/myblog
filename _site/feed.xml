@@ -1,4 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-04-19T17:34:54+08:00</updated><id>http://www.thxopen.com/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">使用Docker安装oracle 11g</title><link href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="alternate" type="text/html" title="使用Docker安装oracle 11g" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker</id><content type="html" xml:base="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html">&lt;h2 id=&quot;一简介&quot;&gt;一，简介&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-04-28T13:52:25+08:00</updated><id>http://www.thxopen.com/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo</title><link href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="alternate" type="text/html" title="Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found</id><content type="html" xml:base="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html">&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+
+&lt;p&gt;项目中需要使用swagger提供api文档，于是加上依赖：&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.springfox&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;springfox-swagger2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.2.2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.springfox&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;springfox-swagger-ui&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.2.2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;配置swagger扫描的路径：&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.beans.factory.annotation.Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.context.annotation.Configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.builders.ApiInfoBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.builders.ParameterBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.builders.PathSelectors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.builders.RequestHandlerSelectors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.schema.ModelRef&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.service.ApiInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.service.Parameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.spi.DocumentationType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.spring.web.plugins.Docket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;springfox.documentation.swagger2.annotations.EnableSwagger2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * swagger配置
+ * &amp;lt;p&amp;gt;
+ * 2019年4月28日
+ *
+ * @author Keith
+ * @version v0.0.1
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//开启swagger&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@EnableSwagger2&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Swagger2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;//在配置文件里设置扫描controller的路径&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;${swagger.basePackage}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;basePackage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Docket&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createRestApi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ParameterBuilder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ticketPar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParameterBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pars&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ticketPar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Authorization&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;token&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;modelRef&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ModelRef&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;string&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parameterType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;header&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//header中的ticket参数非必填，传空也可以&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;pars&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ticketPar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;//根据每个方法名也知道当前方法在设置什么参数&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Docket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DocumentationType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SWAGGER_2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apiInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RequestHandlerSelectors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;basePackage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basePackage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PathSelectors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//                .globalOperationParameters(pars)  ;  //所有接口请求需要带上的参数&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ApiInfo&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apiInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApiInfoBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;接口名称)
+                .description(&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;接口描述&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;)
+                .termsOfServiceUrl(&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;服务&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;)
+                .contact(&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;联系人&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;)
+                .version(&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;版本号&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;以上配置在另一个项目中是没问题的，我拷贝过来到新的项目上，启动tomcat，结果报如下错误：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;疑问&quot;&gt;疑问&lt;/h2&gt;
+
+&lt;p&gt;intellij idea编译能通过，但是启动tomcat的时候却报类找不到，为什么呢？&lt;/p&gt;
+
+&lt;h2 id=&quot;解决问题&quot;&gt;解决问题&lt;/h2&gt;
+
+&lt;p&gt;我使用的是intellij idea开发，我查看了编译好的war目录，虽然我maven已经引用了依赖，构建也没有问题，但我发现&lt;code class=&quot;highlighter-rouge&quot;&gt;/WEB_INFO/lib&lt;/code&gt;
+确实没有swagger的相关jar。&lt;/p&gt;
+
+&lt;p&gt;我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面
+Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键&lt;code class=&quot;highlighter-rouge&quot;&gt;put into /WEB_INFO/lib&lt;/code&gt;，
+再次启动tomcat，问题得到解决。&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中
+即可解决问题。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ClassNotFoundException" /><category term="java" /><category term="swagger" /><category term="intellij idea" /><summary type="html">起因 项目中需要使用swagger提供api文档，于是加上依赖： &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger2&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger-ui&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 配置swagger扫描的路径： import org.springframework.beans.factory.annotation.Value; import org.springframework.context.annotation.Bean; import org.springframework.context.annotation.Configuration; import springfox.documentation.builders.ApiInfoBuilder; import springfox.documentation.builders.ParameterBuilder; import springfox.documentation.builders.PathSelectors; import springfox.documentation.builders.RequestHandlerSelectors; import springfox.documentation.schema.ModelRef; import springfox.documentation.service.ApiInfo; import springfox.documentation.service.Parameter; import springfox.documentation.spi.DocumentationType; import springfox.documentation.spring.web.plugins.Docket; import springfox.documentation.swagger2.annotations.EnableSwagger2; import java.util.ArrayList; import java.util.List; /** * swagger配置 * &amp;lt;p&amp;gt; * 2019年4月28日 * * @author Keith * @version v0.0.1 */ @Configuration //开启swagger @EnableSwagger2 public class Swagger2 { //在配置文件里设置扫描controller的路径 @Value(&quot;${swagger.basePackage}&quot;) String basePackage; @Bean public Docket createRestApi() { ParameterBuilder ticketPar = new ParameterBuilder(); List&amp;lt;Parameter&amp;gt; pars = new ArrayList&amp;lt;Parameter&amp;gt;(); ticketPar.name(&quot;Authorization&quot;).description(&quot;token&quot;) .modelRef(new ModelRef(&quot;string&quot;)).parameterType(&quot;header&quot;) .required(true).build(); //header中的ticket参数非必填，传空也可以 pars.add(ticketPar.build()); //根据每个方法名也知道当前方法在设置什么参数 return new Docket(DocumentationType.SWAGGER_2) .apiInfo(apiInfo()) .select() .apis(RequestHandlerSelectors.basePackage(basePackage)) .paths(PathSelectors.any()) .build(); // .globalOperationParameters(pars) ; //所有接口请求需要带上的参数 } private ApiInfo apiInfo() { return new ApiInfoBuilder() .title(&quot;接口名称) .description(&quot;接口描述&quot;) .termsOfServiceUrl(&quot;服务url&quot;) .contact(&quot;联系人&quot;) .version(&quot;版本号&quot;) .build(); } } 以上配置在另一个项目中是没问题的，我拷贝过来到新的项目上，启动tomcat，结果报如下错误： Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo 疑问 intellij idea编译能通过，但是启动tomcat的时候却报类找不到，为什么呢？ 解决问题 我使用的是intellij idea开发，我查看了编译好的war目录，虽然我maven已经引用了依赖，构建也没有问题，但我发现/WEB_INFO/lib 确实没有swagger的相关jar。 我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键put into /WEB_INFO/lib， 再次启动tomcat，问题得到解决。 总结 intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中 即可解决问题。</summary></entry><entry><title type="html">使用Docker安装oracle 11g</title><link href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="alternate" type="text/html" title="使用Docker安装oracle 11g" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker</id><content type="html" xml:base="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html">&lt;h2 id=&quot;一简介&quot;&gt;一，简介&lt;/h2&gt;
 
 &lt;p&gt;Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。&lt;/p&gt;
 
@@ -394,228 +496,32 @@ the field is expanded to accommodate the data. The value is never truncated.&lt;
     &lt;li&gt;https://stackoverflow.com/questions/35710008/limit-message-size-in-logback&lt;/li&gt;
     &lt;li&gt;https://stackoverflow.com/questions/32704470/can-a-logback-message-field-be-truncated-trimmed-to-n-characters&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="logback" /><category term="layout" /><category term="pattern" /><summary type="html">简介 好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便 的打印日志。 @Slf4j public class LogExampleOther { public static void main(String... args) { log.error(&quot;Something else is wrong here&quot;); } } 只需要在类上加上@Slf4j注解即可</summary></entry><entry><title type="html">在虚拟机里安装Ubuntu Server 16</title><link href="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装Ubuntu Server 16" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html">&lt;p&gt;服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。
-虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。
-对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="logback" /><category term="layout" /><category term="pattern" /><summary type="html">简介 好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便 的打印日志。 @Slf4j public class LogExampleOther { public static void main(String... args) { log.error(&quot;Something else is wrong here&quot;); } } 只需要在类上加上@Slf4j注解即可</summary></entry><entry><title type="html">在Docker上安装常用的和Java相关的工具</title><link href="http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html" rel="alternate" type="text/html" title="在Docker上安装常用的和Java相关的工具" /><published>2019-03-11T00:00:00+08:00</published><updated>2019-03-11T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker</id><content type="html" xml:base="http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html">&lt;p&gt;之前已经写过&lt;a href=&quot;/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html&quot;&gt;在Ubuntu上安装常用的和Java相关的工具&lt;/a&gt;,
+这次要说的是如何在docker上安装这些工具。&lt;/p&gt;
 
-&lt;!--more--&gt;
+&lt;p&gt;何为Docker？&lt;/p&gt;
 
-&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Docker是一个开放源代码软件项目，让应用程序部署在软件货柜下的工作可以自动化进行，借此在Linux操作系统上，
+提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;virtualbox&lt;/a&gt;（虚拟机软件）&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.ubuntu.com/download/alternative-downloads&quot;&gt;Ubuntu Server 下载页面&lt;/a&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso.torrent?_ga=2.238927552.1516861282.1544003123-1140686435.1544003123&quot;&gt;Ubuntu 16.04.5 Server (64-bit) 种子&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://wiki.jikexueyuan.com/project/docker-technology-and-combat/why.html&quot;&gt;为什么要使用Docker？&lt;/a&gt;已经有现成的了，我就不再多说。
+之所以写这个，就是觉得Docker给我带来极大的便利，我同样希望更多人能够享受到Docker带来的好处。&lt;/p&gt;
 
-&lt;p&gt;通过上面的连接，下载virtualbox和ubuntu server的安装镜像，我们就可以开始了&lt;/p&gt;
+&lt;p&gt;我一直有听说Docker，但一直没有揭开她神秘的面纱。终于我忍不住了，由于一次服务器故障，因为同事执行apt-get命令安装了新的软件，
+导致系统环境变量发生了改变，导致ssh服务异常，大家都不能远程连上服务器。这个问题在服务器上一直存在，之前不知道什么原因把&lt;/p&gt;
 
-&lt;h2 id=&quot;开始安装&quot;&gt;开始安装&lt;/h2&gt;
+&lt;p&gt;让我下决心要去了解Docker。&lt;/p&gt;
 
-&lt;h3 id=&quot;一配置虚拟机&quot;&gt;一，配置虚拟机&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，虚拟机名称和系统类型，这里系统类型选择【Linux】，版本选择【Ubuntu（64-bit）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/1.png&quot; alt=&quot;step 1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，内存大小，这里可以根据软件推荐的大小配置，我这里推荐的是1G（1024 MB），为了系统更加流畅，我调到 4G （4096 MB）。可以根据电脑的配置适当上调
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/2.png&quot; alt=&quot;step 2&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3，虚拟硬盘，选择【现在创建虚拟硬盘】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3.png&quot; alt=&quot;step 3&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-1，虚拟硬盘文件类型，选择【VDI（VirtualBox 磁盘映像）】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-1.png&quot; alt=&quot;step 3-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-2，存储在物理硬盘上，选择【动态分配】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-2.png&quot; alt=&quot;step 3-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-3，文件位置和大小，输入磁盘映像的文件名，或者保持默认，调整磁盘大小到10G
-  （因为是动态分配，这里如果选择超过电脑本身物理大小也没有关系，假设我选择了1T，代表最大不能超过该设定的值，文件实际大小是没有1T的。
-  所以尽量设置大一些，避免后面系统使用时间越长，占用空间也越大）
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-3.png&quot; alt=&quot;step 3-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，配置启动光盘，选择建好的虚拟机，点击【设置】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4.png&quot; alt=&quot;step 4&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-1，选择【存储】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-1.png&quot; alt=&quot;step 4-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-2，选中光驱，在右边操作界面点击【光盘】按钮
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-2.png&quot; alt=&quot;step 4-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-3，添加下载好的Ubuntu Server iso文件，点击【ok】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-3.png&quot; alt=&quot;step 4-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，选择新建的虚拟机，点击【启动】，稍等片刻，进入到安装界面
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/5.png&quot; alt=&quot;step 5&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二安装ubuntu-server&quot;&gt;二，安装Ubuntu Server&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，进入安装界面，首先需要选择语言，这里选择【English】（这里不选择中文是因为安装会有问题，据说是一个bug）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/6.png&quot; alt=&quot;step 6&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，选择语言后，进入到ubuntu正式安装界面，选择【Install Ubuntu Server】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/7.png&quot; alt=&quot;step 7&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;3, 在正式安装之前，先看看 Ubuntu 安装程序主菜单，如果在安装过程中出现了问题，可以返回到主菜单，重试某些步骤
-（实际安装过程直接进入第四步，不会有此界面）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/8.png&quot; alt=&quot;step 8&quot; /&gt;
-    &lt;ul&gt;
-      &lt;li&gt;选择安装语言&lt;/li&gt;
-      &lt;li&gt;允许盲人使用盲人显示器访问软件&lt;/li&gt;
-      &lt;li&gt;配置键盘&lt;/li&gt;
-      &lt;li&gt;探测并挂在光盘&lt;/li&gt;
-      &lt;li&gt;装载 debconf 预配置文件&lt;/li&gt;
-      &lt;li&gt;从光盘加载安装程序组件&lt;/li&gt;
-      &lt;li&gt;改变 debconf 的优先级设置&lt;/li&gt;
-      &lt;li&gt;检测光盘的完整性&lt;/li&gt;
-      &lt;li&gt;保存调试日志&lt;/li&gt;
-      &lt;li&gt;允许 shell&lt;/li&gt;
-      &lt;li&gt;终止安装&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，选择安装语言，这里选择【English】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/9.png&quot; alt=&quot;step 9&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，选择你的位置，这里选择【United States】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/10.png&quot; alt=&quot;step 10&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;6，配置键盘布局，是否检测键盘布局，这里选择【No】 
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/11.png&quot; alt=&quot;step 11&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;7，配置键盘布局，选择键盘类型，这里选择【English（US）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/12.png&quot; alt=&quot;step 12&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;8，配置键盘布局，选择键盘布局，这里选择【English（US）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/13.png&quot; alt=&quot;step 13&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;9，生效以上配置，需要等待一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/14.png&quot; alt=&quot;step 14&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;10，配置网络，设置hostname，这里输入【ubuntunode1.thxopen.com】，然后选择【Continue】(ps：目的是在其他机器上通过此hostname访问到主机，可以是任意的字符串)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/15.png&quot; alt=&quot;step 15&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;11，设置用户和密码，输入用户的全称，这里输入【ubuntu】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/16.png&quot; alt=&quot;step 16&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;12，设置用户和密码，输入用户的登录账号，这里输入【ubuntu】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/17.png&quot; alt=&quot;step 17&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;13，设置用户和密码，输入登录账号的密码，这里输入【12345678】，然后选择【Continue】（根据实际需求设置相应强度的密码）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/18.png&quot; alt=&quot;step 18&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;14，设置用户和密码，重复上一步输入的密码，这里输入【12345678】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/19.png&quot; alt=&quot;step 19&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;15，设置用户和密码，由于这里密码设置过于简单，提示是否要使用弱密码，这里选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/20.png&quot; alt=&quot;step 20&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;16，设置用户和密码，是否加密home目录，这里选择【No】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/21.png&quot; alt=&quot;step 21&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;17，生效以上配置，需要等一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/22.png&quot; alt=&quot;step 22&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;18，配置时钟，检测到当前时区是亚洲、重庆，这里选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/23.png&quot; alt=&quot;step 23&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;19，磁盘分区，分区方式，这里选择【Guided - use entire disk】使用全部磁盘
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/24.png&quot; alt=&quot;step 24&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;20，磁盘分区，选择用来分区的磁盘，这里选择【ATA VBOX HARDDISK】(前面新建虚拟机时候创建的)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/25.png&quot; alt=&quot;step 25&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;21，磁盘分区，使用默认的分区配置，这里选择【Yes】使用默认的配置来分区磁盘
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/26.png&quot; alt=&quot;step 26&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;22，生效以上配置，需要等待一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/27.png&quot; alt=&quot;step 27&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;23，配置包管理器，是否设置代理服务器，这里留空，不填写，直接【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/28.png&quot; alt=&quot;step 28&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;24，配置自动升级，这里选择【No automatic updates】（根据自己的需要是否自动更新系统保持系统安全）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/29.png&quot; alt=&quot;step 29&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;25，选择需要安装的软件，这里勾选【standard system utilities】和【OpenSSH server】，然后选择【Continue】(方向键切换，空格键选择或取消)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/30.png&quot; alt=&quot;step 30&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;26，生效以上配置，需要等一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/31.png&quot; alt=&quot;step 31&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;27，安装GRUB引导装载程序在磁盘上，选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/32.png&quot; alt=&quot;step 32&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;28，安装完成，选择【Continue】系统自动重启
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/33.png&quot; alt=&quot;step 33&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;29，重启后自动进入到登录界面
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/34.png&quot; alt=&quot;step 34&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;30，输入前面步骤中设置的账号【ubuntu】和密码【12345678】，登录到系统
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/35.png&quot; alt=&quot;step 35&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
+&lt;p&gt;/usr/local/lib/libssl.so.1.0.0
+/usr/local/lib/libcrypto.so.1.0.0&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;Reference:&lt;/p&gt;
   &lt;ul&gt;
-    &lt;li&gt;https://www.linuxidc.com/Linux/2017-11/148341.htm&lt;/li&gt;
+    &lt;li&gt;https://zh.wikipedia.org/wiki/Docker&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="mac" /><category term="virtualbox" /><summary type="html">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。</summary></entry><entry><title type="html">在虚拟机里安装windows10</title><link href="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装windows10" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html">&lt;p&gt;见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="rabbitmq" /><category term="nginx" /><category term="redis" /><category term="jdk" /><category term="mysql" /><category term="jenkins" /><category term="gitlab" /><category term="mongodb" /><summary type="html">之前已经写过在Ubuntu上安装常用的和Java相关的工具, 这次要说的是如何在docker上安装这些工具。 何为Docker？ Docker是一个开放源代码软件项目，让应用程序部署在软件货柜下的工作可以自动化进行，借此在Linux操作系统上， 提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。 为什么要使用Docker？已经有现成的了，我就不再多说。 之所以写这个，就是觉得Docker给我带来极大的便利，我同样希望更多人能够享受到Docker带来的好处。 我一直有听说Docker，但一直没有揭开她神秘的面纱。终于我忍不住了，由于一次服务器故障，因为同事执行apt-get命令安装了新的软件， 导致系统环境变量发生了改变，导致ssh服务异常，大家都不能远程连上服务器。这个问题在服务器上一直存在，之前不知道什么原因把 让我下决心要去了解Docker。 /usr/local/lib/libssl.so.1.0.0 /usr/local/lib/libcrypto.so.1.0.0 Reference: https://zh.wikipedia.org/wiki/Docker</summary></entry><entry><title type="html">在虚拟机里安装windows10</title><link href="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装windows10" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html">&lt;p&gt;见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
 macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows，
 他们都只是一个工具，哪个用着上手舒服，你就选择那个。&lt;/p&gt;
 
@@ -910,7 +816,228 @@ macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有
   &lt;p&gt;Reference:
 https://gist.github.com/estorgio/1d679f962e8209f8a9232f7593683265
 https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="ubuntu server" /><category term="文件夹共享" /><summary type="html">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</summary></entry><entry><title type="html">如何修改macOS的触控板滚动方向，点击行为和锁定</title><link href="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html" rel="alternate" type="text/html" title="如何修改macOS的触控板滚动方向，点击行为和锁定" /><published>2018-11-04T00:00:00+08:00</published><updated>2018-11-04T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html">&lt;p&gt;触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="ubuntu server" /><category term="文件夹共享" /><summary type="html">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</summary></entry><entry><title type="html">在虚拟机里安装Ubuntu Server 16</title><link href="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装Ubuntu Server 16" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html">&lt;p&gt;服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。
+虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。
+对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;virtualbox&lt;/a&gt;（虚拟机软件）&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ubuntu.com/download/alternative-downloads&quot;&gt;Ubuntu Server 下载页面&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso.torrent?_ga=2.238927552.1516861282.1544003123-1140686435.1544003123&quot;&gt;Ubuntu 16.04.5 Server (64-bit) 种子&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过上面的连接，下载virtualbox和ubuntu server的安装镜像，我们就可以开始了&lt;/p&gt;
+
+&lt;h2 id=&quot;开始安装&quot;&gt;开始安装&lt;/h2&gt;
+
+&lt;h3 id=&quot;一配置虚拟机&quot;&gt;一，配置虚拟机&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;1，虚拟机名称和系统类型，这里系统类型选择【Linux】，版本选择【Ubuntu（64-bit）】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/1.png&quot; alt=&quot;step 1&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2，内存大小，这里可以根据软件推荐的大小配置，我这里推荐的是1G（1024 MB），为了系统更加流畅，我调到 4G （4096 MB）。可以根据电脑的配置适当上调
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/2.png&quot; alt=&quot;step 2&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;3，虚拟硬盘，选择【现在创建虚拟硬盘】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3.png&quot; alt=&quot;step 3&quot; /&gt;&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;3-1，虚拟硬盘文件类型，选择【VDI（VirtualBox 磁盘映像）】
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-1.png&quot; alt=&quot;step 3-1&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;3-2，存储在物理硬盘上，选择【动态分配】
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-2.png&quot; alt=&quot;step 3-2&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;3-3，文件位置和大小，输入磁盘映像的文件名，或者保持默认，调整磁盘大小到10G
+  （因为是动态分配，这里如果选择超过电脑本身物理大小也没有关系，假设我选择了1T，代表最大不能超过该设定的值，文件实际大小是没有1T的。
+  所以尽量设置大一些，避免后面系统使用时间越长，占用空间也越大）
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-3.png&quot; alt=&quot;step 3-3&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;4，配置启动光盘，选择建好的虚拟机，点击【设置】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4.png&quot; alt=&quot;step 4&quot; /&gt;&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;4-1，选择【存储】
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-1.png&quot; alt=&quot;step 4-1&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;4-2，选中光驱，在右边操作界面点击【光盘】按钮
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-2.png&quot; alt=&quot;step 4-2&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;4-3，添加下载好的Ubuntu Server iso文件，点击【ok】
+  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-3.png&quot; alt=&quot;step 4-3&quot; /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;5，选择新建的虚拟机，点击【启动】，稍等片刻，进入到安装界面
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/5.png&quot; alt=&quot;step 5&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二安装ubuntu-server&quot;&gt;二，安装Ubuntu Server&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;1，进入安装界面，首先需要选择语言，这里选择【English】（这里不选择中文是因为安装会有问题，据说是一个bug）
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/6.png&quot; alt=&quot;step 6&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2，选择语言后，进入到ubuntu正式安装界面，选择【Install Ubuntu Server】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/7.png&quot; alt=&quot;step 7&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;3, 在正式安装之前，先看看 Ubuntu 安装程序主菜单，如果在安装过程中出现了问题，可以返回到主菜单，重试某些步骤
+（实际安装过程直接进入第四步，不会有此界面）
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/8.png&quot; alt=&quot;step 8&quot; /&gt;
+    &lt;ul&gt;
+      &lt;li&gt;选择安装语言&lt;/li&gt;
+      &lt;li&gt;允许盲人使用盲人显示器访问软件&lt;/li&gt;
+      &lt;li&gt;配置键盘&lt;/li&gt;
+      &lt;li&gt;探测并挂在光盘&lt;/li&gt;
+      &lt;li&gt;装载 debconf 预配置文件&lt;/li&gt;
+      &lt;li&gt;从光盘加载安装程序组件&lt;/li&gt;
+      &lt;li&gt;改变 debconf 的优先级设置&lt;/li&gt;
+      &lt;li&gt;检测光盘的完整性&lt;/li&gt;
+      &lt;li&gt;保存调试日志&lt;/li&gt;
+      &lt;li&gt;允许 shell&lt;/li&gt;
+      &lt;li&gt;终止安装&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;4，选择安装语言，这里选择【English】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/9.png&quot; alt=&quot;step 9&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;5，选择你的位置，这里选择【United States】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/10.png&quot; alt=&quot;step 10&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;6，配置键盘布局，是否检测键盘布局，这里选择【No】 
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/11.png&quot; alt=&quot;step 11&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;7，配置键盘布局，选择键盘类型，这里选择【English（US）】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/12.png&quot; alt=&quot;step 12&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;8，配置键盘布局，选择键盘布局，这里选择【English（US）】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/13.png&quot; alt=&quot;step 13&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;9，生效以上配置，需要等待一会儿
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/14.png&quot; alt=&quot;step 14&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;10，配置网络，设置hostname，这里输入【ubuntunode1.thxopen.com】，然后选择【Continue】(ps：目的是在其他机器上通过此hostname访问到主机，可以是任意的字符串)
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/15.png&quot; alt=&quot;step 15&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;11，设置用户和密码，输入用户的全称，这里输入【ubuntu】，然后选择【Continue】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/16.png&quot; alt=&quot;step 16&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;12，设置用户和密码，输入用户的登录账号，这里输入【ubuntu】，然后选择【Continue】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/17.png&quot; alt=&quot;step 17&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;13，设置用户和密码，输入登录账号的密码，这里输入【12345678】，然后选择【Continue】（根据实际需求设置相应强度的密码）
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/18.png&quot; alt=&quot;step 18&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;14，设置用户和密码，重复上一步输入的密码，这里输入【12345678】，然后选择【Continue】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/19.png&quot; alt=&quot;step 19&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;15，设置用户和密码，由于这里密码设置过于简单，提示是否要使用弱密码，这里选择【Yes】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/20.png&quot; alt=&quot;step 20&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;16，设置用户和密码，是否加密home目录，这里选择【No】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/21.png&quot; alt=&quot;step 21&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;17，生效以上配置，需要等一会儿
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/22.png&quot; alt=&quot;step 22&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;18，配置时钟，检测到当前时区是亚洲、重庆，这里选择【Yes】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/23.png&quot; alt=&quot;step 23&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;19，磁盘分区，分区方式，这里选择【Guided - use entire disk】使用全部磁盘
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/24.png&quot; alt=&quot;step 24&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;20，磁盘分区，选择用来分区的磁盘，这里选择【ATA VBOX HARDDISK】(前面新建虚拟机时候创建的)
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/25.png&quot; alt=&quot;step 25&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;21，磁盘分区，使用默认的分区配置，这里选择【Yes】使用默认的配置来分区磁盘
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/26.png&quot; alt=&quot;step 26&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;22，生效以上配置，需要等待一会儿
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/27.png&quot; alt=&quot;step 27&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;23，配置包管理器，是否设置代理服务器，这里留空，不填写，直接【Continue】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/28.png&quot; alt=&quot;step 28&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;24，配置自动升级，这里选择【No automatic updates】（根据自己的需要是否自动更新系统保持系统安全）
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/29.png&quot; alt=&quot;step 29&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;25，选择需要安装的软件，这里勾选【standard system utilities】和【OpenSSH server】，然后选择【Continue】(方向键切换，空格键选择或取消)
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/30.png&quot; alt=&quot;step 30&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;26，生效以上配置，需要等一会儿
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/31.png&quot; alt=&quot;step 31&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;27，安装GRUB引导装载程序在磁盘上，选择【Yes】
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/32.png&quot; alt=&quot;step 32&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;28，安装完成，选择【Continue】系统自动重启
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/33.png&quot; alt=&quot;step 33&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;29，重启后自动进入到登录界面
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/34.png&quot; alt=&quot;step 34&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;30，输入前面步骤中设置的账号【ubuntu】和密码【12345678】，登录到系统
+&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/35.png&quot; alt=&quot;step 35&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Reference:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;https://www.linuxidc.com/Linux/2017-11/148341.htm&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="mac" /><category term="virtualbox" /><summary type="html">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。</summary></entry><entry><title type="html">如何修改macOS的触控板滚动方向，点击行为和锁定</title><link href="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html" rel="alternate" type="text/html" title="如何修改macOS的触控板滚动方向，点击行为和锁定" /><published>2018-11-04T00:00:00+08:00</published><updated>2018-11-04T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html">&lt;p&gt;触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器&lt;/p&gt;
 
 &lt;p&gt;不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：&lt;/p&gt;
 
@@ -990,187 +1117,4 @@ https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
   &lt;ul&gt;
     &lt;li&gt;https://www.zhihu.com/question/22096248/answer/22485346&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="wheel" /><category term="direction" /><summary type="html">说到鼠标滚轮，这应该是每个从windows转向mac后要遇到的问题，因为两个操作是反的，如果习惯了windows的操作方式，使用mac的时候会很不习惯。 如何修改滚轮的方向和windows保持一致呢？</summary></entry><entry><title type="html">macOS下如何修改hosts文件</title><link href="http://www.thxopen.com/mac/2018/11/03/system-how-to-modify-host-in-mac.html" rel="alternate" type="text/html" title="macOS下如何修改hosts文件" /><published>2018-11-03T00:00:00+08:00</published><updated>2018-11-03T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/03/system-how-to-modify-host-in-mac</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/03/system-how-to-modify-host-in-mac.html">&lt;p&gt;hosts文件（域名解析文件）是一个用于储存计算机网络中各节点信息的计算机文件。这个文件负责将主机名称映射到相应的IP地址。
-hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是，计算机的用户可以直接对hosts文件进行控制。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;由于Mac OS是属于类unix，一些能在unix下用的命令在macOS上也同样试用，而且目录结构也比较相似。&lt;/p&gt;
-
-&lt;p&gt;作为开发者，我推荐试用命令行方式修改hosts文件，简单快速（如果你有linux的使用经验，你也会认同的）&lt;/p&gt;
-
-&lt;p&gt;macOS的hosts文件存放在 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc&lt;/code&gt; 目录下&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;ps:操作下面的命令你需要有vi命令的基础才行&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;第一步：vi命令打开hosts文件（因为是系统文件，需要使用sudo，会要求输入用户的密码）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vi /etc/hosts 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;执行完成后是下面的样子：&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;##&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# Host Database&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# localhost is used to configure the loopback interface&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# when the system is booting.  Do not change this entry.&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;##&lt;/span&gt;
-127.0.0.1       localhost
-::1             localhost
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;第二步：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;输入 &lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt; 进入编辑模式，在文件末尾添加自己需要添加的映射即可，然后 &lt;code class=&quot;highlighter-rouge&quot;&gt;esc&lt;/code&gt; 退出编辑模式，最后输入&lt;code class=&quot;highlighter-rouge&quot;&gt;:wq!&lt;/code&gt; 保存并退出（如果不希望更改，输入
-&lt;code class=&quot;highlighter-rouge&quot;&gt;:q!&lt;/code&gt; 直接退出即可）&lt;/p&gt;
-
-&lt;p&gt;简单的两步操作即可完成对hosts文件的编辑&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Reference:&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;https://zh.wikipedia.org/wiki/Hosts%E6%96%87%E4%BB%B6&lt;/li&gt;
-    &lt;li&gt;https://www.jianshu.com/p/752211238c1b&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="hosts" /><summary type="html">hosts文件（域名解析文件）是一个用于储存计算机网络中各节点信息的计算机文件。这个文件负责将主机名称映射到相应的IP地址。 hosts文件通常用于补充或取代网络中DNS的功能。和DNS不同的是，计算机的用户可以直接对hosts文件进行控制。</summary></entry><entry><title type="html">一个Java Developer从windows转mac的那点事</title><link href="http://www.thxopen.com/mac/2018/11/01/windows-to-mac-skills.html" rel="alternate" type="text/html" title="一个Java Developer从windows转mac的那点事" /><published>2018-11-01T00:00:00+08:00</published><updated>2018-11-01T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/01/windows-to-mac-skills</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/01/windows-to-mac-skills.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
-
-&lt;p&gt;从工作以来一直都是使用windows系统，随着工作时间的增长，身边还有使用mac的。都说开发使用mac是绝配，我也没有体验过，只是听说，直到自己
-真实体验了mac后，一发不可收拾，系统的流畅，让我欲罢不能。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;不过这么说也有点偏激，但是我也没办法，来看看为什么会这样。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;我第一台笔记本（联想 y450）购于2009年10月，退役与2017年2月（没有坏，只是慢了点，除了开发，其他的事情还是杠杠滴）。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;然后接着又购买了一台超级本（联想 yoga 910），使用她开发了接近2年。但由于是低压的cpu（很后悔买了这个笔记本做开发，当时不知道怎么想的，买了个低压的），
-以至于我稍微开多了程序，她就会表现的很不好，让我对低压的笔记本已经很抵触。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;ps:做开发的一定不要买低压的cpu，一定！！！&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;2018年3月我头脑发热，在苹果官网下单了15寸的MacBook Pro（16年款，￥26,488），本来满怀期待，结果第二天早晨我又把订单取消了，原因是朋友告诉我马上要上新一代的cpu了，
-现在买就太亏了。我想想，16年我没买，我选择18年买，都又要出新的了，确实，当时也没了解清楚，头一热就下单买了，可能是因为招行12期分期免息，
-让我霸气的就下单了（其实这样是不对的，爽了一时，要痛苦1年，面对接下来每个月2k的还款，我又是多么的伤心）&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;就在2018年7月份，苹果发布了18年款的MacBook Pro。cpu确实上了新一代的，而且还有更加强劲的i9处理器，这把我心动的，但是有点追求完美的我，不满足，依然忍住了，
-没有立马就去购买了。在接下来的几个月，我看了各位大神的使用体验，以及评价，发现虽然有了强劲的i9处理器，但因为框架没有更新，承受不住他的发热，导致i9达到一定温度后，
-会被降频，而不能发挥他本身的性能，这个让要求完美的我，更加纠结了。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;纠结了几个月，最终，我抵挡不住诱惑，2018年11月我在网上租了一台MacBook Pro 14年款（ 2.2 GHz Intel Core i7，16G，256G ssd ，15寸），决定先试后买，这样就不会后悔了啊！
-11月2号收到笔记本后，很是激动！虽然是14年款，但是配置还是挺不错的，我不知道我这个时候要是有一台同配置的windows，使用起来是不是同样的感觉，快，舒服？如果有机会，
-我再去体验下高配置的windows再说吧。目前来说这台mac已经让我明显感觉用起来很舒服。使用了短短两周，已经喜欢上mac这种感觉，当我再次翻开我的yoga 910时，我已经受不了windows的卡顿，
-以及从睡眠中唤醒，要等很久才会流畅起来，而mac则像一个丝滑的巧克力在嘴中融化的感觉。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;不过联想yoga 910和这款mac本身没有可比性，所以上面说的所有就不要当真啦。本篇文章的正题是下面即将要说的这些。&lt;/p&gt;
-
-&lt;p&gt;毕竟使用了那么多年windows，一下子切换到mac下很多不习惯和不适应，稍不留神就把windows的习惯带到mac下来，没办法遇到问题只能网上搜一搜。鉴于后面我要购买自己的mac，
-我把我这个期间遇到的问题记录下来，方便后面再去查。&lt;/p&gt;
-
-&lt;p&gt;下面这些就是我从windows切换到mac后不懂的，我总结下来，希望能帮助到需要的人。如果你一开始就是使用mac，本篇文章你也能收获很多。
-我分为以下几个大块，有简单的也有难一点的，没办法，谁叫我是一个开发呢？太喜欢喜欢折腾了……&lt;/p&gt;
-
-&lt;h2 id=&quot;系统篇&quot;&gt;系统篇&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;打开终端&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/03/system-how-to-modify-host-in-mac.html&quot;&gt;修改hosts&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;更改mac的名字&lt;/li&gt;
-  &lt;li&gt;端口占用&lt;/li&gt;
-  &lt;li&gt;tomcat启动提示permission denied&lt;/li&gt;
-  &lt;li&gt;smb window 和 mac 互传文件&lt;/li&gt;
-  &lt;li&gt;在Finder中查看文件大小&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;快捷键篇&quot;&gt;快捷键篇&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;更改fn的行为&lt;/li&gt;
-  &lt;li&gt;insert按键&lt;/li&gt;
-  &lt;li&gt;delete反方向删除 fn+delete&lt;/li&gt;
-  &lt;li&gt;ctrl+x    commond+c   alt+commond+v&lt;/li&gt;
-  &lt;li&gt;重命名文件 回车&lt;/li&gt;
-  &lt;li&gt;新建文件夹 commond+shift+n&lt;/li&gt;
-  &lt;li&gt;打开文件/文件夹 commond+o&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;硬件篇&quot;&gt;硬件篇&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/03/hardware-how-to-change-wheel-direction-in-mac.html&quot;&gt;滚轮方向&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/04/hardware-touch-pad-function.html&quot;&gt;触控板设置&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;开发篇&quot;&gt;开发篇&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;安装java环境&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/05/install-windows10-in-virtualbox.html&quot;&gt;在虚拟机里安装windows10&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/05/install-virtualbox-additions-for-windows.html&quot;&gt;安装virtualbox增强插件实现剪贴板共享，文件拖拽，文件夹共享（windows10）&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html&quot;&gt;在虚拟机里安装ubuntu Server&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html&quot;&gt;安装virtualbox增强插件实现文件夹共享（Ubuntu Server）&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;mac安装最新rvm 升级 ruby&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;常用软件&quot;&gt;常用软件&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;上网
-    &lt;ul&gt;
-      &lt;li&gt;chrome&lt;/li&gt;
-      &lt;li&gt;迅雷&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;娱乐
-    &lt;ul&gt;
-      &lt;li&gt;视频播放&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;社交
-    &lt;ul&gt;
-      &lt;li&gt;qq&lt;/li&gt;
-      &lt;li&gt;微信&lt;/li&gt;
-      &lt;li&gt;钉钉&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;办公
-    &lt;ul&gt;
-      &lt;li&gt;wps for Mac&lt;/li&gt;
-      &lt;li&gt;有道云笔记&lt;/li&gt;
-      &lt;li&gt;网易邮箱大师&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;工具
-    &lt;ul&gt;
-      &lt;li&gt;ftp软件&lt;/li&gt;
-      &lt;li&gt;终端软件&lt;/li&gt;
-      &lt;li&gt;虚拟机&lt;/li&gt;
-      &lt;li&gt;文本编辑器&lt;/li&gt;
-      &lt;li&gt;有道词典&lt;/li&gt;
-      &lt;li&gt;OneDrive&lt;/li&gt;
-      &lt;li&gt;intellij idea&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;mac独有功能&quot;&gt;mac独有功能&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;dashboard使用&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="windows" /><category term="mac" /><summary type="html">前言 从工作以来一直都是使用windows系统，随着工作时间的增长，身边还有使用mac的。都说开发使用mac是绝配，我也没有体验过，只是听说，直到自己 真实体验了mac后，一发不可收拾，系统的流畅，让我欲罢不能。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="wheel" /><category term="direction" /><summary type="html">说到鼠标滚轮，这应该是每个从windows转向mac后要遇到的问题，因为两个操作是反的，如果习惯了windows的操作方式，使用mac的时候会很不习惯。 如何修改滚轮的方向和windows保持一致呢？</summary></entry></feed>

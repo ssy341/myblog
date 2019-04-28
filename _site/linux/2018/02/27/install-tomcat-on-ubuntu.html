@@ -426,8 +426,9 @@ bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo </span>vi /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888
 
 <span class="c"># -----------------------------------------------------------------------------</span>
-
+<span class="c"># config java_home path</span>
 <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-oracle/jre
+<span class="c"># config tomcat path</span>
 <span class="nv">CATALINA_HOME</span><span class="o">=</span>/home/thxopen/app/tomcat-demo-8888
 
 <span class="c"># OS specific support.  $var _must_ be set to either true or false.</span>
@@ -438,7 +439,35 @@ bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span><span class="nb">sudo mv</span> /home/thxopen/app/tomcat-demo-8888/bin/tomcat-8888 /etc/init.d/
 </code></pre></div></div>
 
-<p>2、配置端口</p>
+<p>2、配置环境变量</p>
+
+<p>根据<code class="highlighter-rouge">catalina.sh</code>文件里的注释：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -----------------------------------------------------------------------------</span>
+<span class="c"># Control Script for the CATALINA Server</span>
+<span class="c">#</span>
+<span class="c"># Environment Variable Prerequisites</span>
+<span class="c">#</span>
+<span class="c">#   Do not set the variables in this script. Instead put them into a script</span>
+<span class="c">#   setenv.sh in CATALINA_BASE/bin to keep your customizations separate.</span>
+<span class="c">#</span>
+
+</code></pre></div></div>
+<p>不要直接在<code class="highlighter-rouge">catalina.sh</code>设置变量，而是要在<code class="highlighter-rouge">CATALINA_BASE/bin</code>目录下的<code class="highlighter-rouge">setenv.sh</code>文件里设置</p>
+
+<p>正常启动停止tomcat我们还需要设置<code class="highlighter-rouge">CATALINA_PID</code>变量，下面是对此变量的解释</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#   CATALINA_PID    (Optional) Path of the file which should contains the pid</span>
+<span class="c">#                   of the catalina startup java process, when start (fork) is</span>
+<span class="c">#                   used</span>
+</code></pre></div></div>
+
+<p>在<code class="highlighter-rouge">CATALINA_BASE/bin</code>目录下新建<code class="highlighter-rouge">setenv.sh</code>文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo </span><span class="nv">CATALINA_PID</span><span class="o">=</span>/home/thxopen/app/tomcat-demo-8888/tomcat.pid <span class="o">&gt;</span> setenv.sh
+</code></pre></div></div>
+
+<p>3、配置端口</p>
 
 <p>在目录<code class="highlighter-rouge">/home/thxopen/app/tomcat-demo-8888/conf</code>下打开<code class="highlighter-rouge">server.xml</code>文件，在文件大概70行左右配置上自己想要的端口</p>
 
@@ -464,6 +493,8 @@ bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps
 /etc/init.d/tomcat-8888 stop
 /etc/init.d/tomcat-8888 restart
 </code></pre></div></div>
+
+<p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
 
 
         
@@ -610,6 +641,30 @@ bin  conf  lib  LICENSE  logs  NOTICE  RELEASE-NOTES  RUNNING.txt  temp  webapps
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+项目中需要使用swagger提供api文档，于是加上依赖：
+
+  &lt;dependency&gt;
+        &lt;groupId&gt;io.springfox&lt;/groupId&gt;
+        &lt;artifactId&gt;springfox-swagger2&lt;/...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="permalink">使用Docker安装oracle 11g
 </a>
       
@@ -665,35 +720,19 @@ public class LogExampleOther {
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="permalink">在虚拟机里安装windows10
+        <a href="http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html" rel="permalink">在Docker上安装常用的和Java相关的工具
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
-macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows，
-他们...</p>
-  </article>
-</div>
-        
-          
+    <p class="archive__item-excerpt" itemprop="description">之前已经写过在Ubuntu上安装常用的和Java相关的工具,
+这次要说的是如何在docker上安装这些工具。
+
+何为Docker？
 
 
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://www.thxopen.com/mac/2018/11/05/install-virtualbox-additions-for-windows.html" rel="permalink">windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
-首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。
-
-</p>
+  Docker是一个开放源代码软件项目，让应用程序部署在软件货柜下的工作可以自动化进行，借此在Linux操作系统上，
+提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机...</p>
   </article>
 </div>
         
