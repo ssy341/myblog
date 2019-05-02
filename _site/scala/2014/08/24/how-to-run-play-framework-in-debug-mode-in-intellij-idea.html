@@ -1,0 +1,43 @@
+<p>
+ intellij idea配置：<BR>
+ <img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea1.png" style='margin-bottom:20px'>
+
+ <img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea2.png" style='margin-bottom:20px'>
+ <!--more-->
+
+ <img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea3.png" style='margin-bottom:20px'>
+ <BR>
+</p>
+<p>
+项目启动配置：<BR>
+进入到项目目录<BR>
+<img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea4.png" style='margin-bottom:20px'>
+<BR>
+ 输入<code>activator -jvm-debug 9999 ~run</code><br>
+ ps:<code>run</code>和<code>~run</code>的区别在于前者需要在浏览器访问才会重新编译代码，后者只要修改代码就会重新编译<BR>
+
+<img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea5.png" style='margin-bottom:20px'><BR>
+ 然后出现Listening for transport dt_socket at address: 9999 的提示语句，表示启用9999端口的监听
+</p>
+<p>
+在intellij idea里启动debug <br>
+<img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea6.png" style='margin-bottom:20px'>
+<BR>
+启动成功控制台会输出：Connected to the target VM, address: 'localhost:9999', transport: 
+'socket' <br>
+<img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea7.png" style='margin-bottom:20px'>
+</p>
+<p>
+打好断点，就可以调试代码了，当我点击登录的时候，跳入到断点处 <BR>
+<img src="/img/post/how-to-run-play-framework-in-debug-mode-in-intellij-idea8.png" style='margin-bottom:20px'>
+</p>
+
+<p>
+参考：<BR><a href="https://www.playframework.com/documentation/2.0/IDE" target="_blank" title="play framework documentation">play framework documentation</a> <br>
+<a href="http://stackoverflow.com/questions/24218341/how-to-run-play-framework-2-x-in-debug-mode-in-intellij-idea" target="_blank" title="how to run play framework 2 x in debug mode in intellij idea">
+how to run play framework 2 x in debug mode in intellij idea
+</a>
+</p>
+<p>
+类似文章：<a href="/ide/2013/10/17/intellij-idea-remote-debug-project.html"  target="_blank" title="在intellij idea下远程调试项目">在intellij idea下远程调试项目</a>
+</p>

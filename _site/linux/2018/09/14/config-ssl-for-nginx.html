@@ -1,0 +1,744 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.10.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Nginx配置ssl - 单客欧朋</title>
+<meta name="description" content="https://letsencrypt.org/getting-started/https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginxMySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="单客欧朋">
+<meta property="og:title" content="Nginx配置ssl">
+<meta property="og:url" content="http://localhost:4000/linux/2018/09/14/config-ssl-for-nginx.html">
+
+
+  <meta property="og:description" content="https://letsencrypt.org/getting-started/https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginxMySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-09-14T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/2018/09/14/config-ssl-for-nginx.html">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "单思义",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tags/" >按标签</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >按分类</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/about" >关于</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        
+        <a href="http://www.thxopen.com">
+          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+        </a>
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <a href="http://www.thxopen.com"><h3 class="author__name" itemprop="name">单思义</h3></a>
+    
+    
+      <p class="author__bio" itemprop="description">
+        好记性不如烂笔头
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">成都市 武侯区 天府软件园</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:keith@thxopen.com">
+            <meta itemprop="email" content="keith@thxopen.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/思义-单-927632108" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ssy341" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.stackoverflow.com/users/thxopen" itemprop="sameAs">
+            <i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.weibo.com/smotive" itemprop="sameAs">
+            <i class="fab fa-fw fa-weibo" aria-hidden="true"></i> Weibo
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Nginx配置ssl">
+    <meta itemprop="description" content="https://letsencrypt.org/getting-started/https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginxMySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。安装MySQLsudo apt-get install mysql-server mysql-client安装过程中会要求输入root用户的密码，记下自己输入的密码即可更改默认端口mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击编辑目录 /etc/mysql/mysql.conf.d/mysqld.cnf 下mysql的配置文件：sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf# * Basic Settingsuser            = mysqlpid-file        = /var/run/mysqld/mysqld.pidsocket          = /var/run/mysqld/mysqld.sockport            = 7777   #修改自己需要的端口basedir         = /usrdatadir         = /var/lib/mysqltmpdir          = /tmplc-messages-dir = /usr/share/mysqlskip-external-locking这里演示把默认端口修改为7777，保存修改，重启mysql即可sudo service mysql restart重启之后，查询端口来验证是否修改成功netstat -nlt|grep 7777tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN授权可以访问的客户端默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql首先登录到mysql，授权root用户可以从任意ip获得所有特权mysql -uroot -pEnter password:mysql&gt; grant all privileges on *.* to &#39;root&#39;@&#39;%&#39; identified by &#39;你的密码&#39;;mysql&gt; flush privileges;mysql&gt; exit;ps：为了安全，你可以指定ip和操作权限然后，更改mysql配置文件允许从任意ip连接sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf## Instead of skip-networking the default is now to listen only on# localhost which is more compatible and is not less secure.bind-address            = 0.0.0.0  #把127.0.0.1修改为0.0.0.0即可sudo service mysql restart把127.0.0.1修改为0.0.0.0即可，然后保存修改，重启mysql生效在console中使用mysql检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysqlthxopen@Thxopen:~$ mysql -uroot -pEnter password:Welcome to the MySQL monitor.  Commands end with ; or \g.Your MySQL connection id is 6Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.Oracle is a registered trademark of Oracle Corporation and/or itsaffiliates. Other names may be trademarks of their respectiveowners.Type &#39;help;&#39; or &#39;\h&#39; for help. Type &#39;\c&#39; to clear the current input statement.mysql&gt;出现上述代表mysql安装成功，可以正常使用使用MySQL Workbench操作mysql数据MySQL Workbench 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。支持在Windows, Linux 和 Mac OS X上使用。在官网上下载对应平台的安装包，安装即可使用。工具欢迎面如下图所示：界面看起来比较清爽，简洁，但是功能非常强大。可以通过【加号】按钮新建一个mysql连接，如下图所示：输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。进入MySQL Workbench主界面，如下图所示：主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。返回目录  Reference      http://www.jianshu.com/p/3111290b87f4  ">
+    <meta itemprop="datePublished" content="September 14, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Nginx配置ssl
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> 目录</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#安装mysql">安装MySQL</a></li>
+  <li><a href="#更改默认端口">更改默认端口</a></li>
+  <li><a href="#授权可以访问的客户端">授权可以访问的客户端</a></li>
+  <li><a href="#在console中使用mysql">在console中使用mysql</a></li>
+  <li><a href="#使用mysql-workbench操作mysql数据">使用MySQL Workbench操作mysql数据</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>https://letsencrypt.org/getting-started/
+https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/
+https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx</p>
+
+<p>MySQL是一个开放源代码的关系数据库管理系统，性能高、成本低、可靠性好，已经成为最流行的开源数据库。</p>
+
+<h2 id="安装mysql">安装MySQL</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>mysql-server mysql-client
+</code></pre></div></div>
+
+<p>安装过程中会要求输入root用户的密码，记下自己输入的密码即可</p>
+
+<h2 id="更改默认端口">更改默认端口</h2>
+
+<p>mysql默认的端口是3306，一般情况下我们会更改默认端口，当你数据库暴露在外网时可以一定程度上防止攻击</p>
+
+<p>编辑目录 <code class="highlighter-rouge">/etc/mysql/mysql.conf.d/mysqld.cnf</code> 下mysql的配置文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+<span class="c"># * Basic Settings</span>
+user            <span class="o">=</span> mysql
+pid-file        <span class="o">=</span> /var/run/mysqld/mysqld.pid
+socket          <span class="o">=</span> /var/run/mysqld/mysqld.sock
+port            <span class="o">=</span> 7777   <span class="c">#修改自己需要的端口</span>
+basedir         <span class="o">=</span> /usr
+datadir         <span class="o">=</span> /var/lib/mysql
+tmpdir          <span class="o">=</span> /tmp
+lc-messages-dir <span class="o">=</span> /usr/share/mysql
+skip-external-locking
+
+</code></pre></div></div>
+<p>这里演示把默认端口修改为7777，保存修改，重启mysql即可</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service mysql restart
+</code></pre></div></div>
+
+<p>重启之后，查询端口来验证是否修改成功</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-nlt</span>|grep 7777
+
+tcp        0      0 0.0.0.0:7777            0.0.0.0:<span class="k">*</span>               LISTEN
+</code></pre></div></div>
+
+<h2 id="授权可以访问的客户端">授权可以访问的客户端</h2>
+
+<p>默认情况下，mysql只允许本地操作，如果我们的mysql安装在服务器上，避免不了远程连接，为了方便，这里我允许所有ip远程操作mysql</p>
+
+<p>首先登录到mysql，授权root用户可以从任意ip获得所有特权</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>
+Enter password:
+
+mysql&gt; grant all privileges on <span class="k">*</span>.<span class="k">*</span> to <span class="s1">'root'</span>@<span class="s1">'%'</span> identified by <span class="s1">'你的密码'</span><span class="p">;</span>
+mysql&gt; flush privileges<span class="p">;</span>
+mysql&gt; <span class="nb">exit</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>ps：为了安全，你可以指定ip和操作权限</p>
+
+<p>然后，更改mysql配置文件允许从任意ip连接</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+<span class="c">#</span>
+<span class="c"># Instead of skip-networking the default is now to listen only on</span>
+<span class="c"># localhost which is more compatible and is not less secure.</span>
+bind-address            <span class="o">=</span> 0.0.0.0  <span class="c">#把127.0.0.1修改为0.0.0.0即可</span>
+
+<span class="nb">sudo </span>service mysql restart
+
+</code></pre></div></div>
+<p>把<code class="highlighter-rouge">127.0.0.1</code>修改为<code class="highlighter-rouge">0.0.0.0</code>即可，然后保存修改，重启mysql生效</p>
+
+<h2 id="在console中使用mysql">在console中使用mysql</h2>
+
+<p>检测是否可以正常使用mysql，打开命令行，使用root用户和刚刚输入的密码连接到mysql</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thxopen@Thxopen:~<span class="nv">$ </span>mysql <span class="nt">-uroot</span> <span class="nt">-p</span>
+Enter password:
+
+Welcome to the MySQL monitor.  Commands end with <span class="p">;</span> or <span class="se">\g</span><span class="nb">.</span>
+Your MySQL connection <span class="nb">id </span>is 6
+Server version: 5.7.22-0ubuntu0.16.04.1 <span class="o">(</span>Ubuntu<span class="o">)</span>
+
+Copyright <span class="o">(</span>c<span class="o">)</span> 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type <span class="s1">'help;'</span> or <span class="s1">'\h'</span> <span class="k">for </span>help. Type <span class="s1">'\c'</span> to clear the current input statement.
+
+mysql&gt;
+
+</code></pre></div></div>
+
+<p>出现上述代表mysql安装成功，可以正常使用</p>
+
+<h2 id="使用mysql-workbench操作mysql数据">使用MySQL Workbench操作mysql数据</h2>
+
+<p><a href="https://www.mysql.com/products/workbench/">MySQL Workbench</a> 是一个可视化的，可以对mysql配置、用户管理、备份、数据建模、SQL开发等进行操作的综合管理工具。
+支持在Windows, Linux 和 Mac OS X上使用。</p>
+
+<p>在官网上<a href="https://dev.mysql.com/downloads/workbench/">下载</a>对应平台的安装包，安装即可使用。</p>
+
+<p>工具欢迎面如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql workbench dashboard.png" alt="mysql workbench dashboard" /></p>
+
+<p>界面看起来比较清爽，简洁，但是功能非常强大。</p>
+
+<p>可以通过【加号】按钮新建一个mysql连接，如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql new connection.png" alt="mysql new connection" /></p>
+
+<p>输入mysql服务器地址、端口、密码，点击【Test Connection】检查是否连接成功。</p>
+
+<p>进入MySQL Workbench主界面，如下图所示：</p>
+
+<p><img src="/assets/images/post/linux/ubuntu/mysql sql console.png" alt="mysql sql console" /></p>
+
+<p>主要关注的是中间部分，分别有sql脚本输入区域，表格数据显示区域，历史脚本显示区域</p>
+
+<p>整体来说MySQL Workbench还是一个不错的可视化的工具，官方出品，推荐一下。</p>
+
+<p><a href="/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html">返回目录</a></p>
+
+<blockquote>
+  <p>Reference</p>
+  <ul>
+    <li>http://www.jianshu.com/p/3111290b87f4</li>
+  </ul>
+</blockquote>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#https" class="page__taxonomy-item" rel="tag">https</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ssl" class="page__taxonomy-item" rel="tag">ssl</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2018-09-14T00:00:00+08:00">September 14, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Nginx%E9%85%8D%E7%BD%AEssl%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F09%2F14%2Fconfig-ssl-for-nginx.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F09%2F14%2Fconfig-ssl-for-nginx.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F09%2F14%2Fconfig-ssl-for-nginx.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F09%2F14%2Fconfig-ssl-for-nginx.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" class="pagination--pager" title="在ubuntu下使用mysqlbinlog恢复drop后的数据
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="pagination--pager" title="像使用mybatis一样使用spring data jpa
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" rel="permalink">Spring Data JPA自动创建表同时生成表和列的注释
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">创建表格时同时带上注释
+
+一般情况下我们使用注解的方式很方便的就可以通过java类生成数据库的表，然后把注释写在字段上，就像下面一样
+
+
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/database/2018/09/19/unknown-column-nan-in-field-list.html" rel="permalink">Unknown column ‘NaN’ in ‘field list’
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">起因
+
+使用mysql数据库，在插入数据时，抛出以下异常
+
+Unknown column 'NaN' in 'field list'
+
+
+字面上意思：未知的列’NaN’在字段列表中
+
+我首先想到的是自己 insert 语句是不是有问题，但想到插入语句是由框架完成的，列因该不会弄错，那是什么原因呢？
+
+再看关键字N...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html" rel="permalink">像使用mybatis一样使用spring data jpa
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">简介
+
+自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。
+虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extra
+
+...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/database/2018/08/28/mysqlbinlog-recovery-data.html" rel="permalink">在ubuntu下使用mysqlbinlog恢复drop后的数据
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">背景
+
+我肯定跟mysql过不去，覆盖数据在我身上已经发生了2次了，难道我这是上演从删库到跑路么？
+
+在上次覆盖了数据之后，我就告诉自己操作数据库先备份，即便错了也可以恢复，这次操作之前我已经很谨慎了，可惜最后还是做错了。
+
+同事辛苦几周操作的数据被我一秒钟给覆盖了，我没有着急，我淡定，我回想上次误操作后，打开了...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><input type="text" id="search" class="search-input" tabindex="-1" placeholder="输入你的关键字..." />
+    <div id="results" class="results"></div></div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+    <ul class="social-icons">
+        
+        <li><strong>友情链接:</strong></li>
+        
+
+        
+        
+        <li><a href="http://www.datatables.club"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>DataTables中文网</a></li>
+        
+        <li><a href="https://www.nrjs.cn/"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>牛人js</a></li>
+        
+    </ul>
+</div>
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ssy341"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 单思义. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+  </body>
+</html>
