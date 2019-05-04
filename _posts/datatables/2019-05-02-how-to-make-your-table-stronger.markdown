@@ -62,10 +62,6 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 ## 课程视频
 
-<video src="{{ site.baseurl }}/video/season_two/1.mp4" width="100%">
-您的浏览器不支持 video 标签
-</video>
-
-> ps: 由于服务器带宽不够，推荐[下载]({{ site.baseurl }}/video/season_two/1.mp4)到本地，获得最佳播放体验
+由于服务器不支持视频播放，鼠标右键**_[点我]({{ site.baseurl }}/video/season_two/1.mp4)_**，另存为到本地即可
 
 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言
