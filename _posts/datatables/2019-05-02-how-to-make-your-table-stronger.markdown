@@ -1,7 +1,7 @@
 ---
 title: 使用DataTables"武装"你的html表格——开刊 
 categories: datatables
-tags: [datatables,视频]
+tags: [datatables,视频,入门第二期]
 toc: true
 ---
 
