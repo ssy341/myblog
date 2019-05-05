@@ -2,4 +2,6 @@
 .jekyll-metadata
 .idea
 *.iml
+*.flv
+*.mp4
 Gemfile.lock

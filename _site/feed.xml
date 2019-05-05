@@ -1,4 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-04-28T14:35:17+08:00</updated><id>http://www.thxopen.com/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo</title><link href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="alternate" type="text/html" title="Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found</id><content type="html" xml:base="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html">&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-05-05T08:22:44+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">使用DataTables”武装”你的html表格——开刊</title><link href="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="alternate" type="text/html" title="使用DataTables&quot;武装&quot;你的html表格——开刊" /><published>2019-05-02T00:00:00+08:00</published><updated>2019-05-02T00:00:00+08:00</updated><id>http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger</id><content type="html" xml:base="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;三年前，&lt;a href=&quot;http://datatables.club/blog/2016/06/04/to-reader.html&quot;&gt;《致在使用DataTables的小伙伴》&lt;/a&gt;，看到努力的自己，我想感谢我自己。
+谢谢你，谢谢一直努力的你！&lt;/p&gt;
+
+&lt;p&gt;我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的
+DataTables中文网，没有你们，Datatables中文网也走不到今天。每当看到你们从中文网上获取到答案或者思路，我都感到无比的开心。我永远都忘不了
+当我使用Datatables服务器模式遇到问题解决不了的时候，有一个人帮我解决，然后我豁然开朗的感觉，我想大家每当问题得到解决的时候那种心情是多么的……&lt;/p&gt;
+
+&lt;p&gt;但我也要批评我自己，批评自己不够坚持，没有做到有始有终，以为这样就足够了，这是对大家不负责也是对自己不负责。从2014年到2019年，Datatables中文网
+一直属于半成品状态。我高兴，因为上面的内容能够帮助大家，但我又悲伤，因为内容不够完整，不是所有人都能在上面得到答案。有的人说好，有的人说不好，
+以前我会在意这些看法，但是现在不会了，人无完人，也没有完美的东西。任何事情都是在一次次修正中，逐渐趋于完美。不管怎么样我还是坚持过来了，没有放弃，
+那么在接下来的时间里，不仅仅只是坚持，还要把它做得更好。&lt;/p&gt;
+
+&lt;p&gt;现在越来越多的IT在线教育平台，讲各种各样的知识，技术，框架等等。我也经常会去上面学习，通过看视频，对自己的知识查漏补缺，还可以系统的梳理知识。
+而且对于一些质量好的视频看过之后有种醍醐灌顶，豁然开朗的感觉，如果看一次不懂还可以看第二次，三次，直到明白为止。正因为如此，我有了做视频的念头，
+如果我也能把我总结的经验说出来教给别人，把知识分享给更多人，岂不也是一件快乐的事情。&lt;/p&gt;
+
+&lt;p&gt;所以，我做了。&lt;/p&gt;
+
+&lt;h2 id=&quot;课程目的&quot;&gt;课程目的&lt;/h2&gt;
+
+&lt;p&gt;本次推出Datatables入门第二期——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;不知道怎么学习Datatables&lt;/li&gt;
+  &lt;li&gt;新老版本混用，不规范和不标准，阅读代码困难&lt;/li&gt;
+  &lt;li&gt;滥用Datatables，小小需求就用插件导致项目臃肿&lt;/li&gt;
+  &lt;li&gt;不知道怎么把Datatables的强大功能套用到自己的项目中&lt;/li&gt;
+  &lt;li&gt;客户端模式和服务器模式什么区别，怎么使用&lt;/li&gt;
+  &lt;li&gt;等等&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;课程内容&quot;&gt;课程内容&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;开刊（即本节内容，已完成 2019年05月02日）&lt;/li&gt;
+  &lt;li&gt;第一章，Datatables的6大特性
+    &lt;ul&gt;
+      &lt;li&gt;DOM属性的介绍&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第二章，对于各种数据源该怎么使用Datatables？
+    &lt;ul&gt;
+      &lt;li&gt;Dom数据源&lt;/li&gt;
+      &lt;li&gt;javascript数据&lt;/li&gt;
+      &lt;li&gt;Ajax数据&lt;/li&gt;
+      &lt;li&gt;服务器模式&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第三章，打造和自己项目贴近的表格
+    &lt;ul&gt;
+      &lt;li&gt;info，paging，processing，lengthChange，searching&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第四章，更方便的操作表格数据
+    &lt;ul&gt;
+      &lt;li&gt;ajax&lt;/li&gt;
+      &lt;li&gt;columns&lt;/li&gt;
+      &lt;li&gt;row&lt;/li&gt;
+      &lt;li&gt;draw&lt;/li&gt;
+      &lt;li&gt;page&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;实战——制作一个具有增删改查功能的表格
+    &lt;ul&gt;
+      &lt;li&gt;行内编辑&lt;/li&gt;
+      &lt;li&gt;弹框编辑&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;内容会有变动，只有视频录好后就定下内容，本目录会不断更新直到全部完结&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;课程视频&quot;&gt;课程视频&lt;/h2&gt;
+
+&lt;p&gt;由于服务器不支持视频播放，鼠标右键&lt;strong&gt;&lt;em&gt;&lt;a href=&quot;/video/season_two/1.mp4&quot;&gt;点我&lt;/a&gt;&lt;/em&gt;&lt;/strong&gt;，另存为到本地即可&lt;/p&gt;
+
+&lt;p&gt;最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="datatables" /><category term="视频" /><category term="入门第二期" /><summary type="html">前言 三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。 谢谢你，谢谢一直努力的你！ 我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的 DataTables中文网，没有你们，Datatables中文网也走不到今天。每当看到你们从中文网上获取到答案或者思路，我都感到无比的开心。我永远都忘不了 当我使用Datatables服务器模式遇到问题解决不了的时候，有一个人帮我解决，然后我豁然开朗的感觉，我想大家每当问题得到解决的时候那种心情是多么的…… 但我也要批评我自己，批评自己不够坚持，没有做到有始有终，以为这样就足够了，这是对大家不负责也是对自己不负责。从2014年到2019年，Datatables中文网 一直属于半成品状态。我高兴，因为上面的内容能够帮助大家，但我又悲伤，因为内容不够完整，不是所有人都能在上面得到答案。有的人说好，有的人说不好， 以前我会在意这些看法，但是现在不会了，人无完人，也没有完美的东西。任何事情都是在一次次修正中，逐渐趋于完美。不管怎么样我还是坚持过来了，没有放弃， 那么在接下来的时间里，不仅仅只是坚持，还要把它做得更好。 现在越来越多的IT在线教育平台，讲各种各样的知识，技术，框架等等。我也经常会去上面学习，通过看视频，对自己的知识查漏补缺，还可以系统的梳理知识。 而且对于一些质量好的视频看过之后有种醍醐灌顶，豁然开朗的感觉，如果看一次不懂还可以看第二次，三次，直到明白为止。正因为如此，我有了做视频的念头， 如果我也能把我总结的经验说出来教给别人，把知识分享给更多人，岂不也是一件快乐的事情。 所以，我做了。 课程目的 本次推出Datatables入门第二期——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题： 不知道怎么学习Datatables 新老版本混用，不规范和不标准，阅读代码困难 滥用Datatables，小小需求就用插件导致项目臃肿 不知道怎么把Datatables的强大功能套用到自己的项目中 客户端模式和服务器模式什么区别，怎么使用 等等 课程内容 开刊（即本节内容，已完成 2019年05月02日） 第一章，Datatables的6大特性 DOM属性的介绍 第二章，对于各种数据源该怎么使用Datatables？ Dom数据源 javascript数据 Ajax数据 服务器模式 第三章，打造和自己项目贴近的表格 info，paging，processing，lengthChange，searching 第四章，更方便的操作表格数据 ajax columns row draw page 实战——制作一个具有增删改查功能的表格 行内编辑 弹框编辑 内容会有变动，只有视频录好后就定下内容，本目录会不断更新直到全部完结 课程视频 由于服务器不支持视频播放，鼠标右键点我，另存为到本地即可 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言</summary></entry><entry><title type="html">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo</title><link href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="alternate" type="text/html" title="Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found</id><content type="html" xml:base="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html">&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
 
 &lt;p&gt;项目中需要使用swagger提供api文档，于是加上依赖：&lt;/p&gt;
 
@@ -96,8 +176,6 @@
 &lt;p&gt;我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面
 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键&lt;code class=&quot;highlighter-rouge&quot;&gt;put into /WEB_INFO/lib&lt;/code&gt;，
 再次启动tomcat，问题得到解决。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/java/artifacts.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
@@ -1086,37 +1164,4 @@ https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
   &lt;ul&gt;
     &lt;li&gt;https://sspai.com/post/44173&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="touchpad" /><summary type="html">触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器 不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：</summary></entry><entry><title type="html">如何修改macOS的鼠标滚轮方向</title><link href="http://www.thxopen.com/mac/2018/11/03/hardware-how-to-change-wheel-direction-in-mac.html" rel="alternate" type="text/html" title="如何修改macOS的鼠标滚轮方向" /><published>2018-11-03T00:00:00+08:00</published><updated>2018-11-03T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/03/hardware-how-to-change-wheel-direction-in-mac</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/03/hardware-how-to-change-wheel-direction-in-mac.html">&lt;p&gt;说到鼠标滚轮，这应该是每个从windows转向mac后要遇到的问题，因为两个操作是反的，如果习惯了windows的操作方式，使用mac的时候会很不习惯。&lt;/p&gt;
-
-&lt;p&gt;如何修改滚轮的方向和windows保持一致呢？&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;【系统偏好设置】 - 【鼠标】 - 【滚动方向：自然】，取消勾选即可&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/mac-wheel-config/1.png&quot; alt=&quot;系统偏好设置&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/mac-wheel-config/2.png&quot; alt=&quot;鼠标&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/mac-wheel-config/3.png&quot; alt=&quot;滚动方向&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;苹果的逻辑是：
-你滚动鼠标滚轮是在控制屏幕和触摸板的逻辑是一致的，想把屏幕下面的内容拉出来，自然就该向上拉屏幕，
-也就要向上滚动鼠标滚轮——相当于直接把窗帘撩起来。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;微软的逻辑是：
-你滚动鼠标滚轮是在控制屏幕上的滚动条滚动条当然是向下拉才
-能把内容拉上去——相当于是通过拉窗户旁边的线卷起窗帘。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Reference:&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;https://www.zhihu.com/question/22096248/answer/22485346&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="wheel" /><category term="direction" /><summary type="html">说到鼠标滚轮，这应该是每个从windows转向mac后要遇到的问题，因为两个操作是反的，如果习惯了windows的操作方式，使用mac的时候会很不习惯。 如何修改滚轮的方向和windows保持一致呢？</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="touchpad" /><summary type="html">触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器 不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：</summary></entry></feed>
