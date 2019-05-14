@@ -1,4 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-05-08T15:33:45+08:00</updated><id>http://www.thxopen.com/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">在linux下从jar中替换、修改文件</title><link href="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="alternate" type="text/html" title="在linux下从jar中替换、修改文件" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux</id><content type="html" xml:base="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html">&lt;h2 id=&quot;修改文件内容&quot;&gt;修改文件内容&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-05-14T20:05:46+08:00</updated><id>http://www.thxopen.com/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">请停止学习框架 - Stop Learning Frameworks</title><link href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="alternate" type="text/html" title="请停止学习框架 - Stop Learning Frameworks" /><published>2019-05-14T00:00:00+08:00</published><updated>2019-05-14T00:00:00+08:00</updated><id>http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks</id><content type="html" xml:base="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html">&lt;p&gt;最近阅读到一篇文章，原文标题&lt;a href=&quot;https://sizovs.net/2018/12/17/stop-learning-frameworks/&quot;&gt;《Stop Learning Frameworks》&lt;/a&gt;，
+读完之后感触很深，很赞同作者的观点，这里分享这篇文章，同时练习一下英语翻译，学习一些专业上的英语词汇和表达。下面是译文：&lt;/p&gt;
+
+&lt;h2 id=&quot;请停止学习框架&quot;&gt;请停止学习框架&lt;/h2&gt;
+
+&lt;p&gt;我们是开发者。我们需要与最新的技术保持同步。每天，我们学习编程语言，框架和第三方库。知道越前沿的技术越好。&lt;/p&gt;
+
+&lt;p&gt;与Angular, React, Vue, Riot, Ember, Knockout这些技术保持同步是很有趣的。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;但是我们在浪费时间.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;时间是我们最宝贵的财富。是有限的，不能再生，而且你不能买到更多。&lt;/p&gt;
+
+&lt;p&gt;技术，比如时尚，它像光速一样在变化。为了抓住这些，我们必须奔跑。这场比赛没有赢家，因为比赛没有终点。&lt;/p&gt;
+
+&lt;p&gt;我的导师有一次给我上了一堂课：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;导师：“Ed，你在干什么？”&lt;/li&gt;
+    &lt;li&gt;我（带着一种骄傲）：“我在读一本书，关于使用GWT构建现代java应用程序。”&lt;/li&gt;
+    &lt;li&gt;导师：“为了什么？”&lt;/li&gt;
+    &lt;li&gt;我：“作为一个java开发，我需要跟上潮流，而GWT就是潮流。”&lt;/li&gt;
+    &lt;li&gt;导师：“在GWT之前你读过什么技术的书籍么？”&lt;/li&gt;
+    &lt;li&gt;我：“是一本长达500页的 Apache Tapestry 书，Tapestry 之前是潮流”&lt;/li&gt;
+    &lt;li&gt;导师：“Tapestry 现在任然是潮流么？”&lt;/li&gt;
+    &lt;li&gt;我：“不再是，GWT现在是潮流”&lt;/li&gt;
+    &lt;li&gt;导师：“你能重新使用 Tapestry 技能解决现在的问题么？ ”&lt;/li&gt;
+    &lt;li&gt;我：“不行，目前没有人使用它。 ”&lt;/li&gt;
+    &lt;li&gt;导师：“Tapestry 知识能帮你更好的理解 GWT么？ ”&lt;/li&gt;
+    &lt;li&gt;我：“ 不，它不行。但是我看到了一些重叠的模式。 ”&lt;/li&gt;
+    &lt;li&gt;导师：“ 那个是设计模式，它能帮你解决现在的问题么？ ”&lt;/li&gt;
+    &lt;li&gt;我：“ 是的，大多数都可以 ”&lt;/li&gt;
+    &lt;li&gt;导师：“ 新的技术层出不穷，消失也是常有的。但是他们有一些共同点。设置正确的优先级 ，投资80%的时间在学习基础知识上面，剩余的20%学习，库和工具。”&lt;/li&gt;
+    &lt;li&gt;我：“ 额。。 只花20%的时间学习框架，库和工具？”&lt;/li&gt;
+    &lt;li&gt;导师：“是的，反正你在工作中解决问题的时候会学习到”&lt;/li&gt;
+    &lt;li&gt;我：“ 谢谢 ”&lt;/li&gt;
+    &lt;li&gt;导师：“ 稍后再感谢 ”&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个建议改变了我的生活。我丢掉了书柜上所有框架的书，罪恶感从50减到0，终于解脱了！&lt;/p&gt;
+
+&lt;p&gt;然后我买了一些经久不衰的书籍。这些书占据了我80%的学习时间：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Pragmatic Programmer 程序员修炼之道: 从小工到专家&lt;/li&gt;
+  &lt;li&gt;Clean Code  代码整洁之道&lt;/li&gt;
+  &lt;li&gt;The Clean Coder 程序员的职业素养&lt;/li&gt;
+  &lt;li&gt;Domain-Driven Design 领域驱动设计&lt;/li&gt;
+  &lt;li&gt;Growing Object-Oriented Software, Guided by Tests 测试驱动的面向对象软件开发&lt;/li&gt;
+  &lt;li&gt;Continuous Delivery 持续交付&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://sizovs.net/2019/03/17/the-best-books-all-software-developers-must-read/&quot;&gt;查看所有的书籍列表&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我还买了一本当前技术的书籍。根据“林迪效应”，spring框架必须是一个好的投资：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;技术预期寿命和它们目前已经存在的时间成正比。每多生存一段时间，它的剩余预期寿命就会增加一点&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;技术在市场上存活的时间越长，投资就越安全。&lt;/p&gt;
+
+&lt;p&gt;不要急于学习新的技术，它很有可能会死。&lt;/p&gt;
+
+&lt;p&gt;时间将会展示那些技术值得投资。时间是您最好的顾问。你要学会等待。&lt;/p&gt;
+
+&lt;p&gt;从那以后的十年，我帮助了50个不同的软件项目。感谢导师的建议，我学到的一切都可以在公司，团队和行业适用。我学习的知识今天任然有用。
+&lt;strong&gt;我没有浪费我的时间&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;所有的项目看起来都不一样，但如果你看一下项目的内部：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;编程语言不一样，但设计是一样的&lt;/li&gt;
+  &lt;li&gt;框架不一样，从始至终就那些设计模式&lt;/li&gt;
+  &lt;li&gt;开发人员不一样，但与人交往是的规则是一样的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;请记住，框架，库和工具这些层出不穷，消失也是常有的。时间是宝贵的。&lt;/p&gt;
+
+&lt;p&gt;把你的黄金时间投入到可移植的总是相关的技能上面。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;del&gt;微服务&lt;/del&gt;  演进式架构&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;新的语言&lt;/del&gt;  代码整洁之道，设计模式，领域驱动设计&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;LeSS, SAFe&lt;/del&gt;  精益制造原则&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;Hystrix&lt;/del&gt;  容错模式&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;Docker&lt;/del&gt;  持续交付&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;Angular&lt;/del&gt;  WEB，HTTP 和 REST&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;之所以对这个感触很深，我觉得我就陷入了这个死循环中。大数据热门，我就买了很多关于大数据的书籍，Hadoop，Hive，spark，Hbase等等。
+厚厚的几本书放在那儿吃灰，至今没有翻阅，即便是看了也只是学会了几个工具的使用，对于真正的MapReduce，HDFS这些基础的又理解了多少呢？为什么这些简单的道理自己不能误出来呢？&lt;/p&gt;
+
+&lt;p&gt;万变不离其宗，所以只有基础扎实，工作中解决问题才能游刃有余。&lt;/p&gt;
+
+&lt;p&gt;人与人之间交往好，和家人、朋友、同事都能相处好。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="翻译" /><category term="好文" /><summary type="html">最近阅读到一篇文章，原文标题《Stop Learning Frameworks》， 读完之后感触很深，很赞同作者的观点，这里分享这篇文章，同时练习一下英语翻译，学习一些专业上的英语词汇和表达。下面是译文： 请停止学习框架 我们是开发者。我们需要与最新的技术保持同步。每天，我们学习编程语言，框架和第三方库。知道越前沿的技术越好。 与Angular, React, Vue, Riot, Ember, Knockout这些技术保持同步是很有趣的。 但是我们在浪费时间. 时间是我们最宝贵的财富。是有限的，不能再生，而且你不能买到更多。 技术，比如时尚，它像光速一样在变化。为了抓住这些，我们必须奔跑。这场比赛没有赢家，因为比赛没有终点。 我的导师有一次给我上了一堂课： 导师：“Ed，你在干什么？” 我（带着一种骄傲）：“我在读一本书，关于使用GWT构建现代java应用程序。” 导师：“为了什么？” 我：“作为一个java开发，我需要跟上潮流，而GWT就是潮流。” 导师：“在GWT之前你读过什么技术的书籍么？” 我：“是一本长达500页的 Apache Tapestry 书，Tapestry 之前是潮流” 导师：“Tapestry 现在任然是潮流么？” 我：“不再是，GWT现在是潮流” 导师：“你能重新使用 Tapestry 技能解决现在的问题么？ ” 我：“不行，目前没有人使用它。 ” 导师：“Tapestry 知识能帮你更好的理解 GWT么？ ” 我：“ 不，它不行。但是我看到了一些重叠的模式。 ” 导师：“ 那个是设计模式，它能帮你解决现在的问题么？ ” 我：“ 是的，大多数都可以 ” 导师：“ 新的技术层出不穷，消失也是常有的。但是他们有一些共同点。设置正确的优先级 ，投资80%的时间在学习基础知识上面，剩余的20%学习，库和工具。” 我：“ 额。。 只花20%的时间学习框架，库和工具？” 导师：“是的，反正你在工作中解决问题的时候会学习到” 我：“ 谢谢 ” 导师：“ 稍后再感谢 ” 这个建议改变了我的生活。我丢掉了书柜上所有框架的书，罪恶感从50减到0，终于解脱了！ 然后我买了一些经久不衰的书籍。这些书占据了我80%的学习时间： The Pragmatic Programmer 程序员修炼之道: 从小工到专家 Clean Code 代码整洁之道 The Clean Coder 程序员的职业素养 Domain-Driven Design 领域驱动设计 Growing Object-Oriented Software, Guided by Tests 测试驱动的面向对象软件开发 Continuous Delivery 持续交付 查看所有的书籍列表 我还买了一本当前技术的书籍。根据“林迪效应”，spring框架必须是一个好的投资： 技术预期寿命和它们目前已经存在的时间成正比。每多生存一段时间，它的剩余预期寿命就会增加一点 技术在市场上存活的时间越长，投资就越安全。 不要急于学习新的技术，它很有可能会死。 时间将会展示那些技术值得投资。时间是您最好的顾问。你要学会等待。 从那以后的十年，我帮助了50个不同的软件项目。感谢导师的建议，我学到的一切都可以在公司，团队和行业适用。我学习的知识今天任然有用。 我没有浪费我的时间。 所有的项目看起来都不一样，但如果你看一下项目的内部： 编程语言不一样，但设计是一样的 框架不一样，从始至终就那些设计模式 开发人员不一样，但与人交往是的规则是一样的 请记住，框架，库和工具这些层出不穷，消失也是常有的。时间是宝贵的。 把你的黄金时间投入到可移植的总是相关的技能上面。 微服务 演进式架构 新的语言 代码整洁之道，设计模式，领域驱动设计 LeSS, SAFe 精益制造原则 Hystrix 容错模式 Docker 持续交付 Angular WEB，HTTP 和 REST 之所以对这个感触很深，我觉得我就陷入了这个死循环中。大数据热门，我就买了很多关于大数据的书籍，Hadoop，Hive，spark，Hbase等等。 厚厚的几本书放在那儿吃灰，至今没有翻阅，即便是看了也只是学会了几个工具的使用，对于真正的MapReduce，HDFS这些基础的又理解了多少呢？为什么这些简单的道理自己不能误出来呢？ 万变不离其宗，所以只有基础扎实，工作中解决问题才能游刃有余。 人与人之间交往好，和家人、朋友、同事都能相处好。</summary></entry><entry><title type="html">在linux下从jar中替换、修改文件</title><link href="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="alternate" type="text/html" title="在linux下从jar中替换、修改文件" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux</id><content type="html" xml:base="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html">&lt;h2 id=&quot;修改文件内容&quot;&gt;修改文件内容&lt;/h2&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vi&lt;/code&gt;命令在linux下再熟悉不过了，搭配&lt;code class=&quot;highlighter-rouge&quot;&gt;unzip&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;zip&lt;/code&gt;还可以修改压缩包里的文件。&lt;/p&gt;
 
@@ -1072,225 +1173,4 @@ macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有
   &lt;p&gt;Reference:
 https://gist.github.com/estorgio/1d679f962e8209f8a9232f7593683265
 https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="ubuntu server" /><category term="文件夹共享" /><summary type="html">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</summary></entry><entry><title type="html">在虚拟机里安装Ubuntu Server 16</title><link href="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装Ubuntu Server 16" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/05/install-ubuntu-server-in-virtualbox.html">&lt;p&gt;服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。
-虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。
-对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;virtualbox&lt;/a&gt;（虚拟机软件）&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.ubuntu.com/download/alternative-downloads&quot;&gt;Ubuntu Server 下载页面&lt;/a&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso.torrent?_ga=2.238927552.1516861282.1544003123-1140686435.1544003123&quot;&gt;Ubuntu 16.04.5 Server (64-bit) 种子&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通过上面的连接，下载virtualbox和ubuntu server的安装镜像，我们就可以开始了&lt;/p&gt;
-
-&lt;h2 id=&quot;开始安装&quot;&gt;开始安装&lt;/h2&gt;
-
-&lt;h3 id=&quot;一配置虚拟机&quot;&gt;一，配置虚拟机&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，虚拟机名称和系统类型，这里系统类型选择【Linux】，版本选择【Ubuntu（64-bit）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/1.png&quot; alt=&quot;step 1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，内存大小，这里可以根据软件推荐的大小配置，我这里推荐的是1G（1024 MB），为了系统更加流畅，我调到 4G （4096 MB）。可以根据电脑的配置适当上调
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/2.png&quot; alt=&quot;step 2&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3，虚拟硬盘，选择【现在创建虚拟硬盘】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3.png&quot; alt=&quot;step 3&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-1，虚拟硬盘文件类型，选择【VDI（VirtualBox 磁盘映像）】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-1.png&quot; alt=&quot;step 3-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-2，存储在物理硬盘上，选择【动态分配】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-2.png&quot; alt=&quot;step 3-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-3，文件位置和大小，输入磁盘映像的文件名，或者保持默认，调整磁盘大小到10G
-  （因为是动态分配，这里如果选择超过电脑本身物理大小也没有关系，假设我选择了1T，代表最大不能超过该设定的值，文件实际大小是没有1T的。
-  所以尽量设置大一些，避免后面系统使用时间越长，占用空间也越大）
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/3-3.png&quot; alt=&quot;step 3-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，配置启动光盘，选择建好的虚拟机，点击【设置】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4.png&quot; alt=&quot;step 4&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-1，选择【存储】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-1.png&quot; alt=&quot;step 4-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-2，选中光驱，在右边操作界面点击【光盘】按钮
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-2.png&quot; alt=&quot;step 4-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-3，添加下载好的Ubuntu Server iso文件，点击【ok】
-  &lt;img src=&quot;/assets/images/post/mac/development/installubuntu/4-3.png&quot; alt=&quot;step 4-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，选择新建的虚拟机，点击【启动】，稍等片刻，进入到安装界面
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/5.png&quot; alt=&quot;step 5&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二安装ubuntu-server&quot;&gt;二，安装Ubuntu Server&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，进入安装界面，首先需要选择语言，这里选择【English】（这里不选择中文是因为安装会有问题，据说是一个bug）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/6.png&quot; alt=&quot;step 6&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，选择语言后，进入到ubuntu正式安装界面，选择【Install Ubuntu Server】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/7.png&quot; alt=&quot;step 7&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;3, 在正式安装之前，先看看 Ubuntu 安装程序主菜单，如果在安装过程中出现了问题，可以返回到主菜单，重试某些步骤
-（实际安装过程直接进入第四步，不会有此界面）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/8.png&quot; alt=&quot;step 8&quot; /&gt;
-    &lt;ul&gt;
-      &lt;li&gt;选择安装语言&lt;/li&gt;
-      &lt;li&gt;允许盲人使用盲人显示器访问软件&lt;/li&gt;
-      &lt;li&gt;配置键盘&lt;/li&gt;
-      &lt;li&gt;探测并挂在光盘&lt;/li&gt;
-      &lt;li&gt;装载 debconf 预配置文件&lt;/li&gt;
-      &lt;li&gt;从光盘加载安装程序组件&lt;/li&gt;
-      &lt;li&gt;改变 debconf 的优先级设置&lt;/li&gt;
-      &lt;li&gt;检测光盘的完整性&lt;/li&gt;
-      &lt;li&gt;保存调试日志&lt;/li&gt;
-      &lt;li&gt;允许 shell&lt;/li&gt;
-      &lt;li&gt;终止安装&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，选择安装语言，这里选择【English】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/9.png&quot; alt=&quot;step 9&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，选择你的位置，这里选择【United States】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/10.png&quot; alt=&quot;step 10&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;6，配置键盘布局，是否检测键盘布局，这里选择【No】 
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/11.png&quot; alt=&quot;step 11&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;7，配置键盘布局，选择键盘类型，这里选择【English（US）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/12.png&quot; alt=&quot;step 12&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;8，配置键盘布局，选择键盘布局，这里选择【English（US）】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/13.png&quot; alt=&quot;step 13&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;9，生效以上配置，需要等待一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/14.png&quot; alt=&quot;step 14&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;10，配置网络，设置hostname，这里输入【ubuntunode1.thxopen.com】，然后选择【Continue】(ps：目的是在其他机器上通过此hostname访问到主机，可以是任意的字符串)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/15.png&quot; alt=&quot;step 15&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;11，设置用户和密码，输入用户的全称，这里输入【ubuntu】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/16.png&quot; alt=&quot;step 16&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;12，设置用户和密码，输入用户的登录账号，这里输入【ubuntu】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/17.png&quot; alt=&quot;step 17&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;13，设置用户和密码，输入登录账号的密码，这里输入【12345678】，然后选择【Continue】（根据实际需求设置相应强度的密码）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/18.png&quot; alt=&quot;step 18&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;14，设置用户和密码，重复上一步输入的密码，这里输入【12345678】，然后选择【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/19.png&quot; alt=&quot;step 19&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;15，设置用户和密码，由于这里密码设置过于简单，提示是否要使用弱密码，这里选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/20.png&quot; alt=&quot;step 20&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;16，设置用户和密码，是否加密home目录，这里选择【No】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/21.png&quot; alt=&quot;step 21&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;17，生效以上配置，需要等一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/22.png&quot; alt=&quot;step 22&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;18，配置时钟，检测到当前时区是亚洲、重庆，这里选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/23.png&quot; alt=&quot;step 23&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;19，磁盘分区，分区方式，这里选择【Guided - use entire disk】使用全部磁盘
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/24.png&quot; alt=&quot;step 24&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;20，磁盘分区，选择用来分区的磁盘，这里选择【ATA VBOX HARDDISK】(前面新建虚拟机时候创建的)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/25.png&quot; alt=&quot;step 25&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;21，磁盘分区，使用默认的分区配置，这里选择【Yes】使用默认的配置来分区磁盘
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/26.png&quot; alt=&quot;step 26&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;22，生效以上配置，需要等待一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/27.png&quot; alt=&quot;step 27&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;23，配置包管理器，是否设置代理服务器，这里留空，不填写，直接【Continue】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/28.png&quot; alt=&quot;step 28&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;24，配置自动升级，这里选择【No automatic updates】（根据自己的需要是否自动更新系统保持系统安全）
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/29.png&quot; alt=&quot;step 29&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;25，选择需要安装的软件，这里勾选【standard system utilities】和【OpenSSH server】，然后选择【Continue】(方向键切换，空格键选择或取消)
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/30.png&quot; alt=&quot;step 30&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;26，生效以上配置，需要等一会儿
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/31.png&quot; alt=&quot;step 31&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;27，安装GRUB引导装载程序在磁盘上，选择【Yes】
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/32.png&quot; alt=&quot;step 32&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;28，安装完成，选择【Continue】系统自动重启
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/33.png&quot; alt=&quot;step 33&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;29，重启后自动进入到登录界面
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/34.png&quot; alt=&quot;step 34&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;30，输入前面步骤中设置的账号【ubuntu】和密码【12345678】，登录到系统
-&lt;img src=&quot;/assets/images/post/mac/development/installubuntu/35.png&quot; alt=&quot;step 35&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Reference:&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;https://www.linuxidc.com/Linux/2017-11/148341.htm&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="mac" /><category term="virtualbox" /><summary type="html">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="ubuntu server" /><category term="文件夹共享" /><summary type="html">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</summary></entry></feed>
