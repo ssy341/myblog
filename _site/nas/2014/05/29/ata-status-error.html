@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="freenas启动过程中屏幕不断提示ata status error">
-<meta property="og:url" content="http://www.thxopen.com/nas/2014/05/29/ata-status-error.html">
+<meta property="og:url" content="http://localhost:4000/nas/2014/05/29/ata-status-error.html">
 
 
   <meta property="og:description" content="在这之前我有一个疑问，自己没弄懂，如果你知道，请求你在下面留下你的见解，非常感谢！问题就是freenas有必要安装在硬盘上么？官方提供了三种安装方法:  iso-刻录在光盘上然后安装在其他介质上面，比如硬盘、闪存；  img，直接用工具写入到u盘上，u盘插上主机，从u盘启动即可运行freenas；  虚拟机安装文件，下载后，直接用虚拟机软件读取即可。如果freenas要用阵列，那么freenas不能安装在属于阵列的磁盘中，我的主板支持阵列，一共四个sata接口，如果接4个硬盘组成阵列，那freenas只能安装在其他存储设备上，比如u盘，移动硬盘。这么弄我感觉有点别扭，系统的运行肯定不会那么流畅，现在给我的感觉就是要么用阵列，要么不用阵列，好矛盾啊，谁能解答我这个疑问？言归正传，下面我要说的就是我在实验把freenas安装在一个单独的硬盘上遇到的问题和思考我先把从官方下载好的iso镜像刻录在光盘上（文章下面有下载地址），然后设置从光盘启动，电脑有一个80G的硬盘，安装过程很简单，光盘启动后，最后会停留在一个界面，一共四个选项：  第一是安装/升级  第二是进入shell  第三是重启  第四是关闭选择第一项后，直接提示当前识别到的硬盘，一路ok下来(此操作会格式化硬盘数据，操作前请备份好数据)。根据提示信息，最后确定安装freenas到该硬盘，当我点ok的时候，报错，安装失败。这时候我想起在光盘启动freenas的时候，屏幕一直不停的提示”ATA STATUS ERROR”，从提示来看和硬盘有关系，但是不知是什么问题，google一番，还是找到问题解决办法(原文在文章下方)，其中有一楼网友说道是AHCI的问题，要把硬盘模式切换为IDE模式。我切换硬盘模式后，freenas安装成功。帖子中还有其他说法，我没有仔细查看。这个时候通过浏览器访问freenas地址，既可以看到freenas的web GUI界面。之前只接用u盘启动，使用比较起来，感觉安装在硬盘的freenas操作起来要比u盘上的快一些，不知道是错觉还是真的有提升？但是这个时候80g的硬盘就全部用来安装freenas了，如果需要安装插件或者开启共享，需要再挂载其他硬盘，感觉装硬盘有点浪费空间啊，在安装的时候也没有相关操作是划分分区的，或者是我还没找到方法。这样看来把freenas装在u盘上是目前对于我来说最佳办法，不知道大家是不是也是这么做的呢？参考:CAM status: ATA Status ErrorFreeNAS-9.2.1.5-RELEASE-x64.iso">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://www.thxopen.com/nas/2014/05/29/ata-status-error.html">
+<link rel="canonical" href="http://localhost:4000/nas/2014/05/29/ata-status-error.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://www.thxopen.com",
+      "url": "http://localhost:4000",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
+        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
+              <a href="http://localhost:4000/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://www.thxopen.com/tags/" >按标签</a>
+              <a href="http://localhost:4000/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://www.thxopen.com/categories/" >按分类</a>
+              <a href="http://localhost:4000/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://www.thxopen.com/about" >关于</a>
+              <a href="http://localhost:4000/about" >关于</a>
             </li>
           
         </ul>
@@ -175,7 +175,7 @@
       
         
         <a href="http://www.thxopen.com">
-          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
         </a>
       
     </div>
@@ -384,7 +384,7 @@
     
       
       
-      <a href="http://www.thxopen.com/tags/#freenas" class="page__taxonomy-item" rel="tag">freenas</a>
+      <a href="http://localhost:4000/tags/#freenas" class="page__taxonomy-item" rel="tag">freenas</a>
     
     </span>
   </p>
@@ -405,7 +405,7 @@
     
       
       
-      <a href="http://www.thxopen.com/categories/#nas" class="page__taxonomy-item" rel="tag">nas</a>
+      <a href="http://localhost:4000/categories/#nas" class="page__taxonomy-item" rel="tag">nas</a>
     
     </span>
   </p>
@@ -421,72 +421,30 @@
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=freenas%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%B1%8F%E5%B9%95%E4%B8%8D%E6%96%AD%E6%8F%90%E7%A4%BAata+status+error%20http%3A%2F%2Fwww.thxopen.com%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=freenas%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%B1%8F%E5%B9%95%E4%B8%8D%E6%96%AD%E6%8F%90%E7%A4%BAata+status+error%20http%3A%2F%2Flocalhost%3A4000%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fnas%2F2014%2F05%2F29%2Fata-status-error.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://www.thxopen.com/jekyll/2014/04/25/i-and-jekyll.html" class="pagination--pager" title="jekyll初级入门-jekyll安装运行
+      <a href="http://localhost:4000/jekyll/2014/04/25/i-and-jekyll.html" class="pagination--pager" title="jekyll初级入门-jekyll安装运行
 ">向前</a>
     
     
-      <a href="http://www.thxopen.com/life/2014/06/09/thinking.html" class="pagination--pager" title="8年前的我
+      <a href="http://localhost:4000/life/2014/06/09/thinking.html" class="pagination--pager" title="8年前的我
 ">向后</a>
     
   </nav>
 
     </div>
 
-    
-      <div class="page__comments">
-  
-  
-
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-      <section>
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- myblog -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-2101546703939638"
-             data-ad-slot="1759638498"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </section>
-      <section id="custom-comments">
-
-        <div id="gitalk-container"></div>
-
-        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-        <script src="/assets/js/md5.js"></script>
-
-        <script>
-            const gitalk = new Gitalk({
-                clientID: '7bebf50c943165d34c25',
-                clientSecret: '1450558ddd30817d1ed9b26f8c0c3a4638022035',
-                repo: 'myblog',
-                owner: 'ssy341',
-                admin: ['ssy341'],
-                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
-                distractionFreeMode: false  // Facebook-like distraction free mode
-            })
-
-            gitalk.render('gitalk-container')
-        </script>
-      </section>
-  
-</div>
     
   </article>
 
@@ -505,7 +463,7 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
+        <a href="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
 </a>
       
     </h2>
@@ -528,7 +486,7 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="permalink">在linux下从jar中替换、修改文件
+        <a href="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="permalink">在linux下从jar中替换、修改文件
 </a>
       
     </h2>
@@ -558,7 +516,7 @@ vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩�
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="permalink">使用DataTables”武装”你的html表格——开刊
+        <a href="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="permalink">使用DataTables”武装”你的html表格——开刊
 </a>
       
     </h2>
@@ -582,7 +540,7 @@ DataTables中文网，没有你们，Datat...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
+        <a href="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
 </a>
       
     </h2>
@@ -645,7 +603,7 @@ DataTables中文网，没有你们，Datat...</p>
     
     
     
-    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -655,15 +613,15 @@ DataTables中文网，没有你们，Datat...</p>
     </div>
 
     
-  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
-<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
-<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
 
 
 
