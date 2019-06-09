@@ -1,4 +1,131 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-05-05T08:22:44+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">使用DataTables”武装”你的html表格——开刊</title><link href="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="alternate" type="text/html" title="使用DataTables&quot;武装&quot;你的html表格——开刊" /><published>2019-05-02T00:00:00+08:00</published><updated>2019-05-02T00:00:00+08:00</updated><id>http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger</id><content type="html" xml:base="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-06-09T12:34:22+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">使用OBS录制屏幕</title><link href="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html" rel="alternate" type="text/html" title="使用OBS录制屏幕" /><published>2019-06-08T00:00:00+08:00</published><updated>2019-06-08T00:00:00+08:00</updated><id>http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs</id><content type="html" xml:base="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html">&lt;p&gt;由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现&lt;a href=&quot;https://obsproject.com/&quot;&gt;OBS&lt;/a&gt;非常好。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;OBS Studio - Free and open source software for live streaming and screen recording&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;OBS Studio - 直播和屏幕录制的免费开源软件&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个简直太合我意了（偷笑中），不仅免费，而且功能强大，独乐了不如众乐乐，分享下如何使用OBS录制自己的屏幕。&lt;/p&gt;
+
+&lt;h2 id=&quot;下载安装&quot;&gt;下载安装&lt;/h2&gt;
+
+&lt;p&gt;你可以通过&lt;a href=&quot;https://obsproject.com/download&quot;&gt;官网&lt;/a&gt;下载对应的版本，支持windows、mac和linux。本次选择mac版作为例子来讲解。&lt;/p&gt;
+
+&lt;h2 id=&quot;录制屏幕&quot;&gt;录制屏幕&lt;/h2&gt;
+
+&lt;h3 id=&quot;指定窗口录制&quot;&gt;指定窗口录制&lt;/h3&gt;
+
+&lt;p&gt;和其他录制屏幕软件不同的是，OBS它可以指定应用程序窗口来录制，这样即便你在操作其他软件，也不会影响到录制&lt;/p&gt;
+
+&lt;p&gt;软件打开后，默认会有一个场景，在对应场景里选中【窗口捕获】，点击下方的⚙配置选择窗口捕获来源&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/windows-target-1.png&quot; alt=&quot;windows-target-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在下拉列表里可以选择你要捕获的窗口，每个应用程序都会列在这里&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/windows-target-2.png&quot; alt=&quot;windows-target-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过上面两个步骤的设置，就可以录制选定窗口&lt;/p&gt;
+
+&lt;h3 id=&quot;不同应用程序切换&quot;&gt;不同应用程序切换&lt;/h3&gt;
+
+&lt;p&gt;在录制Datatables入门第二期视频时，会在ppt和IDE应用程序之间来回切换，这样就需要使用场景来实现。&lt;/p&gt;
+
+&lt;p&gt;首先，点击左下角场景区域➕，新建一个场景，按照自己的需要命名&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/scene-1.png&quot; alt=&quot;scene-1&quot; /&gt;
+&lt;img src=&quot;/assets/images/post/tools/obs/scene-2.png&quot; alt=&quot;scene-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其次，点击来源区域➕，新建捕获来源
+&lt;img src=&quot;/assets/images/post/tools/obs/target-1.png&quot; alt=&quot;target-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择窗口捕获
+&lt;img src=&quot;/assets/images/post/tools/obs/target-2.png&quot; alt=&quot;target-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;按照自己的需要命名
+&lt;img src=&quot;/assets/images/post/tools/obs/target-3.png&quot; alt=&quot;target-3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择窗口捕获来源
+&lt;img src=&quot;/assets/images/post/tools/obs/target-4.png&quot; alt=&quot;target-4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最后就有两个场景可供录制
+&lt;img src=&quot;/assets/images/post/tools/obs/target-5.png&quot; alt=&quot;target-5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们为场景指定不同的快捷键，这样切换场景的时候就不用回到OBS软件操作&lt;/p&gt;
+
+&lt;p&gt;点击上图右下方【设置】按钮，进入【热键】设置部分，给场景切换指定快捷键，这样在录制的时候我们可以随时切换录制那个场景&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/settings-1.png&quot; alt=&quot;settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：不要设置和其他软件冲突的快捷键，不然会起冲突导致切换场景失效&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;录制电脑输出声音&quot;&gt;录制电脑输出声音&lt;/h2&gt;
+
+&lt;p&gt;默认设置下，视频录制的声音来自麦克风&lt;/p&gt;
+
+&lt;p&gt;如果我在电脑上播放歌曲，这时候声音从扬声器播放，然后被麦克风采集（注意看下图两处红色框框，上方的代表在播放音乐，下方代表麦克风采集到扬声器声音）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/sound-1.png&quot; alt=&quot;sound-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果我想电脑的声音直接被OBS采集而不是通过麦克风采集，这里需要用到虚拟声卡 —— Soundflower&lt;/p&gt;
+
+&lt;h3 id=&quot;第一步安装soundflower&quot;&gt;第一步：安装Soundflower&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Soundflower - a free audio system extension that allows applications to pass audio to other applications.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Soundflower - 一款免费的音频系统扩展，允许应用程序将音频传递到其他的应用程序。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先下载安装&lt;a href=&quot;https://soundflower.en.softonic.com/mac&quot;&gt;Soundflower&lt;/a&gt;，安装完成后打开【Launchpad】找到【音频MIDI设置】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/midi-settings-1.png&quot; alt=&quot;midi-settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击左下角➕ =》【创建多输出设备】=》点击标题处可以命名，这里重命名为【obs】=》勾选【内建输出】和【Soundflower(2ch)】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/midi-settings-2.png&quot; alt=&quot;midi-settings-2&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;解释：这里创建多输出设备的用意在于在录制屏幕的时候同时可以听到电脑输出的声音，如果不设置录制视频的时候自己听不到声音，但视频可以采集到电脑输出的声音&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;第二步配置obs&quot;&gt;第二步：配置OBS&lt;/h3&gt;
+
+&lt;p&gt;上面配置好的虚拟声卡后，在OBS【设置】界面  =》 【音频】 =》 桌面音频设备选择【Soundflower(ch2)】 =》 麦克风/辅助音频设备选择【已禁用】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/obs-settings-1.png&quot; alt=&quot;obs-settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后电脑声音输出选择第一步新建的【obs】虚拟声卡&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/mac-sound-settings-1.png&quot; alt=&quot;mac-sound-settings-1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;解释：由于obs是两个设备，一个是内置的扬声器，一个是虚拟声卡Soundflower(2ch)，这里选择输出设备为obs意味着声卡将会把声音从这两个设备输出，
+而在上面OBS 【音频】 设置里，我们把桌面音频设备选择的是Soundflower(2ch)，即我们想要的，录制的声音直接从电脑声卡采集，而不是从麦克风&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ps: 在选择obs输出之前，请先调好声音大小，因为选择obs后将不能修改声音&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通过上面两步设置，我们录制屏幕的时候，声音就可以直接采集从电脑声卡输出的声音了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/obs-record-1.png&quot; alt=&quot;obs-record-1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;第一个红框表示电脑正在播放音乐&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;第二个红框表示OBS采集到声卡的输出&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="obs" /><category term="tools" /><category term="录屏软件" /><summary type="html">由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现OBS非常好。 OBS Studio - Free and open source software for live streaming and screen recording OBS Studio - 直播和屏幕录制的免费开源软件 这个简直太合我意了（偷笑中），不仅免费，而且功能强大，独乐了不如众乐乐，分享下如何使用OBS录制自己的屏幕。 下载安装 你可以通过官网下载对应的版本，支持windows、mac和linux。本次选择mac版作为例子来讲解。 录制屏幕 指定窗口录制 和其他录制屏幕软件不同的是，OBS它可以指定应用程序窗口来录制，这样即便你在操作其他软件，也不会影响到录制 软件打开后，默认会有一个场景，在对应场景里选中【窗口捕获】，点击下方的⚙配置选择窗口捕获来源 在下拉列表里可以选择你要捕获的窗口，每个应用程序都会列在这里 通过上面两个步骤的设置，就可以录制选定窗口 不同应用程序切换 在录制Datatables入门第二期视频时，会在ppt和IDE应用程序之间来回切换，这样就需要使用场景来实现。 首先，点击左下角场景区域➕，新建一个场景，按照自己的需要命名 其次，点击来源区域➕，新建捕获来源 选择窗口捕获 按照自己的需要命名 选择窗口捕获来源 最后就有两个场景可供录制 我们为场景指定不同的快捷键，这样切换场景的时候就不用回到OBS软件操作 点击上图右下方【设置】按钮，进入【热键】设置部分，给场景切换指定快捷键，这样在录制的时候我们可以随时切换录制那个场景 注意：不要设置和其他软件冲突的快捷键，不然会起冲突导致切换场景失效 录制电脑输出声音 默认设置下，视频录制的声音来自麦克风 如果我在电脑上播放歌曲，这时候声音从扬声器播放，然后被麦克风采集（注意看下图两处红色框框，上方的代表在播放音乐，下方代表麦克风采集到扬声器声音） 如果我想电脑的声音直接被OBS采集而不是通过麦克风采集，这里需要用到虚拟声卡 —— Soundflower 第一步：安装Soundflower Soundflower - a free audio system extension that allows applications to pass audio to other applications. Soundflower - 一款免费的音频系统扩展，允许应用程序将音频传递到其他的应用程序。 首先下载安装Soundflower，安装完成后打开【Launchpad】找到【音频MIDI设置】 点击左下角➕ =》【创建多输出设备】=》点击标题处可以命名，这里重命名为【obs】=》勾选【内建输出】和【Soundflower(2ch)】 解释：这里创建多输出设备的用意在于在录制屏幕的时候同时可以听到电脑输出的声音，如果不设置录制视频的时候自己听不到声音，但视频可以采集到电脑输出的声音 第二步：配置OBS 上面配置好的虚拟声卡后，在OBS【设置】界面 =》 【音频】 =》 桌面音频设备选择【Soundflower(ch2)】 =》 麦克风/辅助音频设备选择【已禁用】 然后电脑声音输出选择第一步新建的【obs】虚拟声卡 解释：由于obs是两个设备，一个是内置的扬声器，一个是虚拟声卡Soundflower(2ch)，这里选择输出设备为obs意味着声卡将会把声音从这两个设备输出， 而在上面OBS 【音频】 设置里，我们把桌面音频设备选择的是Soundflower(2ch)，即我们想要的，录制的声音直接从电脑声卡采集，而不是从麦克风 ps: 在选择obs输出之前，请先调好声音大小，因为选择obs后将不能修改声音 通过上面两步设置，我们录制屏幕的时候，声音就可以直接采集从电脑声卡输出的声音了 第一个红框表示电脑正在播放音乐 第二个红框表示OBS采集到声卡的输出</summary></entry><entry><title type="html">使用DataTables”武装”你的html表格——开刊</title><link href="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="alternate" type="text/html" title="使用DataTables&quot;武装&quot;你的html表格——开刊" /><published>2019-05-02T00:00:00+08:00</published><updated>2019-05-02T00:00:00+08:00</updated><id>http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger</id><content type="html" xml:base="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
 
 &lt;p&gt;三年前，&lt;a href=&quot;http://datatables.club/blog/2016/06/04/to-reader.html&quot;&gt;《致在使用DataTables的小伙伴》&lt;/a&gt;，看到努力的自己，我想感谢我自己。
 谢谢你，谢谢一直努力的你！&lt;/p&gt;
@@ -176,6 +303,8 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 &lt;p&gt;我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面
 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键&lt;code class=&quot;highlighter-rouge&quot;&gt;put into /WEB_INFO/lib&lt;/code&gt;，
 再次启动tomcat，问题得到解决。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/java/artifacts.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
@@ -1117,51 +1246,4 @@ https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
   &lt;ul&gt;
     &lt;li&gt;https://www.linuxidc.com/Linux/2017-11/148341.htm&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="mac" /><category term="virtualbox" /><summary type="html">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。</summary></entry><entry><title type="html">如何修改macOS的触控板滚动方向，点击行为和锁定</title><link href="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html" rel="alternate" type="text/html" title="如何修改macOS的触控板滚动方向，点击行为和锁定" /><published>2018-11-04T00:00:00+08:00</published><updated>2018-11-04T00:00:00+08:00</updated><id>http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function</id><content type="html" xml:base="http://www.thxopen.com/mac/2018/11/04/hardware-touch-pad-function.html">&lt;p&gt;触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器&lt;/p&gt;
-
-&lt;p&gt;不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;触摸板控制滚轮&quot;&gt;触摸板控制滚轮&lt;/h2&gt;
-
-&lt;p&gt;在windows下虽然鼠标的滚轮是随着滚动条的方向，但是在触摸板上却是跟着屏幕内容滚动（联想yoga 910 就是这样），用了mac后才发现这个叫自然滚动，
-如果发现滚动方向别扭通过下面的设置更改回来。&lt;/p&gt;
-
-&lt;p&gt;在mac下进入到【系统偏好设置】 - 【触控板】 - 【滚动缩放】 - 【滚动方向：自然】，勾选上&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/1.png&quot; alt=&quot;系统偏好设置&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/2.png&quot; alt=&quot;触控板&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;轻触点击&quot;&gt;轻触点击&lt;/h2&gt;
-
-&lt;p&gt;习惯了windows的触控板后，轻触就是鼠标左键点击，但mac默认不是这样的，必须要按下触控板才能点击，让我感觉到很不习惯。通过下面的设置可以达到我的要求&lt;/p&gt;
-
-&lt;p&gt;同样还是在【系统偏好设置】 - 【触控板】- 【光标与点按】 - 【轻点来点按】，勾选上&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/3.png&quot; alt=&quot;触控板&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;连续轻触两下锁定&quot;&gt;连续轻触两下锁定&lt;/h2&gt;
-
-&lt;p&gt;在windows下还有一个操作已经习惯了，前面是轻触一下代表点按，这下要说的是鼠标点住左键不放（轻触两下触控板完成），mac下默认不是这样，
-想要拖动窗口，或者选中文字需要按照下面的设置才能解决&lt;/p&gt;
-
-&lt;p&gt;【系统偏好设置】 - 【辅助功能】- 【鼠标与触控板】 - 【触控板选项】 - 【启动拖拽】，勾选上，并且选择【三指拖移】
- &lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/4.png&quot; alt=&quot;触控板&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/5.png&quot; alt=&quot;触控板&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/hardware/touch-pad-function/6.png&quot; alt=&quot;触控板&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;mac里没有完全等价的操作，只能说【三指拖移】暂且解决了我的问题，【使用拖移锁定】或者 【不是用拖移锁定】可以自己尝试，我觉得达不到我要的效果。
-选择【三指拖移】后，切换桌面的操作就变成四指了，这个要取舍一下&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Reference:&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;https://sspai.com/post/44173&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="mac" /><category term="touchpad" /><summary type="html">触摸板也是mac电脑的一个特色，也是大家喜欢mac的一个重要原因之一。如果操作得好可以完全不需要鼠标，简直就是神器 不过刚从windows切换过来有些操作还是不太习惯，主要是以下几个操作：</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="mac" /><category term="virtualbox" /><summary type="html">服务器环境大部分都是linux，作为开发来说，和线上环境保持一致会比较方便，而且开发起来也会比较方便。 虽然macOS也是类unix，但终究还是有点区别，况且安装了虚拟机出了问题还可以重来。 对本身的系统保持一个好的状态，这是我们首先要做到的，想起以前学oracle的时候，在本机安装，结果没装好，连系统都要重做，那是多么痛苦的一段经历。</summary></entry></feed>
