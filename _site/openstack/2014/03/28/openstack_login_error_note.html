@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="登陆openstack提示You are not authorized for any projects.">
-<meta property="og:url" content="http://localhost:4000/openstack/2014/03/28/openstack_login_error_note.html">
+<meta property="og:url" content="http://www.thxopen.com/openstack/2014/03/28/openstack_login_error_note.html">
 
 
   <meta property="og:description" content="一路配置过来，安装keystone glance nova 最后能打开主页面，我输入登录名和密码提示我没有授权任何project下面是我执行的 keystone_data.sh#!/bin/sh## Keystone Datas## Description: Fill Keystone with datas.# Mainly inspired by http://www.hastexo.com/resources/docs/installing-openstack-essex-20121-ubuntu-1204-precise-pangolin# Written by Martin Gerhard Loschwitz / Hastexo# Modified by Emilien Macchi / StackOps## Support: openstack@lists.launchpad.net# License: Apache Software License (ASL) 2.0##ADMIN_PASSWORD=${ADMIN_PASSWORD:-password}ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}SERVICE_PASSWORD=${SERVICE_PASSWORD:-$ADMIN_PASSWORD}export SERVICE_TOKEN=&quot;1234567890&quot;export SERVICE_ENDPOINT=&quot;http://localhost:35357/v2.0&quot;SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}get_id () {    echo `$@ | awk &#39;/ id / { print $4 }&#39;`}# TenantsADMIN_TENANT=$(get_id keystone tenant-create --name=admin)SERVICE_TENANT=$(get_id keystone tenant-create --name=$SERVICE_TENANT_NAME)DEMO_TENANT=$(get_id keystone tenant-create --name=demo)INVIS_TENANT=$(get_id keystone tenant-create --name=invisible_to_admin)# UsersADMIN_USER=$(get_id keystone user-create --name=admin --pass=&quot;$ADMIN_PASSWORD&quot; --email=admin@domain.com)DEMO_USER=$(get_id keystone user-create --name=demo --pass=&quot;$ADMIN_PASSWORD&quot; --email=demo@domain.com)# RolesADMIN_ROLE=$(get_id keystone role-create --name=admin)KEYSTONEADMIN_ROLE=$(get_id keystone role-create --name=KeystoneAdmin)KEYSTONESERVICE_ROLE=$(get_id keystone role-create --name=KeystoneServiceAdmin)# Add Roles to Users in Tenantskeystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $ADMIN_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $DEMO_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONEADMIN_ROLE --tenant-id $ADMIN_TENANTkeystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONESERVICE_ROLE --tenant-id $ADMIN_TENANT# The Member role is used by Horizon and SwiftMEMBER_ROLE=$(get_id keystone role-create --name=Member)keystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $DEMO_TENANTkeystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $INVIS_TENANT# Configure service users/rolesNOVA_USER=$(get_id keystone user-create --name=nova --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=nova@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $NOVA_USER --role-id $ADMIN_ROLEGLANCE_USER=$(get_id keystone user-create --name=glance --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=glance@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $GLANCE_USER --role-id $ADMIN_ROLESWIFT_USER=$(get_id keystone user-create --name=swift --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=swift@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $SWIFT_USER --role-id $ADMIN_ROLERESELLER_ROLE=$(get_id keystone role-create --name=ResellerAdmin)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $NOVA_USER --role-id $RESELLER_ROLEQUANTUM_USER=$(get_id keystone user-create --name=quantum --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=quantum@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $QUANTUM_USER --role-id $ADMIN_ROLECINDER_USER=$(get_id keystone user-create --name=cinder --pass=&quot;$SERVICE_PASSWORD&quot; --tenant-id $SERVICE_TENANT --email=cinder@domain.com)keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $CINDER_USER --role-id $ADMIN_ROLE执行完上面的，用命令查看 keystone user-list   keystone role-list  keystone tenant-list 均有值 ，这是为什么呢？根据错误提示“没有被授权任何项目”，我联想到是不是user和role没有进行关联呢？打开keystone实例，总共10张表，分别为：  ec2_credential  ENDPOINT  metadata  migrate_version  role  service  tenant  token  user  user_tenant_membership我一个表一个表查看，发现user_tenant_membership这张表有两个字段user_id和tenant_id，但是没有值，我查看表结构发现时外键关联的，我尝试把user和tenant进行关联，重新登录，竟然ok了分析：初次接触openstack，太多东西不明白，对照书上操作，新的技术更新比较快，书上的内容就不同步了，以上的keystone datas 应该是少添加了user的权限或添加错误，或许还有其他问题，不过暂时还没有发现，再以后的操作过程中再记录下来">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/openstack/2014/03/28/openstack_login_error_note.html">
+<link rel="canonical" href="http://www.thxopen.com/openstack/2014/03/28/openstack_login_error_note.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -175,7 +175,7 @@
       
         
         <a href="http://www.thxopen.com">
-          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
         </a>
       
     </div>
@@ -424,7 +424,7 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
       
       
-      <a href="http://localhost:4000/tags/#keystone" class="page__taxonomy-item" rel="tag">keystone</a>
+      <a href="http://www.thxopen.com/tags/#keystone" class="page__taxonomy-item" rel="tag">keystone</a>
     
     </span>
   </p>
@@ -445,7 +445,7 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
       
       
-      <a href="http://localhost:4000/categories/#openstack" class="page__taxonomy-item" rel="tag">openstack</a>
+      <a href="http://www.thxopen.com/categories/#openstack" class="page__taxonomy-item" rel="tag">openstack</a>
     
     </span>
   </p>
@@ -461,30 +461,72 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E7%99%BB%E9%99%86openstack%E6%8F%90%E7%A4%BAYou+are+not+authorized+for+any+projects.%20http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E7%99%BB%E9%99%86openstack%E6%8F%90%E7%A4%BAYou+are+not+authorized+for+any+projects.%20http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fopenstack%2F2014%2F03%2F28%2Fopenstack_login_error_note.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/openstack/2014/03/27/openstack_FAQ.html" class="pagination--pager" title="执行keystone-manage db_sync错误
+      <a href="http://www.thxopen.com/openstack/2014/03/27/openstack_FAQ.html" class="pagination--pager" title="执行keystone-manage db_sync错误
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2014/03/30/Linux-parted.html" class="pagination--pager" title="ubuntu server下建立分区表/分区/格式化/自动挂载
+      <a href="http://www.thxopen.com/linux/2014/03/30/Linux-parted.html" class="pagination--pager" title="ubuntu server下建立分区表/分区/格式化/自动挂载
 ">向后</a>
     
   </nav>
 
     </div>
 
+    
+      <div class="page__comments">
+  
+  
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+      <section>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- myblog -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2101546703939638"
+             data-ad-slot="1759638498"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </section>
+      <section id="custom-comments">
+
+        <div id="gitalk-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script src="/assets/js/md5.js"></script>
+
+        <script>
+            const gitalk = new Gitalk({
+                clientID: '7bebf50c943165d34c25',
+                clientSecret: '1450558ddd30817d1ed9b26f8c0c3a4638022035',
+                repo: 'myblog',
+                owner: 'ssy341',
+                admin: ['ssy341'],
+                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+                distractionFreeMode: false  // Facebook-like distraction free mode
+            })
+
+            gitalk.render('gitalk-container')
+        </script>
+      </section>
+  
+</div>
     
   </article>
 
@@ -503,7 +545,76 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
+        <a href="http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option.html" rel="permalink">Datatables的4大特性-dom的介绍
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本节为Datatables入门第二期 ——《使用Datatables”武装”你的html表格》的第一节，主要讲dom。
+
+课程简介
+
+何为dom，它是一个磨人的小妖精，之所以把dom放在开篇，我个人觉得它是一个核心，也是一个进入Datatables大门的钥匙，理解了dom
+算是使用Datatables的入门选手了...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html" rel="permalink">使用OBS录制屏幕
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现OBS非常好。
+
+
+  OBS Studio - Free and open source software for live streaming and screen recording
+
+
+
+  OBS Studio...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work.html" rel="permalink">Ctrl+C 和 Ctrl+V 是如何工作的？ - How does Ctrl+c and Ctrl+v work?
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本来忙着录视频，但运气不好跟公司发生了一点小矛盾，心情不美丽，所以就瞎逛，
+在 StackExchange 上看到有人提问“How does Ctrl+c and Ctrl+v work?”，
+一下就吸引了我的目光，这两个快捷键可是说我们天天都在用，但你要我说出来是如何工作的？我还真是不晓得，不多说，
+跟着提问者...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
 </a>
       
     </h2>
@@ -517,87 +628,8 @@ keystone user-role-add <span class="nt">--tenant-id</span> <span class="nv">$SER
   </article>
 </div>
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="permalink">在linux下从jar中替换、修改文件
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">修改文件内容
-
-vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩包里的文件。
-
-
-  ps: 如果本机还没有安装zip,unzip，先执行安装命令
-  
-    sudo apt-get install unzip
-    sudo apt-get install zip
-  
-
-
-假设现...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="permalink">使用DataTables”武装”你的html表格——开刊
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">前言
-
-三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。
-谢谢你，谢谢一直努力的你！
-
-我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的
-DataTables中文网，没有你们，Datat...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">起因
-
-项目中需要使用swagger提供api文档，于是加上依赖：
-
-  &lt;dependency&gt;
-        &lt;groupId&gt;io.springfox&lt;/groupId&gt;
-        &lt;artifactId&gt;springfox-swagger2&lt;/...</p>
-  </article>
-</div>
-        
       </div>
     </div>
-  
   
 </div>
 
@@ -643,7 +675,7 @@ DataTables中文网，没有你们，Datat...</p>
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -653,15 +685,15 @@ DataTables中文网，没有你们，Datat...</p>
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

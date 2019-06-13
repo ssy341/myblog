@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="像使用mybatis一样使用spring data jpa">
-<meta property="og:url" content="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html">
+<meta property="og:url" content="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html">
 
 
   <meta property="og:description" content="简介自从用上了spring data jpa后，已经深深的喜欢上她的这种风格。简单的CURD操作、根据方法名动态生成sql，就这两点我已经很满足了。虽然已经很强大，美中不足的是对原生sql的支持有点欠缺，不过好在有大神弥补了这个小小遗憾，下面介绍大神给的解决方案spring-data-jpa-extraspring-data-jpa-extra是一个可以像使用mybatis一样的spring data jpa扩展，她在spring data jpa上扩展了sql模板的功能，解决下面三个问题：  动态原生查询支持，如mybatis  可以返回任何类型的数据  没有代码，只有sql语句本身强大的spring data jpa，加上动态原生sql的功能，简直就是如虎添翼，下面通过简单的介绍，告诉大家怎么使用这个插件配置作者已经把源码放在github上，并在maven仓库里发布了对应的jar，可供依赖使用，如果你正在使用maven，只需要添加下面代码，即可使用她  第一步：引入依赖&lt;dependency&gt;    &lt;groupId&gt;com.slyak&lt;/groupId&gt;    &lt;artifactId&gt;spring-data-jpa-extra&lt;/artifactId&gt;    &lt;version&gt;2.1.1.RELEASE&lt;/version&gt;&lt;/dependency&gt;ps:github上的readme给出的是2.1.2.RELEASE，但我在使用的时候，只能下载到2.1.1的版本，具体原因不太清楚，大家参考的时候多尝试一下  第二步：开启功能并配置Freemarkimport com.slyak.spring.jpa.FreemarkerSqlTemplates;import com.slyak.spring.jpa.GenericJpaRepositoryFactoryBean;import com.slyak.spring.jpa.GenericJpaRepositoryImpl;import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.ComponentScan;import org.springframework.context.annotation.Configuration;import org.springframework.data.jpa.repository.config.EnableJpaRepositories;/** * spring data jpa extra 配置 * &lt;p&gt; * 2018/9/18 * * @author Keith * @version v0.0.1 */@Configuration//your base package@ComponentScan(&quot;com.thxopen&quot;)@EnableJpaRepositories(        //your repository package        basePackages = &quot;com.thxopen.dao.repository&quot; ,        repositoryBaseClass = GenericJpaRepositoryImpl.class,         repositoryFactoryBeanClass = GenericJpaRepositoryFactoryBean.class)public class RepositoryConfig {    @Bean    public FreemarkerSqlTemplates freemarkerSqlTemplates() {        FreemarkerSqlTemplates templates = new FreemarkerSqlTemplates();        templates.setSuffix(&quot;.sftl&quot;);        return templates;    }}使用  第一步：创建实体和DTOSample.javaimport lombok.Data;import org.hibernate.annotations.Table;import javax.persistence.Column;import javax.persistence.Entity;/** * demo例子 * &lt;p&gt; * 2018/9/18 * * @author Keith * @version v0.0.1 */@Entity(name = &quot;tb_sample&quot;)@Table(appliesTo = &quot;tb_sample&quot;,comment = &quot;demo例子&quot;)@Datapublic class Sample {    @Column(columnDefinition = &quot;varchar(255) COMMENT &#39;测试字段&#39;&quot;)    private String content;}SampleDTO.javapublic class SampleDTO {    private long id;    private String contentShow;    public long getId() {        return id;    }    public void setId(long id) {        this.id = id;    }    public String getContentShow() {        return contentShow;    }    public void setContentShow(String contentShow) {        this.contentShow = contentShow;    }}SampleQuery.javapublic class SampleQuery {    private String content;    public String getContent() {        return content;    }    public void setContent(String content) {        if (content != null) {            this.content = &quot;%&quot; + content + &quot;%&quot;;        }    }}  第二步：创建Repository与spring data jpa用法不一样的是，需要把继承JpaRepository改为继承GenericJpaRepository，代码如下import com.slyak.spring.jpa.GenericJpaRepository;import com.slyak.spring.jpa.TemplateQuery;import com.thxopen.dao.entity.Sample;import org.springframework.data.domain.Page;import org.springframework.data.domain.Pageable;import org.springframework.data.jpa.repository.Query;import org.springframework.data.repository.query.Param;import java.util.HashMap;import java.util.List;import java.util.Map;/** * @author keith * @create 2018年9月18日15:03:59 * @desc **/public interface SampleRepository extends GenericJpaRepository&lt;Sample,Long&gt; {    /**     * spring data jpa 原生     * 根据条件过滤     * 更多写法参考 https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation     * @param content     * @return     */    List&lt;Sample&gt; findAllByContent(String content);        /**     * spring data jpa 原生的native     * @param name     * @return     */    @Query(nativeQuery = true, value = &quot;select * from tb_sample where content like ?1&quot;)    List&lt;Sample&gt; findDtos2(@Param(&quot;name&quot;) String name);    /**     * 分页过滤查询     * @param content     * @param pageable     * @return     */    @TemplateQuery    Page&lt;Sample&gt; findByContent(@Param(&quot;content&quot;) String content, Pageable pageable);    /**     * 分页对象过滤查询     * @param sampleQuery     * @param pageable     * @return     */    @TemplateQuery    List&lt;Sample&gt; findByTemplateQueryObject(SampleQuery sampleQuery, Pageable pageable);    /**     * 过滤计算总数     * @param content     * @return     */    @TemplateQuery    Long countContent(@Param(&quot;content&quot;) String content);    /**     * 返回自定义的dto     * @return     */    @TemplateQuery    List&lt;SampleDTO&gt; findDtos();        /**     * 返回map     * keith-fix 目前还有报错，暂且不用     * @return     */    @TemplateQuery    List&lt;Map&lt;String,Object&gt;&gt; findMap();}ps:使用@TemplateQuery自定义注解代表会根据方法名去模板文件里找相应的sql  第三步：在/resources/sqls创建对应的sql模板（tb_sample.sftl），文件名同Entity的name值--findByContent  SELECT * FROM tb_sample WHERE 1 = 1&lt;#if content??&gt;        AND content LIKE :content&lt;/#if&gt;--countContentSELECT count(*) FROM tb_sample WHERE 1 = 1&lt;#if content??&gt;  AND content LIKE :content&lt;/#if&gt;--findDtosSELECT id, content as contentShow FROM tb_sample--findByTemplateQueryObjectSELECT * FROM tb_sample WHERE 1 = 1&lt;#if content??&gt; AND content LIKE :content&lt;/#if&gt;--findMapSELECT * FROM tb_sample--后面的字符串和Repository里的方法名一一对应  第四步：创建测试用例，验证方法import com.thxopen.Application;import com.thxopen.dao.entity.Sample;import com.thxopen.dao.repository.sample.SampleDTO;import com.thxopen.dao.repository.sample.SampleQuery;import com.thxopen.dao.repository.sample.SampleRepository;import lombok.extern.slf4j.Slf4j;import org.junit.Assert;import org.junit.Test;import org.junit.runner.RunWith;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.boot.autoconfigure.EnableAutoConfiguration;import org.springframework.boot.test.context.SpringBootTest;import org.springframework.data.domain.Page;import org.springframework.data.domain.PageRequest;import org.springframework.test.context.junit4.SpringRunner;import java.util.List;import java.util.Map;/** * jpa类似mybatis用法测试用例 * 教程参考：https://github.com/slyak/spring-data-jpa-extra * &lt;p&gt; * 2018/9/18 * * @author Keith * @version v0.0.1 */@RunWith(SpringRunner.class)@SpringBootTest(classes = Application.class)@EnableAutoConfiguration@Slf4jpublic class SampleTest {    @Autowired    SampleRepository sampleRepository;    @Test    public void delSomeSample() {        sampleRepository.deleteAll();    }    @Test    public void addSomeSample() {        for (int i = 0; i &lt; 10; i++) {            Sample sample = new Sample();            sample.setContent(&quot;hello world&quot; + i);            sampleRepository.save(sample);        }    }    @Test    public void findByTemplateQuery() {        PageRequest pageRequest = new PageRequest(1, 10);        Page&lt;Sample&gt; samples = sampleRepository.findByContent(&quot;%world%&quot;, pageRequest);        Assert.assertTrue(samples.getTotalElements() == 10);    }    @Test    public void countByTemplateQuery() {        long count = sampleRepository.countContent(&quot;%world%&quot;);        Assert.assertTrue(count == 10);    }    @Test    public void findByTemplateQueryAndReturnDTOs() {        List&lt;SampleDTO&gt; dtos = sampleRepository.findDtos();        Assert.assertTrue(dtos.size() == 10);    }    @Test    public void findByTemplateQueryWithTemplateQueryObject() {        SampleQuery sq = new SampleQuery();        sq.setContent(&quot;%world%&quot;);        List&lt;Sample&gt; samples = sampleRepository.findByTemplateQueryObject(sq, null);        Assert.assertTrue(samples.size() == 10);    }    @Test    public void findBySpringElQuery() {        List&lt;Sample&gt; dtos = sampleRepository.findDtos2(&quot;%world%&quot;);        Assert.assertTrue(dtos.size() == 10);    }    /**     * keith-fix 会报错，问题暂时不知     */    @Test    public void findMap() {        List&lt;Map&lt;String, Object&gt;&gt; listMaps = sampleRepository.findMap();        Assert.assertTrue(listMaps.size() == 10);    }}总结从上面给出的代码可以看出spring-data-jpa-extra确实很强大，在开发中效率能提高很多，希望本文能帮助到大家，同时在这里还要感谢作者的付出，谢谢  Reference:      https://github.com/slyak/spring-data-jpa-extra    https://blog.csdn.net/qq_27384769/article/details/79283391  ">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html">
+<link rel="canonical" href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-extra-to-write-sql-like-mybatis.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -175,7 +175,7 @@
       
         
         <a href="http://www.thxopen.com">
-          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
         </a>
       
     </div>
@@ -727,31 +727,31 @@ SELECT <span class="k">*</span> FROM tb_sample
     
       
       
-      <a href="http://localhost:4000/tags/#java" class="page__taxonomy-item" rel="tag">java</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#java" class="page__taxonomy-item" rel="tag">java</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#jpa" class="page__taxonomy-item" rel="tag">jpa</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#jpa" class="page__taxonomy-item" rel="tag">jpa</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#mybatis" class="page__taxonomy-item" rel="tag">mybatis</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#mybatis" class="page__taxonomy-item" rel="tag">mybatis</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#query" class="page__taxonomy-item" rel="tag">query</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#query" class="page__taxonomy-item" rel="tag">query</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#spring-boot" class="page__taxonomy-item" rel="tag">spring boot</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#spring-boot" class="page__taxonomy-item" rel="tag">spring boot</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#spring-data-jpa" class="page__taxonomy-item" rel="tag">spring data jpa</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#spring-data-jpa" class="page__taxonomy-item" rel="tag">spring data jpa</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#template" class="page__taxonomy-item" rel="tag">template</a>
+      <a href="http://www.thxopen.com/tags/#template" class="page__taxonomy-item" rel="tag">template</a>
     
     </span>
   </p>
@@ -772,7 +772,7 @@ SELECT <span class="k">*</span> FROM tb_sample
     
       
       
-      <a href="http://localhost:4000/categories/#java" class="page__taxonomy-item" rel="tag">java</a>
+      <a href="http://www.thxopen.com/categories/#java" class="page__taxonomy-item" rel="tag">java</a>
     
     </span>
   </p>
@@ -788,30 +788,72 @@ SELECT <span class="k">*</span> FROM tb_sample
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E5%83%8F%E4%BD%BF%E7%94%A8mybatis%E4%B8%80%E6%A0%B7%E4%BD%BF%E7%94%A8spring+data+jpa%20http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E5%83%8F%E4%BD%BF%E7%94%A8mybatis%E4%B8%80%E6%A0%B7%E4%BD%BF%E7%94%A8spring+data+jpa%20http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Fjava%2F2018%2F09%2F19%2Fuse-spring-data-jpa-extra-to-write-sql-like-mybatis.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/database/2018/09/19/unknown-column-nan-in-field-list.html" class="pagination--pager" title="Unknown column ‘NaN’ in ‘field list’
+      <a href="http://www.thxopen.com/database/2018/09/19/unknown-column-nan-in-field-list.html" class="pagination--pager" title="Unknown column ‘NaN’ in ‘field list’
 ">向前</a>
     
     
-      <a href="http://localhost:4000/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" class="pagination--pager" title="Spring Data JPA自动创建表同时生成表和列的注释
+      <a href="http://www.thxopen.com/java/2018/09/19/use-spring-data-jpa-to-gen-table-and-column-comment-in-mysql.html" class="pagination--pager" title="Spring Data JPA自动创建表同时生成表和列的注释
 ">向后</a>
     
   </nav>
 
     </div>
 
+    
+      <div class="page__comments">
+  
+  
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+      <section>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- myblog -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2101546703939638"
+             data-ad-slot="1759638498"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </section>
+      <section id="custom-comments">
+
+        <div id="gitalk-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script src="/assets/js/md5.js"></script>
+
+        <script>
+            const gitalk = new Gitalk({
+                clientID: '7bebf50c943165d34c25',
+                clientSecret: '1450558ddd30817d1ed9b26f8c0c3a4638022035',
+                repo: 'myblog',
+                owner: 'ssy341',
+                admin: ['ssy341'],
+                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+                distractionFreeMode: false  // Facebook-like distraction free mode
+            })
+
+            gitalk.render('gitalk-container')
+        </script>
+      </section>
+  
+</div>
     
   </article>
 
@@ -830,7 +872,76 @@ SELECT <span class="k">*</span> FROM tb_sample
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
+        <a href="http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option.html" rel="permalink">Datatables的4大特性-dom的介绍
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本节为Datatables入门第二期 ——《使用Datatables”武装”你的html表格》的第一节，主要讲dom。
+
+课程简介
+
+何为dom，它是一个磨人的小妖精，之所以把dom放在开篇，我个人觉得它是一个核心，也是一个进入Datatables大门的钥匙，理解了dom
+算是使用Datatables的入门选手了...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html" rel="permalink">使用OBS录制屏幕
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现OBS非常好。
+
+
+  OBS Studio - Free and open source software for live streaming and screen recording
+
+
+
+  OBS Studio...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work.html" rel="permalink">Ctrl+C 和 Ctrl+V 是如何工作的？ - How does Ctrl+c and Ctrl+v work?
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本来忙着录视频，但运气不好跟公司发生了一点小矛盾，心情不美丽，所以就瞎逛，
+在 StackExchange 上看到有人提问“How does Ctrl+c and Ctrl+v work?”，
+一下就吸引了我的目光，这两个快捷键可是说我们天天都在用，但你要我说出来是如何工作的？我还真是不晓得，不多说，
+跟着提问者...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
 </a>
       
     </h2>
@@ -844,87 +955,8 @@ SELECT <span class="k">*</span> FROM tb_sample
   </article>
 </div>
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="permalink">在linux下从jar中替换、修改文件
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">修改文件内容
-
-vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩包里的文件。
-
-
-  ps: 如果本机还没有安装zip,unzip，先执行安装命令
-  
-    sudo apt-get install unzip
-    sudo apt-get install zip
-  
-
-
-假设现...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="permalink">使用DataTables”武装”你的html表格——开刊
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">前言
-
-三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。
-谢谢你，谢谢一直努力的你！
-
-我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的
-DataTables中文网，没有你们，Datat...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">起因
-
-项目中需要使用swagger提供api文档，于是加上依赖：
-
-  &lt;dependency&gt;
-        &lt;groupId&gt;io.springfox&lt;/groupId&gt;
-        &lt;artifactId&gt;springfox-swagger2&lt;/...</p>
-  </article>
-</div>
-        
       </div>
     </div>
-  
   
 </div>
 
@@ -970,7 +1002,7 @@ DataTables中文网，没有你们，Datat...</p>
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -980,15 +1012,15 @@ DataTables中文网，没有你们，Datat...</p>
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 

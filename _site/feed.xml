@@ -1,4 +1,187 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-05-16T11:24:26+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">请停止学习框架 - Stop Learning Frameworks</title><link href="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html" rel="alternate" type="text/html" title="请停止学习框架 - Stop Learning Frameworks" /><published>2019-05-14T00:00:00+08:00</published><updated>2019-05-14T00:00:00+08:00</updated><id>http://localhost:4000/life/2019/05/14/stop-learning-frameworks</id><content type="html" xml:base="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html">&lt;p&gt;最近阅读到一篇文章，原文标题&lt;a href=&quot;https://sizovs.net/2018/12/17/stop-learning-frameworks/&quot;&gt;《Stop Learning Frameworks》&lt;/a&gt;，
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://www.thxopen.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.thxopen.com/" rel="alternate" type="text/html" /><updated>2019-06-13T15:32:24+08:00</updated><id>http://www.thxopen.com/</id><title type="html">单客欧朋</title><subtitle>好记性不如烂笔头</subtitle><author><name>单思义</name><email>keith@thxopen.com</email></author><entry><title type="html">Datatables的4大特性-dom的介绍</title><link href="http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option.html" rel="alternate" type="text/html" title="Datatables的4大特性-dom的介绍" /><published>2019-06-09T00:00:00+08:00</published><updated>2019-06-09T00:00:00+08:00</updated><id>http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option</id><content type="html" xml:base="http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option.html">&lt;p&gt;本节为Datatables入门第二期 ——《使用Datatables”武装”你的html表格》的第一节，主要讲dom。&lt;/p&gt;
+
+&lt;h2 id=&quot;课程简介&quot;&gt;课程简介&lt;/h2&gt;
+
+&lt;p&gt;何为dom，它是一个磨人的小妖精，之所以把dom放在开篇，我个人觉得它是一个核心，也是一个进入Datatables大门的钥匙，理解了dom
+算是使用Datatables的入门选手了。废话不多说，跟着视频来，看看dom究竟是什么？&lt;/p&gt;
+
+&lt;p&gt;本节课程我从以下几个点来讲解：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如何使用Datatables？&lt;/li&gt;
+  &lt;li&gt;理解Datatables基本模型DOM
+    &lt;ul&gt;
+      &lt;li&gt;length changing&lt;/li&gt;
+      &lt;li&gt;filter&lt;/li&gt;
+      &lt;li&gt;information&lt;/li&gt;
+      &lt;li&gt;pagination&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;DOM引发的一系列”血案”，解密真相，揭开谜底
+    &lt;ul&gt;
+      &lt;li&gt;它的控件我不喜欢，想隐藏掉，怎么做？&lt;/li&gt;
+      &lt;li&gt;表格上下都有翻页控件，怎么做?&lt;/li&gt;
+      &lt;li&gt;按照自己的意愿摆放它的控件，怎么做？&lt;/li&gt;
+      &lt;li&gt;我需要多个条件过滤，它只有一个搜索框，怎么做？&lt;/li&gt;
+      &lt;li&gt;Bootstrap的布局自适应，使用很方便，Datatables可以套用么，怎么做？&lt;/li&gt;
+      &lt;li&gt;改变各个控件的显示位置，怎么做？&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过简单的入门，原理的介绍，还有真实的案例，三部曲带领大家走进Datatables的大门。&lt;/p&gt;
+
+&lt;h2 id=&quot;课程视频&quot;&gt;课程视频&lt;/h2&gt;
+
+&lt;p&gt;由于服务器不支持视频播放，鼠标右键&lt;strong&gt;&lt;em&gt;&lt;a href=&quot;/video/season_two/season2-02.mp4&quot;&gt;点我&lt;/a&gt;&lt;/em&gt;&lt;/strong&gt;，另存为到本地即可&lt;/p&gt;
+
+&lt;p&gt;最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="datatables" /><category term="视频" /><category term="入门第二期" /><summary type="html">本节为Datatables入门第二期 ——《使用Datatables”武装”你的html表格》的第一节，主要讲dom。 课程简介 何为dom，它是一个磨人的小妖精，之所以把dom放在开篇，我个人觉得它是一个核心，也是一个进入Datatables大门的钥匙，理解了dom 算是使用Datatables的入门选手了。废话不多说，跟着视频来，看看dom究竟是什么？ 本节课程我从以下几个点来讲解： 如何使用Datatables？ 理解Datatables基本模型DOM length changing filter information pagination DOM引发的一系列”血案”，解密真相，揭开谜底 它的控件我不喜欢，想隐藏掉，怎么做？ 表格上下都有翻页控件，怎么做? 按照自己的意愿摆放它的控件，怎么做？ 我需要多个条件过滤，它只有一个搜索框，怎么做？ Bootstrap的布局自适应，使用很方便，Datatables可以套用么，怎么做？ 改变各个控件的显示位置，怎么做？ 通过简单的入门，原理的介绍，还有真实的案例，三部曲带领大家走进Datatables的大门。 课程视频 由于服务器不支持视频播放，鼠标右键点我，另存为到本地即可 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言</summary></entry><entry><title type="html">使用OBS录制屏幕</title><link href="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html" rel="alternate" type="text/html" title="使用OBS录制屏幕" /><published>2019-06-08T00:00:00+08:00</published><updated>2019-06-08T00:00:00+08:00</updated><id>http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs</id><content type="html" xml:base="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html">&lt;p&gt;由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现&lt;a href=&quot;https://obsproject.com/&quot;&gt;OBS&lt;/a&gt;非常好。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;OBS Studio - Free and open source software for live streaming and screen recording&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;OBS Studio - 直播和屏幕录制的免费开源软件&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个简直太合我意了（偷笑中），不仅免费，而且功能强大，独乐了不如众乐乐，分享下如何使用OBS录制自己的屏幕。&lt;/p&gt;
+
+&lt;h2 id=&quot;下载安装&quot;&gt;下载安装&lt;/h2&gt;
+
+&lt;p&gt;你可以通过&lt;a href=&quot;https://obsproject.com/download&quot;&gt;官网&lt;/a&gt;下载对应的版本，支持windows、mac和linux。本次选择mac版作为例子来讲解。&lt;/p&gt;
+
+&lt;h2 id=&quot;录制屏幕&quot;&gt;录制屏幕&lt;/h2&gt;
+
+&lt;h3 id=&quot;指定窗口录制&quot;&gt;指定窗口录制&lt;/h3&gt;
+
+&lt;p&gt;和其他录制屏幕软件不同的是，OBS它可以指定应用程序窗口来录制，这样即便你在操作其他软件，也不会影响到录制&lt;/p&gt;
+
+&lt;p&gt;软件打开后，默认会有一个场景，在对应场景里选中【窗口捕获】，点击下方的⚙配置选择窗口捕获来源&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/windows-target-1.png&quot; alt=&quot;windows-target-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在下拉列表里可以选择你要捕获的窗口，每个应用程序都会列在这里&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/windows-target-2.png&quot; alt=&quot;windows-target-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过上面两个步骤的设置，就可以录制选定窗口&lt;/p&gt;
+
+&lt;h3 id=&quot;不同应用程序切换&quot;&gt;不同应用程序切换&lt;/h3&gt;
+
+&lt;p&gt;在录制Datatables入门第二期视频时，会在ppt和IDE应用程序之间来回切换，这样就需要使用场景来实现。&lt;/p&gt;
+
+&lt;p&gt;首先，点击左下角场景区域➕，新建一个场景，按照自己的需要命名&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/scene-1.png&quot; alt=&quot;scene-1&quot; /&gt;
+&lt;img src=&quot;/assets/images/post/tools/obs/scene-2.png&quot; alt=&quot;scene-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其次，点击来源区域➕，新建捕获来源
+&lt;img src=&quot;/assets/images/post/tools/obs/target-1.png&quot; alt=&quot;target-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择窗口捕获
+&lt;img src=&quot;/assets/images/post/tools/obs/target-2.png&quot; alt=&quot;target-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;按照自己的需要命名
+&lt;img src=&quot;/assets/images/post/tools/obs/target-3.png&quot; alt=&quot;target-3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择窗口捕获来源
+&lt;img src=&quot;/assets/images/post/tools/obs/target-4.png&quot; alt=&quot;target-4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最后就有两个场景可供录制
+&lt;img src=&quot;/assets/images/post/tools/obs/target-5.png&quot; alt=&quot;target-5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们为场景指定不同的快捷键，这样切换场景的时候就不用回到OBS软件操作&lt;/p&gt;
+
+&lt;p&gt;点击上图右下方【设置】按钮，进入【热键】设置部分，给场景切换指定快捷键，这样在录制的时候我们可以随时切换录制那个场景&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/settings-1.png&quot; alt=&quot;settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：不要设置和其他软件冲突的快捷键，不然会起冲突导致切换场景失效&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;录制电脑输出声音&quot;&gt;录制电脑输出声音&lt;/h2&gt;
+
+&lt;p&gt;默认设置下，视频录制的声音来自麦克风&lt;/p&gt;
+
+&lt;p&gt;如果我在电脑上播放歌曲，这时候声音从扬声器播放，然后被麦克风采集（注意看下图两处红色框框，上方的代表在播放音乐，下方代表麦克风采集到扬声器声音）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/sound-1.png&quot; alt=&quot;sound-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果我想电脑的声音直接被OBS采集而不是通过麦克风采集，这里需要用到虚拟声卡 —— Soundflower&lt;/p&gt;
+
+&lt;h3 id=&quot;第一步安装soundflower&quot;&gt;第一步：安装Soundflower&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Soundflower - a free audio system extension that allows applications to pass audio to other applications.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Soundflower - 一款免费的音频系统扩展，允许应用程序将音频传递到其他的应用程序。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先下载安装&lt;a href=&quot;https://soundflower.en.softonic.com/mac&quot;&gt;Soundflower&lt;/a&gt;，安装完成后打开【Launchpad】找到【音频MIDI设置】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/midi-settings-1.png&quot; alt=&quot;midi-settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击左下角➕ =》【创建多输出设备】=》点击标题处可以命名，这里重命名为【obs】=》勾选【内建输出】和【Soundflower(2ch)】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/midi-settings-2.png&quot; alt=&quot;midi-settings-2&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;解释：这里创建多输出设备的用意在于在录制屏幕的时候同时可以听到电脑输出的声音，如果不设置录制视频的时候自己听不到声音，但视频可以采集到电脑输出的声音&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;第二步配置obs&quot;&gt;第二步：配置OBS&lt;/h3&gt;
+
+&lt;p&gt;上面配置好的虚拟声卡后，在OBS【设置】界面  =》 【音频】 =》 桌面音频设备选择【Soundflower(ch2)】 =》 麦克风/辅助音频设备选择【已禁用】&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/obs-settings-1.png&quot; alt=&quot;obs-settings-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后电脑声音输出选择第一步新建的【obs】虚拟声卡&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/mac-sound-settings-1.png&quot; alt=&quot;mac-sound-settings-1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;解释：由于obs是两个设备，一个是内置的扬声器，一个是虚拟声卡Soundflower(2ch)，这里选择输出设备为obs意味着声卡将会把声音从这两个设备输出，
+而在上面OBS 【音频】 设置里，我们把桌面音频设备选择的是Soundflower(2ch)，即我们想要的，录制的声音直接从电脑声卡采集，而不是从麦克风&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ps: 在选择obs输出之前，请先调好声音大小，因为选择obs后将不能修改声音&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通过上面两步设置，我们录制屏幕的时候，声音就可以直接采集从电脑声卡输出的声音了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/post/tools/obs/obs-record-1.png&quot; alt=&quot;obs-record-1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;第一个红框表示电脑正在播放音乐&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;第二个红框表示OBS采集到声卡的输出&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="obs" /><category term="tools" /><category term="录屏软件" /><summary type="html">由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现OBS非常好。 OBS Studio - Free and open source software for live streaming and screen recording OBS Studio - 直播和屏幕录制的免费开源软件 这个简直太合我意了（偷笑中），不仅免费，而且功能强大，独乐了不如众乐乐，分享下如何使用OBS录制自己的屏幕。 下载安装 你可以通过官网下载对应的版本，支持windows、mac和linux。本次选择mac版作为例子来讲解。 录制屏幕 指定窗口录制 和其他录制屏幕软件不同的是，OBS它可以指定应用程序窗口来录制，这样即便你在操作其他软件，也不会影响到录制 软件打开后，默认会有一个场景，在对应场景里选中【窗口捕获】，点击下方的⚙配置选择窗口捕获来源 在下拉列表里可以选择你要捕获的窗口，每个应用程序都会列在这里 通过上面两个步骤的设置，就可以录制选定窗口 不同应用程序切换 在录制Datatables入门第二期视频时，会在ppt和IDE应用程序之间来回切换，这样就需要使用场景来实现。 首先，点击左下角场景区域➕，新建一个场景，按照自己的需要命名 其次，点击来源区域➕，新建捕获来源 选择窗口捕获 按照自己的需要命名 选择窗口捕获来源 最后就有两个场景可供录制 我们为场景指定不同的快捷键，这样切换场景的时候就不用回到OBS软件操作 点击上图右下方【设置】按钮，进入【热键】设置部分，给场景切换指定快捷键，这样在录制的时候我们可以随时切换录制那个场景 注意：不要设置和其他软件冲突的快捷键，不然会起冲突导致切换场景失效 录制电脑输出声音 默认设置下，视频录制的声音来自麦克风 如果我在电脑上播放歌曲，这时候声音从扬声器播放，然后被麦克风采集（注意看下图两处红色框框，上方的代表在播放音乐，下方代表麦克风采集到扬声器声音） 如果我想电脑的声音直接被OBS采集而不是通过麦克风采集，这里需要用到虚拟声卡 —— Soundflower 第一步：安装Soundflower Soundflower - a free audio system extension that allows applications to pass audio to other applications. Soundflower - 一款免费的音频系统扩展，允许应用程序将音频传递到其他的应用程序。 首先下载安装Soundflower，安装完成后打开【Launchpad】找到【音频MIDI设置】 点击左下角➕ =》【创建多输出设备】=》点击标题处可以命名，这里重命名为【obs】=》勾选【内建输出】和【Soundflower(2ch)】 解释：这里创建多输出设备的用意在于在录制屏幕的时候同时可以听到电脑输出的声音，如果不设置录制视频的时候自己听不到声音，但视频可以采集到电脑输出的声音 第二步：配置OBS 上面配置好的虚拟声卡后，在OBS【设置】界面 =》 【音频】 =》 桌面音频设备选择【Soundflower(ch2)】 =》 麦克风/辅助音频设备选择【已禁用】 然后电脑声音输出选择第一步新建的【obs】虚拟声卡 解释：由于obs是两个设备，一个是内置的扬声器，一个是虚拟声卡Soundflower(2ch)，这里选择输出设备为obs意味着声卡将会把声音从这两个设备输出， 而在上面OBS 【音频】 设置里，我们把桌面音频设备选择的是Soundflower(2ch)，即我们想要的，录制的声音直接从电脑声卡采集，而不是从麦克风 ps: 在选择obs输出之前，请先调好声音大小，因为选择obs后将不能修改声音 通过上面两步设置，我们录制屏幕的时候，声音就可以直接采集从电脑声卡输出的声音了 第一个红框表示电脑正在播放音乐 第二个红框表示OBS采集到声卡的输出</summary></entry><entry><title type="html">Ctrl+C 和 Ctrl+V 是如何工作的？ - How does Ctrl+c and Ctrl+v work?</title><link href="http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work.html" rel="alternate" type="text/html" title="Ctrl+C 和 Ctrl+V 是如何工作的？ - How does Ctrl+c and Ctrl+v work?" /><published>2019-05-20T00:00:00+08:00</published><updated>2019-05-20T00:00:00+08:00</updated><id>http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work</id><content type="html" xml:base="http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work.html">&lt;p&gt;本来忙着录视频，但运气不好跟公司发生了一点小矛盾，心情不美丽，所以就瞎逛，
+在 StackExchange 上看到有人提问&lt;a href=&quot;https://superuser.com/questions/1436622/how-does-ctrlc-and-ctrlv-work&quot;&gt;“How does Ctrl+c and Ctrl+v work?”&lt;/a&gt;，
+一下就吸引了我的目光，这两个快捷键可是说我们天天都在用，但你要我说出来是如何工作的？我还真是不晓得，不多说，
+跟着提问者进去瞧瞧，到底是如何工作的？&lt;/p&gt;
+
+&lt;p&gt;以下是译文:&lt;/p&gt;
+
+&lt;h2 id=&quot;questionctrlc-和-ctrlv-是如何工作的&quot;&gt;Question：Ctrl+C 和 Ctrl+V 是如何工作的?&lt;/h2&gt;
+
+&lt;p&gt;我一直很好奇，当我将图像（选择它使用快捷键Ctrl+c）复制到word文件（使用ctrl+v粘贴）&lt;a href=&quot;https://www.quora.com/What-does-under-the-hood-mean-in-programming&quot;&gt;幕后&lt;/a&gt;（操作系统层面）发生了什么事情？&lt;/p&gt;
+
+&lt;h2 id=&quot;answer&quot;&gt;Answer&lt;/h2&gt;
+
+&lt;h3 id=&quot;windows&quot;&gt;Windows&lt;/h3&gt;
+
+&lt;p&gt;在windows下，剪贴板API和存储缓冲区是由OS提供（显然是内核级别）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ctrl+C 告诉程序使用 Win32 API 方法 &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/desktop/api/Winuser/nf-winuser-setclipboarddata&quot;&gt;SetClipboardData()&lt;/a&gt;去存储“被复制”的数据&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="翻译" /><category term="好文" /><summary type="html">本来忙着录视频，但运气不好跟公司发生了一点小矛盾，心情不美丽，所以就瞎逛， 在 StackExchange 上看到有人提问“How does Ctrl+c and Ctrl+v work?”， 一下就吸引了我的目光，这两个快捷键可是说我们天天都在用，但你要我说出来是如何工作的？我还真是不晓得，不多说， 跟着提问者进去瞧瞧，到底是如何工作的？ 以下是译文: Question：Ctrl+C 和 Ctrl+V 是如何工作的? 我一直很好奇，当我将图像（选择它使用快捷键Ctrl+c）复制到word文件（使用ctrl+v粘贴）幕后（操作系统层面）发生了什么事情？ Answer Windows 在windows下，剪贴板API和存储缓冲区是由OS提供（显然是内核级别）： Ctrl+C 告诉程序使用 Win32 API 方法 SetClipboardData()去存储“被复制”的数据</summary></entry><entry><title type="html">请停止学习框架 - Stop Learning Frameworks</title><link href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="alternate" type="text/html" title="请停止学习框架 - Stop Learning Frameworks" /><published>2019-05-14T00:00:00+08:00</published><updated>2019-05-14T00:00:00+08:00</updated><id>http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks</id><content type="html" xml:base="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html">&lt;p&gt;最近阅读到一篇文章，原文标题&lt;a href=&quot;https://sizovs.net/2018/12/17/stop-learning-frameworks/&quot;&gt;《Stop Learning Frameworks》&lt;/a&gt;，
 读完之后感触很深，很赞同作者的观点，这里分享这篇文章，同时练习一下英语翻译，学习一些专业上的英语词汇和表达。下面是译文：&lt;/p&gt;
 
 &lt;h2 id=&quot;请停止学习框架&quot;&gt;请停止学习框架&lt;/h2&gt;
@@ -99,7 +282,7 @@
 
 &lt;p&gt;万变不离其宗，所以只有基础扎实，工作中解决问题才能游刃有余。&lt;/p&gt;
 
-&lt;p&gt;人与人之间交往好，和家人、朋友、同事都能相处好。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="翻译" /><category term="好文" /><summary type="html">最近阅读到一篇文章，原文标题《Stop Learning Frameworks》， 读完之后感触很深，很赞同作者的观点，这里分享这篇文章，同时练习一下英语翻译，学习一些专业上的英语词汇和表达。下面是译文： 请停止学习框架 我们是开发者。我们需要与最新的技术保持同步。每天，我们学习编程语言，框架和第三方库。知道越前沿的技术越好。 与Angular, React, Vue, Riot, Ember, Knockout这些技术保持同步是很有趣的。 但是我们在浪费时间. 时间是我们最宝贵的财富。是有限的，不能再生，而且你不能买到更多。 技术，比如时尚，它像光速一样在变化。为了抓住这些，我们必须奔跑。这场比赛没有赢家，因为比赛没有终点。 我的导师有一次给我上了一堂课： 导师：“Ed，你在干什么？” 我（带着一种骄傲）：“我在读一本书，关于使用GWT构建现代java应用程序。” 导师：“为了什么？” 我：“作为一个java开发，我需要跟上潮流，而GWT就是潮流。” 导师：“在GWT之前你读过什么技术的书籍么？” 我：“是一本长达500页的 Apache Tapestry 书，Tapestry 之前是潮流” 导师：“Tapestry 现在任然是潮流么？” 我：“不再是，GWT现在是潮流” 导师：“你能重新使用 Tapestry 技能解决现在的问题么？ ” 我：“不行，目前没有人使用它。 ” 导师：“Tapestry 知识能帮你更好的理解 GWT么？ ” 我：“ 不，它不行。但是我看到了一些重叠的模式。 ” 导师：“ 那个是设计模式，它能帮你解决现在的问题么？ ” 我：“ 是的，大多数都可以 ” 导师：“ 新的技术层出不穷，消失也是常有的。但是他们有一些共同点。设置正确的优先级 ，投资80%的时间在学习基础知识上面，剩余的20%学习，库和工具。” 我：“ 额。。 只花20%的时间学习框架，库和工具？” 导师：“是的，反正你在工作中解决问题的时候会学习到” 我：“ 谢谢 ” 导师：“ 稍后再感谢 ” 这个建议改变了我的生活。我丢掉了书柜上所有框架的书，罪恶感从50减到0，终于解脱了！ 然后我买了一些经久不衰的书籍。这些书占据了我80%的学习时间： The Pragmatic Programmer 程序员修炼之道: 从小工到专家 Clean Code 代码整洁之道 The Clean Coder 程序员的职业素养 Domain-Driven Design 领域驱动设计 Growing Object-Oriented Software, Guided by Tests 测试驱动的面向对象软件开发 Continuous Delivery 持续交付 查看所有的书籍列表 我还买了一本当前技术的书籍。根据“林迪效应”，spring框架必须是一个好的投资： 技术预期寿命和它们目前已经存在的时间成正比。每多生存一段时间，它的剩余预期寿命就会增加一点 技术在市场上存活的时间越长，投资就越安全。 不要急于学习新的技术，它很有可能会死。 时间将会展示那些技术值得投资。时间是您最好的顾问。你要学会等待。 从那以后的十年，我帮助了50个不同的软件项目。感谢导师的建议，我学到的一切都可以在公司，团队和行业适用。我学习的知识今天任然有用。 我没有浪费我的时间。 所有的项目看起来都不一样，但如果你看一下项目的内部： 编程语言不一样，但设计是一样的 框架不一样，从始至终就那些设计模式 开发人员不一样，但与人交往是的规则是一样的 请记住，框架，库和工具这些层出不穷，消失也是常有的。时间是宝贵的。 把你的黄金时间投入到可移植的总是相关的技能上面。 微服务 演进式架构 新的语言 代码整洁之道，设计模式，领域驱动设计 LeSS, SAFe 精益制造原则 Hystrix 容错模式 Docker 持续交付 Angular WEB，HTTP 和 REST 之所以对这个感触很深，我觉得我就陷入了这个死循环中。大数据热门，我就买了很多关于大数据的书籍，Hadoop，Hive，spark，Hbase等等。 厚厚的几本书放在那儿吃灰，至今没有翻阅，即便是看了也只是学会了几个工具的使用，对于真正的MapReduce，HDFS这些基础的又理解了多少呢？为什么这些简单的道理自己不能误出来呢？ 万变不离其宗，所以只有基础扎实，工作中解决问题才能游刃有余。 人与人之间交往好，和家人、朋友、同事都能相处好。</summary></entry><entry><title type="html">在linux下从jar中替换、修改文件</title><link href="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="alternate" type="text/html" title="在linux下从jar中替换、修改文件" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux</id><content type="html" xml:base="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html">&lt;h2 id=&quot;修改文件内容&quot;&gt;修改文件内容&lt;/h2&gt;
+&lt;p&gt;人与人之间交往好，和家人、朋友、同事都能相处好。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="翻译" /><category term="好文" /><summary type="html">最近阅读到一篇文章，原文标题《Stop Learning Frameworks》， 读完之后感触很深，很赞同作者的观点，这里分享这篇文章，同时练习一下英语翻译，学习一些专业上的英语词汇和表达。下面是译文： 请停止学习框架 我们是开发者。我们需要与最新的技术保持同步。每天，我们学习编程语言，框架和第三方库。知道越前沿的技术越好。 与Angular, React, Vue, Riot, Ember, Knockout这些技术保持同步是很有趣的。 但是我们在浪费时间. 时间是我们最宝贵的财富。是有限的，不能再生，而且你不能买到更多。 技术，比如时尚，它像光速一样在变化。为了抓住这些，我们必须奔跑。这场比赛没有赢家，因为比赛没有终点。 我的导师有一次给我上了一堂课： 导师：“Ed，你在干什么？” 我（带着一种骄傲）：“我在读一本书，关于使用GWT构建现代java应用程序。” 导师：“为了什么？” 我：“作为一个java开发，我需要跟上潮流，而GWT就是潮流。” 导师：“在GWT之前你读过什么技术的书籍么？” 我：“是一本长达500页的 Apache Tapestry 书，Tapestry 之前是潮流” 导师：“Tapestry 现在任然是潮流么？” 我：“不再是，GWT现在是潮流” 导师：“你能重新使用 Tapestry 技能解决现在的问题么？ ” 我：“不行，目前没有人使用它。 ” 导师：“Tapestry 知识能帮你更好的理解 GWT么？ ” 我：“ 不，它不行。但是我看到了一些重叠的模式。 ” 导师：“ 那个是设计模式，它能帮你解决现在的问题么？ ” 我：“ 是的，大多数都可以 ” 导师：“ 新的技术层出不穷，消失也是常有的。但是他们有一些共同点。设置正确的优先级 ，投资80%的时间在学习基础知识上面，剩余的20%学习，库和工具。” 我：“ 额。。 只花20%的时间学习框架，库和工具？” 导师：“是的，反正你在工作中解决问题的时候会学习到” 我：“ 谢谢 ” 导师：“ 稍后再感谢 ” 这个建议改变了我的生活。我丢掉了书柜上所有框架的书，罪恶感从50减到0，终于解脱了！ 然后我买了一些经久不衰的书籍。这些书占据了我80%的学习时间： The Pragmatic Programmer 程序员修炼之道: 从小工到专家 Clean Code 代码整洁之道 The Clean Coder 程序员的职业素养 Domain-Driven Design 领域驱动设计 Growing Object-Oriented Software, Guided by Tests 测试驱动的面向对象软件开发 Continuous Delivery 持续交付 查看所有的书籍列表 我还买了一本当前技术的书籍。根据“林迪效应”，spring框架必须是一个好的投资： 技术预期寿命和它们目前已经存在的时间成正比。每多生存一段时间，它的剩余预期寿命就会增加一点 技术在市场上存活的时间越长，投资就越安全。 不要急于学习新的技术，它很有可能会死。 时间将会展示那些技术值得投资。时间是您最好的顾问。你要学会等待。 从那以后的十年，我帮助了50个不同的软件项目。感谢导师的建议，我学到的一切都可以在公司，团队和行业适用。我学习的知识今天任然有用。 我没有浪费我的时间。 所有的项目看起来都不一样，但如果你看一下项目的内部： 编程语言不一样，但设计是一样的 框架不一样，从始至终就那些设计模式 开发人员不一样，但与人交往是的规则是一样的 请记住，框架，库和工具这些层出不穷，消失也是常有的。时间是宝贵的。 把你的黄金时间投入到可移植的总是相关的技能上面。 微服务 演进式架构 新的语言 代码整洁之道，设计模式，领域驱动设计 LeSS, SAFe 精益制造原则 Hystrix 容错模式 Docker 持续交付 Angular WEB，HTTP 和 REST 之所以对这个感触很深，我觉得我就陷入了这个死循环中。大数据热门，我就买了很多关于大数据的书籍，Hadoop，Hive，spark，Hbase等等。 厚厚的几本书放在那儿吃灰，至今没有翻阅，即便是看了也只是学会了几个工具的使用，对于真正的MapReduce，HDFS这些基础的又理解了多少呢？为什么这些简单的道理自己不能误出来呢？ 万变不离其宗，所以只有基础扎实，工作中解决问题才能游刃有余。 人与人之间交往好，和家人、朋友、同事都能相处好。</summary></entry><entry><title type="html">在linux下从jar中替换、修改文件</title><link href="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="alternate" type="text/html" title="在linux下从jar中替换、修改文件" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux</id><content type="html" xml:base="http://www.thxopen.com/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html">&lt;h2 id=&quot;修改文件内容&quot;&gt;修改文件内容&lt;/h2&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vi&lt;/code&gt;命令在linux下再熟悉不过了，搭配&lt;code class=&quot;highlighter-rouge&quot;&gt;unzip&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;zip&lt;/code&gt;还可以修改压缩包里的文件。&lt;/p&gt;
 
@@ -273,7 +456,7 @@ Example 1: to archive two class files into an archive called classes.jar:
 Example 2: use an existing manifest file &lt;span class=&quot;s1&quot;&gt;'mymanifest'&lt;/span&gt; and archive all the
            files &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the foo/ directory into &lt;span class=&quot;s1&quot;&gt;'classes.jar'&lt;/span&gt;:
        jar cvfm classes.jar mymanifest &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; foo/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="jar" /><category term="linux" /><category term="vi" /><category term="zip" /><category term="unzip" /><summary type="html">修改文件内容 vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩包里的文件。 ps: 如果本机还没有安装zip,unzip，先执行安装命令 sudo apt-get install unzip sudo apt-get install zip 假设现在有如下结构的目录: HelloWorld/ └── src └── main ├── META-INF │   └── MANIFEST.MF ├── java │   └── com │   └── thxopen │   └── demo │   └── Main.java └── resources └── demo.txt Main.java 文件内容如下： package com.thxopen.demo; import java.io.BufferedInputStream; import java.io.IOException; import java.io.InputStream; /** * @author Keith Shan * @date 2019年5月7日 * @site http://www.thxopen.com */ public class Main { public static void main(String[] args) { System.out.println(&quot;Hello World!&quot;); InputStream uri = Main.class.getClassLoader().getResourceAsStream(&quot;demo.txt&quot;); BufferedInputStream bf = null; try { bf = new BufferedInputStream(uri); byte[] b = new byte[bf.available()]; bf.read(b); System.out.println(new String(b)); } catch (IOException e) { e.printStackTrace(); } finally { if (bf != null) { try { bf.close(); } catch (IOException e) { e.printStackTrace(); } } } } } 代码很简单，输出一个Hello World! 然后读取resources/demo.txt文件内容并输出。 我们把项目构建成jar上传到服务器，并在服务器上执行。下面是执行输出的结果 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Hello World! I am Keith Shan. 现在需要修改demo.txt的内容，改变输出，不需要重新打包上传，使用vi命令即可 thxopen@PC201503302026:~/work$ vi HelloWorld.jar &quot; zip.vim version v28 &quot; Browsing zipfile /home/thxopen/work/HelloWorld.jar &quot; Select a file with cursor and press ENTER META-INF/MANIFEST.MF com/ com/thxopen/ com/thxopen/demo/ com/thxopen/demo/Main.class demo.txt META-INF/ META-INF/HelloWorld.kotlin_module 然后会列出jar里面的内容，把光标移动到需要编辑的文件，回车即可编辑。 ps: 如果文件比较多，可以使用/filename 来查找定位 进入文件编辑状态后，操作就和vi命令一样，这里我新增I am the new String. 内容，:wq!保存退出vi，然后:exit退出jar编辑状态。 重新执行 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Hello World! I am Keith Shan. I am the new String. 从输出可以看到demo.txt内容被成功修改 替换文件 修改文件内容对于.class文件来说似乎就不行了，那只能直接替换文件，如果替换文件呢？ 我修改Main.java文件，修改后内容如下： package com.thxopen.demo; /** * @author Keith Shan * @date 2019年5月7日 * @site http://www.thxopen.com */ public class Main { public static void main(String[] args) { System.out.println(&quot;Class file modified&quot;); } } 我把编译好的class文件放到 /com/thxopen/demo目录下，如下所示 thxopen@PC201503302026:~/work$ tree . ├── HelloWorld.jar └── com └── thxopen └── demo └── Main.class (重新编译好的文件) 3 directories, 2 files 执行如下命令把文件替换到jar中 thxopen@PC201503302026:~/work$ jar -uvf HelloWorld.jar com/thxopen/demo/Main.class adding: com/thxopen/demo/Main.class(in = 557) (out= 351)(deflated 36%) 重新执行，class文件已经被替换 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Class file modified 附：jar命令的基本用法 thxopen@PC201503302026:~/work$ jar Usage: jar {ctxui}[vfmn0PMe] [jar-file] [manifest-file] [entry-point] [-C dir] files ... Options: -c create new archive -t list table of contents for archive -x extract named (or all) files from archive -u update existing archive 更新存在的压缩包 -v generate verbose output on standard output 生成日志到标准输出 -f specify archive file name 指定压缩包名称 -m include manifest information from specified manifest file -n perform Pack200 normalization after creating a new archive -e specify application entry point for stand-alone application bundled into an executable jar file -0 store only; use no ZIP compression -P preserve leading '/' (absolute path) and &quot;..&quot; (parent directory) components from file names -M do not create a manifest file for the entries -i generate index information for the specified jar files -C change to the specified directory and include the following file If any file is a directory then it is processed recursively. The manifest file name, the archive file name and the entry point name are specified in the same order as the 'm', 'f' and 'e' flags. Example 1: to archive two class files into an archive called classes.jar: jar cvf classes.jar Foo.class Bar.class Example 2: use an existing manifest file 'mymanifest' and archive all the files in the foo/ directory into 'classes.jar': jar cvfm classes.jar mymanifest -C foo/ .</summary></entry><entry><title type="html">使用DataTables”武装”你的html表格——开刊</title><link href="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="alternate" type="text/html" title="使用DataTables&quot;武装&quot;你的html表格——开刊" /><published>2019-05-02T00:00:00+08:00</published><updated>2019-05-02T00:00:00+08:00</updated><id>http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger</id><content type="html" xml:base="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="jar" /><category term="linux" /><category term="vi" /><category term="zip" /><category term="unzip" /><summary type="html">修改文件内容 vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩包里的文件。 ps: 如果本机还没有安装zip,unzip，先执行安装命令 sudo apt-get install unzip sudo apt-get install zip 假设现在有如下结构的目录: HelloWorld/ └── src └── main ├── META-INF │   └── MANIFEST.MF ├── java │   └── com │   └── thxopen │   └── demo │   └── Main.java └── resources └── demo.txt Main.java 文件内容如下： package com.thxopen.demo; import java.io.BufferedInputStream; import java.io.IOException; import java.io.InputStream; /** * @author Keith Shan * @date 2019年5月7日 * @site http://www.thxopen.com */ public class Main { public static void main(String[] args) { System.out.println(&quot;Hello World!&quot;); InputStream uri = Main.class.getClassLoader().getResourceAsStream(&quot;demo.txt&quot;); BufferedInputStream bf = null; try { bf = new BufferedInputStream(uri); byte[] b = new byte[bf.available()]; bf.read(b); System.out.println(new String(b)); } catch (IOException e) { e.printStackTrace(); } finally { if (bf != null) { try { bf.close(); } catch (IOException e) { e.printStackTrace(); } } } } } 代码很简单，输出一个Hello World! 然后读取resources/demo.txt文件内容并输出。 我们把项目构建成jar上传到服务器，并在服务器上执行。下面是执行输出的结果 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Hello World! I am Keith Shan. 现在需要修改demo.txt的内容，改变输出，不需要重新打包上传，使用vi命令即可 thxopen@PC201503302026:~/work$ vi HelloWorld.jar &quot; zip.vim version v28 &quot; Browsing zipfile /home/thxopen/work/HelloWorld.jar &quot; Select a file with cursor and press ENTER META-INF/MANIFEST.MF com/ com/thxopen/ com/thxopen/demo/ com/thxopen/demo/Main.class demo.txt META-INF/ META-INF/HelloWorld.kotlin_module 然后会列出jar里面的内容，把光标移动到需要编辑的文件，回车即可编辑。 ps: 如果文件比较多，可以使用/filename 来查找定位 进入文件编辑状态后，操作就和vi命令一样，这里我新增I am the new String. 内容，:wq!保存退出vi，然后:exit退出jar编辑状态。 重新执行 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Hello World! I am Keith Shan. I am the new String. 从输出可以看到demo.txt内容被成功修改 替换文件 修改文件内容对于.class文件来说似乎就不行了，那只能直接替换文件，如果替换文件呢？ 我修改Main.java文件，修改后内容如下： package com.thxopen.demo; /** * @author Keith Shan * @date 2019年5月7日 * @site http://www.thxopen.com */ public class Main { public static void main(String[] args) { System.out.println(&quot;Class file modified&quot;); } } 我把编译好的class文件放到 /com/thxopen/demo目录下，如下所示 thxopen@PC201503302026:~/work$ tree . ├── HelloWorld.jar └── com └── thxopen └── demo └── Main.class (重新编译好的文件) 3 directories, 2 files 执行如下命令把文件替换到jar中 thxopen@PC201503302026:~/work$ jar -uvf HelloWorld.jar com/thxopen/demo/Main.class adding: com/thxopen/demo/Main.class(in = 557) (out= 351)(deflated 36%) 重新执行，class文件已经被替换 thxopen@PC201503302026:~/work$ java -jar HelloWorld.jar Class file modified 附：jar命令的基本用法 thxopen@PC201503302026:~/work$ jar Usage: jar {ctxui}[vfmn0PMe] [jar-file] [manifest-file] [entry-point] [-C dir] files ... Options: -c create new archive -t list table of contents for archive -x extract named (or all) files from archive -u update existing archive 更新存在的压缩包 -v generate verbose output on standard output 生成日志到标准输出 -f specify archive file name 指定压缩包名称 -m include manifest information from specified manifest file -n perform Pack200 normalization after creating a new archive -e specify application entry point for stand-alone application bundled into an executable jar file -0 store only; use no ZIP compression -P preserve leading '/' (absolute path) and &quot;..&quot; (parent directory) components from file names -M do not create a manifest file for the entries -i generate index information for the specified jar files -C change to the specified directory and include the following file If any file is a directory then it is processed recursively. The manifest file name, the archive file name and the entry point name are specified in the same order as the 'm', 'f' and 'e' flags. Example 1: to archive two class files into an archive called classes.jar: jar cvf classes.jar Foo.class Bar.class Example 2: use an existing manifest file 'mymanifest' and archive all the files in the foo/ directory into 'classes.jar': jar cvfm classes.jar mymanifest -C foo/ .</summary></entry><entry><title type="html">使用DataTables”武装”你的html表格——开刊</title><link href="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="alternate" type="text/html" title="使用DataTables&quot;武装&quot;你的html表格——开刊" /><published>2019-05-02T00:00:00+08:00</published><updated>2019-05-02T00:00:00+08:00</updated><id>http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger</id><content type="html" xml:base="http://www.thxopen.com/datatables/2019/05/02/how-to-make-your-table-stronger.html">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
 
 &lt;p&gt;三年前，&lt;a href=&quot;http://datatables.club/blog/2016/06/04/to-reader.html&quot;&gt;《致在使用DataTables的小伙伴》&lt;/a&gt;，看到努力的自己，我想感谢我自己。
 谢谢你，谢谢一直努力的你！&lt;/p&gt;
@@ -295,7 +478,7 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 &lt;h2 id=&quot;课程目的&quot;&gt;课程目的&lt;/h2&gt;
 
-&lt;p&gt;本次推出Datatables入门第二期——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题：&lt;/p&gt;
+&lt;p&gt;本次推出Datatables入门第二期 ——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;不知道怎么学习Datatables&lt;/li&gt;
@@ -310,9 +493,9 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 &lt;ul&gt;
   &lt;li&gt;开刊（即本节内容，已完成 2019年05月02日）&lt;/li&gt;
-  &lt;li&gt;第一章，Datatables的6大特性
+  &lt;li&gt;第一章，Datatables的6大特性(已完成 2019年06月09日)
     &lt;ul&gt;
-      &lt;li&gt;DOM属性的介绍&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/datatables/2019/06/09/datatables-dom-option.html&quot;&gt;DOM属性的介绍&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;第二章，对于各种数据源该怎么使用Datatables？
@@ -351,9 +534,9 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 &lt;h2 id=&quot;课程视频&quot;&gt;课程视频&lt;/h2&gt;
 
-&lt;p&gt;由于服务器不支持视频播放，鼠标右键&lt;strong&gt;&lt;em&gt;&lt;a href=&quot;/video/season_two/1.mp4&quot;&gt;点我&lt;/a&gt;&lt;/em&gt;&lt;/strong&gt;，另存为到本地即可&lt;/p&gt;
+&lt;p&gt;由于服务器不支持视频播放，鼠标右键&lt;strong&gt;&lt;em&gt;&lt;a href=&quot;/video/season_two/season2-01.mp4&quot;&gt;点我&lt;/a&gt;&lt;/em&gt;&lt;/strong&gt;，另存为到本地即可&lt;/p&gt;
 
-&lt;p&gt;最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="datatables" /><category term="视频" /><category term="入门第二期" /><summary type="html">前言 三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。 谢谢你，谢谢一直努力的你！ 我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的 DataTables中文网，没有你们，Datatables中文网也走不到今天。每当看到你们从中文网上获取到答案或者思路，我都感到无比的开心。我永远都忘不了 当我使用Datatables服务器模式遇到问题解决不了的时候，有一个人帮我解决，然后我豁然开朗的感觉，我想大家每当问题得到解决的时候那种心情是多么的…… 但我也要批评我自己，批评自己不够坚持，没有做到有始有终，以为这样就足够了，这是对大家不负责也是对自己不负责。从2014年到2019年，Datatables中文网 一直属于半成品状态。我高兴，因为上面的内容能够帮助大家，但我又悲伤，因为内容不够完整，不是所有人都能在上面得到答案。有的人说好，有的人说不好， 以前我会在意这些看法，但是现在不会了，人无完人，也没有完美的东西。任何事情都是在一次次修正中，逐渐趋于完美。不管怎么样我还是坚持过来了，没有放弃， 那么在接下来的时间里，不仅仅只是坚持，还要把它做得更好。 现在越来越多的IT在线教育平台，讲各种各样的知识，技术，框架等等。我也经常会去上面学习，通过看视频，对自己的知识查漏补缺，还可以系统的梳理知识。 而且对于一些质量好的视频看过之后有种醍醐灌顶，豁然开朗的感觉，如果看一次不懂还可以看第二次，三次，直到明白为止。正因为如此，我有了做视频的念头， 如果我也能把我总结的经验说出来教给别人，把知识分享给更多人，岂不也是一件快乐的事情。 所以，我做了。 课程目的 本次推出Datatables入门第二期——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题： 不知道怎么学习Datatables 新老版本混用，不规范和不标准，阅读代码困难 滥用Datatables，小小需求就用插件导致项目臃肿 不知道怎么把Datatables的强大功能套用到自己的项目中 客户端模式和服务器模式什么区别，怎么使用 等等 课程内容 开刊（即本节内容，已完成 2019年05月02日） 第一章，Datatables的6大特性 DOM属性的介绍 第二章，对于各种数据源该怎么使用Datatables？ Dom数据源 javascript数据 Ajax数据 服务器模式 第三章，打造和自己项目贴近的表格 info，paging，processing，lengthChange，searching 第四章，更方便的操作表格数据 ajax columns row draw page 实战——制作一个具有增删改查功能的表格 行内编辑 弹框编辑 内容会有变动，只有视频录好后就定下内容，本目录会不断更新直到全部完结 课程视频 由于服务器不支持视频播放，鼠标右键点我，另存为到本地即可 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言</summary></entry><entry><title type="html">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo</title><link href="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="alternate" type="text/html" title="Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found</id><content type="html" xml:base="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html">&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+&lt;p&gt;最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="datatables" /><category term="视频" /><category term="入门第二期" /><summary type="html">前言 三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。 谢谢你，谢谢一直努力的你！ 我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的 DataTables中文网，没有你们，Datatables中文网也走不到今天。每当看到你们从中文网上获取到答案或者思路，我都感到无比的开心。我永远都忘不了 当我使用Datatables服务器模式遇到问题解决不了的时候，有一个人帮我解决，然后我豁然开朗的感觉，我想大家每当问题得到解决的时候那种心情是多么的…… 但我也要批评我自己，批评自己不够坚持，没有做到有始有终，以为这样就足够了，这是对大家不负责也是对自己不负责。从2014年到2019年，Datatables中文网 一直属于半成品状态。我高兴，因为上面的内容能够帮助大家，但我又悲伤，因为内容不够完整，不是所有人都能在上面得到答案。有的人说好，有的人说不好， 以前我会在意这些看法，但是现在不会了，人无完人，也没有完美的东西。任何事情都是在一次次修正中，逐渐趋于完美。不管怎么样我还是坚持过来了，没有放弃， 那么在接下来的时间里，不仅仅只是坚持，还要把它做得更好。 现在越来越多的IT在线教育平台，讲各种各样的知识，技术，框架等等。我也经常会去上面学习，通过看视频，对自己的知识查漏补缺，还可以系统的梳理知识。 而且对于一些质量好的视频看过之后有种醍醐灌顶，豁然开朗的感觉，如果看一次不懂还可以看第二次，三次，直到明白为止。正因为如此，我有了做视频的念头， 如果我也能把我总结的经验说出来教给别人，把知识分享给更多人，岂不也是一件快乐的事情。 所以，我做了。 课程目的 本次推出Datatables入门第二期 ——《使用Datatables”武装”你的html表格》，旨在给出一个系统的学习路径，解决如下问题： 不知道怎么学习Datatables 新老版本混用，不规范和不标准，阅读代码困难 滥用Datatables，小小需求就用插件导致项目臃肿 不知道怎么把Datatables的强大功能套用到自己的项目中 客户端模式和服务器模式什么区别，怎么使用 等等 课程内容 开刊（即本节内容，已完成 2019年05月02日） 第一章，Datatables的6大特性(已完成 2019年06月09日) DOM属性的介绍 第二章，对于各种数据源该怎么使用Datatables？ Dom数据源 javascript数据 Ajax数据 服务器模式 第三章，打造和自己项目贴近的表格 info，paging，processing，lengthChange，searching 第四章，更方便的操作表格数据 ajax columns row draw page 实战——制作一个具有增删改查功能的表格 行内编辑 弹框编辑 内容会有变动，只有视频录好后就定下内容，本目录会不断更新直到全部完结 课程视频 由于服务器不支持视频播放，鼠标右键点我，另存为到本地即可 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言</summary></entry><entry><title type="html">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo</title><link href="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="alternate" type="text/html" title="Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found</id><content type="html" xml:base="http://www.thxopen.com/java/exception/2019/04/28/apiinfo-class-not-found.html">&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
 
 &lt;p&gt;项目中需要使用swagger提供api文档，于是加上依赖：&lt;/p&gt;
 
@@ -457,7 +640,7 @@ Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到�
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中
-即可解决问题。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ClassNotFoundException" /><category term="java" /><category term="swagger" /><category term="intellij idea" /><summary type="html">起因 项目中需要使用swagger提供api文档，于是加上依赖： &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger2&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger-ui&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 配置swagger扫描的路径： import org.springframework.beans.factory.annotation.Value; import org.springframework.context.annotation.Bean; import org.springframework.context.annotation.Configuration; import springfox.documentation.builders.ApiInfoBuilder; import springfox.documentation.builders.ParameterBuilder; import springfox.documentation.builders.PathSelectors; import springfox.documentation.builders.RequestHandlerSelectors; import springfox.documentation.schema.ModelRef; import springfox.documentation.service.ApiInfo; import springfox.documentation.service.Parameter; import springfox.documentation.spi.DocumentationType; import springfox.documentation.spring.web.plugins.Docket; import springfox.documentation.swagger2.annotations.EnableSwagger2; import java.util.ArrayList; import java.util.List; /** * swagger配置 * &amp;lt;p&amp;gt; * 2019年4月28日 * * @author Keith * @version v0.0.1 */ @Configuration //开启swagger @EnableSwagger2 public class Swagger2 { //在配置文件里设置扫描controller的路径 @Value(&quot;${swagger.basePackage}&quot;) String basePackage; @Bean public Docket createRestApi() { ParameterBuilder ticketPar = new ParameterBuilder(); List&amp;lt;Parameter&amp;gt; pars = new ArrayList&amp;lt;Parameter&amp;gt;(); ticketPar.name(&quot;Authorization&quot;).description(&quot;token&quot;) .modelRef(new ModelRef(&quot;string&quot;)).parameterType(&quot;header&quot;) .required(true).build(); //header中的ticket参数非必填，传空也可以 pars.add(ticketPar.build()); //根据每个方法名也知道当前方法在设置什么参数 return new Docket(DocumentationType.SWAGGER_2) .apiInfo(apiInfo()) .select() .apis(RequestHandlerSelectors.basePackage(basePackage)) .paths(PathSelectors.any()) .build(); // .globalOperationParameters(pars) ; //所有接口请求需要带上的参数 } private ApiInfo apiInfo() { return new ApiInfoBuilder() .title(&quot;接口名称) .description(&quot;接口描述&quot;) .termsOfServiceUrl(&quot;服务url&quot;) .contact(&quot;联系人&quot;) .version(&quot;版本号&quot;) .build(); } } 以上配置在另一个项目中是没问题的，我拷贝过来到新的项目上，启动tomcat，结果报如下错误： Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo 疑问 intellij idea编译能通过，但是启动tomcat的时候却报类找不到，为什么呢？ 解决问题 我使用的是intellij idea开发，我查看了编译好的war目录，虽然我maven已经引用了依赖，构建也没有问题，但我发现/WEB_INFO/lib 确实没有swagger的相关jar。 我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键put into /WEB_INFO/lib， 再次启动tomcat，问题得到解决。 总结 intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中 即可解决问题。</summary></entry><entry><title type="html">使用Docker安装oracle 11g</title><link href="http://localhost:4000/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="alternate" type="text/html" title="使用Docker安装oracle 11g" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>http://localhost:4000/linux/docker/2019/04/17/install-oracle11g-on-docker</id><content type="html" xml:base="http://localhost:4000/linux/docker/2019/04/17/install-oracle11g-on-docker.html">&lt;h2 id=&quot;一简介&quot;&gt;一，简介&lt;/h2&gt;
+即可解决问题。&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ClassNotFoundException" /><category term="java" /><category term="swagger" /><category term="intellij idea" /><summary type="html">起因 项目中需要使用swagger提供api文档，于是加上依赖： &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger2&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;io.springfox&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;springfox-swagger-ui&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.2.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 配置swagger扫描的路径： import org.springframework.beans.factory.annotation.Value; import org.springframework.context.annotation.Bean; import org.springframework.context.annotation.Configuration; import springfox.documentation.builders.ApiInfoBuilder; import springfox.documentation.builders.ParameterBuilder; import springfox.documentation.builders.PathSelectors; import springfox.documentation.builders.RequestHandlerSelectors; import springfox.documentation.schema.ModelRef; import springfox.documentation.service.ApiInfo; import springfox.documentation.service.Parameter; import springfox.documentation.spi.DocumentationType; import springfox.documentation.spring.web.plugins.Docket; import springfox.documentation.swagger2.annotations.EnableSwagger2; import java.util.ArrayList; import java.util.List; /** * swagger配置 * &amp;lt;p&amp;gt; * 2019年4月28日 * * @author Keith * @version v0.0.1 */ @Configuration //开启swagger @EnableSwagger2 public class Swagger2 { //在配置文件里设置扫描controller的路径 @Value(&quot;${swagger.basePackage}&quot;) String basePackage; @Bean public Docket createRestApi() { ParameterBuilder ticketPar = new ParameterBuilder(); List&amp;lt;Parameter&amp;gt; pars = new ArrayList&amp;lt;Parameter&amp;gt;(); ticketPar.name(&quot;Authorization&quot;).description(&quot;token&quot;) .modelRef(new ModelRef(&quot;string&quot;)).parameterType(&quot;header&quot;) .required(true).build(); //header中的ticket参数非必填，传空也可以 pars.add(ticketPar.build()); //根据每个方法名也知道当前方法在设置什么参数 return new Docket(DocumentationType.SWAGGER_2) .apiInfo(apiInfo()) .select() .apis(RequestHandlerSelectors.basePackage(basePackage)) .paths(PathSelectors.any()) .build(); // .globalOperationParameters(pars) ; //所有接口请求需要带上的参数 } private ApiInfo apiInfo() { return new ApiInfoBuilder() .title(&quot;接口名称) .description(&quot;接口描述&quot;) .termsOfServiceUrl(&quot;服务url&quot;) .contact(&quot;联系人&quot;) .version(&quot;版本号&quot;) .build(); } } 以上配置在另一个项目中是没问题的，我拷贝过来到新的项目上，启动tomcat，结果报如下错误： Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo 疑问 intellij idea编译能通过，但是启动tomcat的时候却报类找不到，为什么呢？ 解决问题 我使用的是intellij idea开发，我查看了编译好的war目录，虽然我maven已经引用了依赖，构建也没有问题，但我发现/WEB_INFO/lib 确实没有swagger的相关jar。 我把问题锁定到Artifacts配置上，我打开Project Structure -》 Project Settings -》Artifacts 发现Available Elements里面 Swagger相关的jar没有打包war中，所以tomcat启动会提示类找不到。于是选中swagger相关jar，右键put into /WEB_INFO/lib， 再次启动tomcat，问题得到解决。 总结 intellij idea在修改pom.xml后，没有自动把相关的jar构建到war中，导致发布到tomcat里的war缺失相关jar。手动把缺失的jar构建到war中 即可解决问题。</summary></entry><entry><title type="html">使用Docker安装oracle 11g</title><link href="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html" rel="alternate" type="text/html" title="使用Docker安装oracle 11g" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker</id><content type="html" xml:base="http://www.thxopen.com/linux/docker/2019/04/17/install-oracle11g-on-docker.html">&lt;h2 id=&quot;一简介&quot;&gt;一，简介&lt;/h2&gt;
 
 &lt;p&gt;Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。&lt;/p&gt;
 
@@ -650,7 +833,7 @@ SQL&amp;gt;
     &lt;li&gt;http://blog.grayidea.cn/archives/67&lt;/li&gt;
     &lt;li&gt;https://blog.csdn.net/u013238950/article/details/50999401&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="oracle 11g" /><category term="docker" /><summary type="html">一，简介 Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。 借助docker，安装oracle不再困难，只需要几步即可。 需要注意，在参考本文章之前，需要具备操作docker的基础，怎么使用docker，可以参考这里 二，安装 2.1、安装oracle 11g镜像到docker 2.1.1、搜索符合条件的镜像 docker search oracle NAME DESCRIPTION STARS OFFICIAL AUTOMATED oraclelinux Official Docker builds of Oracle Linux. 573 [OK] jaspeen/oracle-11g Docker image for Oracle 11g database 99 [OK] oracle/openjdk Docker images containing OpenJDK Oracle Linux 55 [OK] …… 2.1.2、选择安装 jaspeen/oracle-11g，等待下载安装完成 docker pull jaspeen/oracle-11g 2.1.3、查看下载好的镜像 docker images REPOSITORY TAG IMAGE ID CREATED SIZE jaspeen/oracle-11g latest 0c8711fe4f0f 3 years ago 281MB 注意，这个镜像没有直接安装好oracle，他帮我们配置好了环境，提供了安装脚本，我们只需要按照要求把oracle的安装目录配置好，启动镜像，即可 2.2、准备oracle 11g安装文件 2.2.1、下载oracle 11g安装文件 从oracle 官网 下载所需要的安装包，这里我们以oracle 11g 为例子，分别下载 linux.x64_11gR2_database_1of2.zip 和 linux.x64_11gR2_database_2of2.zip两个压缩包，下载完成后解压到D盘 (如下目录结构) D:. └─oracleinstall └─database ├─doc ├─install ├─response ├─rpm ├─sshsetup ├─stage ├─runInstaller └─welcome.html 2.3、安装oracle 2.3.1、注意事项 为什么要解压成上面的目录结构，我们先来看看jaspeen/oracle-11g镜像提供的安装脚本 #!/usr/bin/env bash set -e source /assets/colorecho trap &quot;echo_red '******* ERROR: Something went wrong.'; exit 1&quot; SIGTERM trap &quot;echo_red '******* Caught SIGINT signal. Stopping...'; exit 2&quot; SIGINT if [ ! -d &quot;/install/database&quot; ]; then echo_red &quot;Installation files not found. Unzip installation files into mounted(/install) folder&quot; exit 1 fi echo_yellow &quot;Installing Oracle Database 11g&quot; su oracle -c &quot;/install/database/runInstaller -silent -ignorePrereq -waitforcompletion -responseFile /assets/db_install.rsp&quot; /opt/oracle/oraInventory/orainstRoot.sh /opt/oracle/app/product/11.2.0/dbhome_1/root.sh 从脚本里可以看到它会读取/install/database目录，如果不存在会给出提示Installation files not found. Unzip installation files into mounted(/install) folder 2.3.2、启动镜像（执行安装oracle） 命令的解释： docker run 启动容器的命令 privileged 给这个容器特权，安装oracle可能需要操作需要root权限的文件或目录 name 给这个容器名一个名字 p 映射端口 v 挂在文件到容器指定目录 (d:/oracleinstall/database 对应容器 /install/database) jaspeen/oracle-11g 代表启动指定的容器 docker run --privileged --name oracle11g -p 1521:1521 -v d:/oracleinstall:/install jaspeen/oracle-11g Database is not installed. Installing... Installing Oracle Database 11g Starting Oracle Universal Installer... Checking Temp space: must be greater than 120 MB. Actual 47303 MB Passed Checking swap space: must be greater than 150 MB. Actual 1023 MB Passed Preparing to launch Oracle Universal Installer from /tmp/OraInstall2019-04-17_08-14-23AM. Please wait ... You can find the log of this install session at: /opt/oracle/oraInventory/logs/installActions2019-04-17_08-14-23AM.log …… 这个安装过程会很漫长，日志也很多，这里只提供部分。注意到日志里有 100% complete 打印，代表oracle安装成功 2.3.3、安装完成 再次查看运行状态，oracle已经启动完成 docker ps -a CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 7f53f07c93e5 jaspeen/oracle-11g &quot;/assets/entrypoint.…&quot; About an hour ago Up About an hour 0.0.0.0:1521-&amp;gt;1521/tcp, 8080/tcp oracle11g 2.3.4、其他需要注意的，如果日志长时间没有更新，检查docker是否已经死掉 查看docker的状态 docker ps -a Error response from daemon: An invalid argument was supplied. 如果出现如上提示，表示docker已经死掉，我们只需要重新执行安装步骤，让oracle安装完成 ps:根据我的猜测，我给docker分配的资源不够导致的，我重新把docker的内存和cpu调高一点后oracle顺利安装完成。 docker rm oracle11g docker run --privileged --name oracle11g -p 1521:1521 -v oracleinstall:/install jaspeen/oracle-11g 三，配置 默认scott用户是被锁定的，我们需要解锁，通过数据库工具即可成功连接到oracle 3.1，连接到容器， docker exec -it oracle11g /bin/bash 3.2，切换到oracle用户，然后连接到sql控制台 [root@7f53f07c93e5 /]# su - oracle Last login: Wed Apr 17 08:29:31 UTC 2019 [oracle@7f53f07c93e5 ~]$ sqlplus / as sysdba SQL*Plus: Release 11.2.0.1.0 Production on Wed Apr 17 09:29:49 2019 Copyright (c) 1982, 2009, Oracle. All rights reserved. Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production With the Partitioning, OLAP, Data Mining and Real Application Testing options SQL&amp;gt; 3.3，解锁账户 SQL&amp;gt; alter user scott account unlock; User altered. SQL&amp;gt; commit; Commit complete. SQL&amp;gt; conn scott/tiger ERROR: ORA-28001: the password has expired Changing password for scott New password: Retype new password: Password changed Connected. SQL&amp;gt; 3.4，使用dataGrip连接oracle数据库 数据库安装完成后，使用默认的sid为orcl，端口为1521，scott/tiger即可连接 Reference: https://zh.wikipedia.org/wiki/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93 https://hub.docker.com/r/jaspeen/oracle-11g https://stackoverflow.com/questions/37468788/what-is-the-right-way-to-add-data-to-an-existing-named-volume-in-docker https://hub.docker.com/_/busybox http://blog.grayidea.cn/archives/67 https://blog.csdn.net/u013238950/article/details/50999401</summary></entry><entry><title type="html">使用logback限制日志打印内容长度</title><link href="http://localhost:4000/java/2019/04/12/limit-message-size-in-logback.html" rel="alternate" type="text/html" title="使用logback限制日志打印内容长度" /><published>2019-04-12T00:00:00+08:00</published><updated>2019-04-12T00:00:00+08:00</updated><id>http://localhost:4000/java/2019/04/12/limit-message-size-in-logback</id><content type="html" xml:base="http://localhost:4000/java/2019/04/12/limit-message-size-in-logback.html">&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="oracle 11g" /><category term="docker" /><summary type="html">一，简介 Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。 借助docker，安装oracle不再困难，只需要几步即可。 需要注意，在参考本文章之前，需要具备操作docker的基础，怎么使用docker，可以参考这里 二，安装 2.1、安装oracle 11g镜像到docker 2.1.1、搜索符合条件的镜像 docker search oracle NAME DESCRIPTION STARS OFFICIAL AUTOMATED oraclelinux Official Docker builds of Oracle Linux. 573 [OK] jaspeen/oracle-11g Docker image for Oracle 11g database 99 [OK] oracle/openjdk Docker images containing OpenJDK Oracle Linux 55 [OK] …… 2.1.2、选择安装 jaspeen/oracle-11g，等待下载安装完成 docker pull jaspeen/oracle-11g 2.1.3、查看下载好的镜像 docker images REPOSITORY TAG IMAGE ID CREATED SIZE jaspeen/oracle-11g latest 0c8711fe4f0f 3 years ago 281MB 注意，这个镜像没有直接安装好oracle，他帮我们配置好了环境，提供了安装脚本，我们只需要按照要求把oracle的安装目录配置好，启动镜像，即可 2.2、准备oracle 11g安装文件 2.2.1、下载oracle 11g安装文件 从oracle 官网 下载所需要的安装包，这里我们以oracle 11g 为例子，分别下载 linux.x64_11gR2_database_1of2.zip 和 linux.x64_11gR2_database_2of2.zip两个压缩包，下载完成后解压到D盘 (如下目录结构) D:. └─oracleinstall └─database ├─doc ├─install ├─response ├─rpm ├─sshsetup ├─stage ├─runInstaller └─welcome.html 2.3、安装oracle 2.3.1、注意事项 为什么要解压成上面的目录结构，我们先来看看jaspeen/oracle-11g镜像提供的安装脚本 #!/usr/bin/env bash set -e source /assets/colorecho trap &quot;echo_red '******* ERROR: Something went wrong.'; exit 1&quot; SIGTERM trap &quot;echo_red '******* Caught SIGINT signal. Stopping...'; exit 2&quot; SIGINT if [ ! -d &quot;/install/database&quot; ]; then echo_red &quot;Installation files not found. Unzip installation files into mounted(/install) folder&quot; exit 1 fi echo_yellow &quot;Installing Oracle Database 11g&quot; su oracle -c &quot;/install/database/runInstaller -silent -ignorePrereq -waitforcompletion -responseFile /assets/db_install.rsp&quot; /opt/oracle/oraInventory/orainstRoot.sh /opt/oracle/app/product/11.2.0/dbhome_1/root.sh 从脚本里可以看到它会读取/install/database目录，如果不存在会给出提示Installation files not found. Unzip installation files into mounted(/install) folder 2.3.2、启动镜像（执行安装oracle） 命令的解释： docker run 启动容器的命令 privileged 给这个容器特权，安装oracle可能需要操作需要root权限的文件或目录 name 给这个容器名一个名字 p 映射端口 v 挂在文件到容器指定目录 (d:/oracleinstall/database 对应容器 /install/database) jaspeen/oracle-11g 代表启动指定的容器 docker run --privileged --name oracle11g -p 1521:1521 -v d:/oracleinstall:/install jaspeen/oracle-11g Database is not installed. Installing... Installing Oracle Database 11g Starting Oracle Universal Installer... Checking Temp space: must be greater than 120 MB. Actual 47303 MB Passed Checking swap space: must be greater than 150 MB. Actual 1023 MB Passed Preparing to launch Oracle Universal Installer from /tmp/OraInstall2019-04-17_08-14-23AM. Please wait ... You can find the log of this install session at: /opt/oracle/oraInventory/logs/installActions2019-04-17_08-14-23AM.log …… 这个安装过程会很漫长，日志也很多，这里只提供部分。注意到日志里有 100% complete 打印，代表oracle安装成功 2.3.3、安装完成 再次查看运行状态，oracle已经启动完成 docker ps -a CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 7f53f07c93e5 jaspeen/oracle-11g &quot;/assets/entrypoint.…&quot; About an hour ago Up About an hour 0.0.0.0:1521-&amp;gt;1521/tcp, 8080/tcp oracle11g 2.3.4、其他需要注意的，如果日志长时间没有更新，检查docker是否已经死掉 查看docker的状态 docker ps -a Error response from daemon: An invalid argument was supplied. 如果出现如上提示，表示docker已经死掉，我们只需要重新执行安装步骤，让oracle安装完成 ps:根据我的猜测，我给docker分配的资源不够导致的，我重新把docker的内存和cpu调高一点后oracle顺利安装完成。 docker rm oracle11g docker run --privileged --name oracle11g -p 1521:1521 -v oracleinstall:/install jaspeen/oracle-11g 三，配置 默认scott用户是被锁定的，我们需要解锁，通过数据库工具即可成功连接到oracle 3.1，连接到容器， docker exec -it oracle11g /bin/bash 3.2，切换到oracle用户，然后连接到sql控制台 [root@7f53f07c93e5 /]# su - oracle Last login: Wed Apr 17 08:29:31 UTC 2019 [oracle@7f53f07c93e5 ~]$ sqlplus / as sysdba SQL*Plus: Release 11.2.0.1.0 Production on Wed Apr 17 09:29:49 2019 Copyright (c) 1982, 2009, Oracle. All rights reserved. Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production With the Partitioning, OLAP, Data Mining and Real Application Testing options SQL&amp;gt; 3.3，解锁账户 SQL&amp;gt; alter user scott account unlock; User altered. SQL&amp;gt; commit; Commit complete. SQL&amp;gt; conn scott/tiger ERROR: ORA-28001: the password has expired Changing password for scott New password: Retype new password: Password changed Connected. SQL&amp;gt; 3.4，使用dataGrip连接oracle数据库 数据库安装完成后，使用默认的sid为orcl，端口为1521，scott/tiger即可连接 Reference: https://zh.wikipedia.org/wiki/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93 https://hub.docker.com/r/jaspeen/oracle-11g https://stackoverflow.com/questions/37468788/what-is-the-right-way-to-add-data-to-an-existing-named-volume-in-docker https://hub.docker.com/_/busybox http://blog.grayidea.cn/archives/67 https://blog.csdn.net/u013238950/article/details/50999401</summary></entry><entry><title type="html">使用logback限制日志打印内容长度</title><link href="http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback.html" rel="alternate" type="text/html" title="使用logback限制日志打印内容长度" /><published>2019-04-12T00:00:00+08:00</published><updated>2019-04-12T00:00:00+08:00</updated><id>http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback</id><content type="html" xml:base="http://www.thxopen.com/java/2019/04/12/limit-message-size-in-logback.html">&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
 
 &lt;p&gt;好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合&lt;a href=&quot;//projectlombok.org&quot;&gt;lombok&lt;/a&gt;可以很方便
 的打印日志。&lt;/p&gt;
@@ -853,7 +1036,7 @@ the field is expanded to accommodate the data. The value is never truncated.&lt;
     &lt;li&gt;https://stackoverflow.com/questions/35710008/limit-message-size-in-logback&lt;/li&gt;
     &lt;li&gt;https://stackoverflow.com/questions/32704470/can-a-logback-message-field-be-truncated-trimmed-to-n-characters&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="logback" /><category term="layout" /><category term="pattern" /><summary type="html">简介 好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便 的打印日志。 @Slf4j public class LogExampleOther { public static void main(String... args) { log.error(&quot;Something else is wrong here&quot;); } } 只需要在类上加上@Slf4j注解即可</summary></entry><entry><title type="html">在Docker上安装常用的和Java相关的工具</title><link href="http://localhost:4000/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html" rel="alternate" type="text/html" title="在Docker上安装常用的和Java相关的工具" /><published>2019-03-11T00:00:00+08:00</published><updated>2019-03-11T00:00:00+08:00</updated><id>http://localhost:4000/linux/docker/2019/03/11/install-java-ee-environment-on-docker</id><content type="html" xml:base="http://localhost:4000/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html">&lt;p&gt;之前已经写过&lt;a href=&quot;/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html&quot;&gt;在Ubuntu上安装常用的和Java相关的工具&lt;/a&gt;,
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="logback" /><category term="layout" /><category term="pattern" /><summary type="html">简介 好的日志打印，对于程序的调试和查找问题是很重要的。目前广泛使用的是logback，配合lombok可以很方便 的打印日志。 @Slf4j public class LogExampleOther { public static void main(String... args) { log.error(&quot;Something else is wrong here&quot;); } } 只需要在类上加上@Slf4j注解即可</summary></entry><entry><title type="html">在Docker上安装常用的和Java相关的工具</title><link href="http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html" rel="alternate" type="text/html" title="在Docker上安装常用的和Java相关的工具" /><published>2019-03-11T00:00:00+08:00</published><updated>2019-03-11T00:00:00+08:00</updated><id>http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker</id><content type="html" xml:base="http://www.thxopen.com/linux/docker/2019/03/11/install-java-ee-environment-on-docker.html">&lt;p&gt;之前已经写过&lt;a href=&quot;/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html&quot;&gt;在Ubuntu上安装常用的和Java相关的工具&lt;/a&gt;,
 这次要说的是如何在docker上安装这些工具。&lt;/p&gt;
 
 &lt;p&gt;何为Docker？&lt;/p&gt;
@@ -878,299 +1061,4 @@ the field is expanded to accommodate the data. The value is never truncated.&lt;
   &lt;ul&gt;
     &lt;li&gt;https://zh.wikipedia.org/wiki/Docker&lt;/li&gt;
   &lt;/ul&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="rabbitmq" /><category term="nginx" /><category term="redis" /><category term="jdk" /><category term="mysql" /><category term="jenkins" /><category term="gitlab" /><category term="mongodb" /><summary type="html">之前已经写过在Ubuntu上安装常用的和Java相关的工具, 这次要说的是如何在docker上安装这些工具。 何为Docker？ Docker是一个开放源代码软件项目，让应用程序部署在软件货柜下的工作可以自动化进行，借此在Linux操作系统上， 提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。 为什么要使用Docker？已经有现成的了，我就不再多说。 之所以写这个，就是觉得Docker给我带来极大的便利，我同样希望更多人能够享受到Docker带来的好处。 我一直有听说Docker，但一直没有揭开她神秘的面纱。终于我忍不住了，由于一次服务器故障，因为同事执行apt-get命令安装了新的软件， 导致系统环境变量发生了改变，导致ssh服务异常，大家都不能远程连上服务器。这个问题在服务器上一直存在，之前不知道什么原因把 让我下决心要去了解Docker。 /usr/local/lib/libssl.so.1.0.0 /usr/local/lib/libcrypto.so.1.0.0 Reference: https://zh.wikipedia.org/wiki/Docker</summary></entry><entry><title type="html">在虚拟机里安装windows10</title><link href="http://localhost:4000/mac/2018/11/05/install-windows10-in-virtualbox.html" rel="alternate" type="text/html" title="在虚拟机里安装windows10" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://localhost:4000/mac/2018/11/05/install-windows10-in-virtualbox</id><content type="html" xml:base="http://localhost:4000/mac/2018/11/05/install-windows10-in-virtualbox.html">&lt;p&gt;见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？
-macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows，
-他们都只是一个工具，哪个用着上手舒服，你就选择那个。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;同时需要多个操作系统的时候怎么办呢？有些只能在windows下才能运行的程序又怎么办呢？虚拟机在这方面帮我们解决了很多问题，找到问题的解决办法就行，没有绝对的对与错，好与坏。&lt;/p&gt;
-
-&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;virtualbox&lt;/a&gt;（虚拟机软件）&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.microsoft.com/zh-cn/software-download/windows10ISO&quot;&gt;windows10 iso&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通过上面的连接，下载virtualbox和windows10的安装镜像，我们就可以开始了&lt;/p&gt;
-
-&lt;h2 id=&quot;开始安装&quot;&gt;开始安装&lt;/h2&gt;
-
-&lt;h3 id=&quot;一配置虚拟机&quot;&gt;一，配置虚拟机&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，虚拟机名称和系统类型，这里系统类型选择【Microsoft Windows】，版本选择【windows 10（64-bit）】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step1.png&quot; alt=&quot;step 1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，内存大小，这里可以根据软件推荐的大小配置，我这里推荐的是2G（2048 MB），为了系统更加流畅，我调到 4G （4096 MB）。可以根据电脑的配置适当上调
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step2.png&quot; alt=&quot;step 2&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3，虚拟硬盘，选择【现在创建虚拟硬盘】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step3.png&quot; alt=&quot;step 3&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-1，虚拟硬盘文件类型，选择【VDI（VirtualBox 磁盘映像）】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step3-1.png&quot; alt=&quot;step 3-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-2，存储在物理硬盘上，选择【动态分配】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step3-2.png&quot; alt=&quot;step 3-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-3，文件位置和大小，输入磁盘映像的文件名，或者保持默认，调整磁盘大小到50G
-  （因为是动态分配，这里如果选择超过电脑本身物理大小也没有关系，假设我选择了1T，代表最大不能超过该设定的值，文件实际大小是没有1T的。
-  所以尽量设置大一些，避免后面系统使用时间越长，占用空间也越大）
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step3-3.png&quot; alt=&quot;step 3-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，配置启动光盘，选择建好的虚拟机，点击【设置】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step4.png&quot; alt=&quot;step 4&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-1，选择【存储】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step4-1.png&quot; alt=&quot;step 4-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-2，选中光驱，在右边操作界面点击【光盘】按钮
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step4-2.png&quot; alt=&quot;step 4-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;4-3，添加下载好的windows10 iso文件，点击【ok】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step4-3.png&quot; alt=&quot;step 4-3&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，选择新建的虚拟机，点击【启动】，稍等片刻，进入到安装界面
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step5.png&quot; alt=&quot;step 5&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二安装-windows-10&quot;&gt;二，安装 windows 10&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;6，进入到windows10的安装界面，点击【下一步】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step6.png&quot; alt=&quot;step 6&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;7，点击【现在安装】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step7.png&quot; alt=&quot;step 7&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;8，要求输入产品密钥，点击【我没有产品密钥】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step8.png&quot; alt=&quot;step 8&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;9，选择安装的版本，选择【windows 10 专业版】，点击【下一步】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step9.png&quot; alt=&quot;step 9&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;10，适用的声明和许可条款，勾选【我接受许可条款】，点击【下一步】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step10.png&quot; alt=&quot;step 10&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;11，选择安装类型，点击【自定义：仅安装 Windows（高级）】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step11.png&quot; alt=&quot;step 11&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;12，选择安装windows的路径，由于是新装，选择我们新建的磁盘，点击【新建】，使用默认大小，点击【应用】
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step12.png&quot; alt=&quot;step 12&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;12-1，确定创建额外分区，点击【确定】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step12-1.png&quot; alt=&quot;step 12-1&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;12-2，选择【主分区】，点击【下一步】
-  &lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step12-2.png&quot; alt=&quot;step 12-2&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;13，开始安装，等待自动安装完成
-&lt;img src=&quot;/assets/images/post/mac/development/installwindows/windows-step13.png&quot; alt=&quot;step 13&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;14，安装完成后需要对windows10进行个性化配置，按照界面提示操作即可，到此windows10安装完成 :)&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="windows10" /><category term="mac" /><category term="虚拟机" /><summary type="html">见过很多人购买了mac后安装的是windows，现在看来只能说windows普及的好，用不习惯就是用不习惯，mac装windows又怎么了？ macOS的确很流畅，就像苹果手机和安卓手机那样的区别，没有细究过为什么macOS系统要比windows流畅，但是不管怎么说各有所长，你要打游戏那就选windows， 他们都只是一个工具，哪个用着上手舒服，你就选择那个。</summary></entry><entry><title type="html">windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽</title><link href="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-windows.html" rel="alternate" type="text/html" title="windows下安装Virtualbox增强插件-实现文件夹共享，共享剪贴板，文件拖拽" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-windows</id><content type="html" xml:base="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-windows.html">&lt;p&gt;为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。
-首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;一安装virtualbox增强插件&quot;&gt;一，安装virtualbox增强插件&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，左上角找到【Devices】- 【Insert Guest Additions CD Image…】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，然后打开我的电脑，可以看到CD驱动器已经加载
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/2.png&quot; alt=&quot;2&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3，打开光盘，看到如下目录，双击【VBoxWindowsAdditions.exe】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/3.png&quot; alt=&quot;3&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;4，所有操作都默认即可，一路点击【Next】，然后点击【Install】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/44.png&quot; alt=&quot;44&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/development/installadditions/55.png&quot; alt=&quot;55&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/post/mac/development/installadditions/66.png&quot; alt=&quot;66&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，系统设备安装提示，点击【安装】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/33.png&quot; alt=&quot;33&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;6，安装完成，要求重启，点击【Finish】重启即可
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/4.png&quot; alt=&quot;4&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;二配置增强插件&quot;&gt;二，配置增强插件&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，左上角找到【Devices】- 【Shared Clipboard】，选择【Bidirectional】，实现剪贴板共享，现在你可以在主机上复制，在虚拟机里粘贴
-（反之亦然，注意windows下是ctrl+c和ctrl+v，在mac下是commond+c和commond+v）
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/6.png&quot; alt=&quot;6&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;2，【Devices】 - 【Drag and Drop】，选择【Bidirectional】，实现文件拖拽，现在你可以拖拽文件到虚拟机，但是反过来不行，会报错，暂且没有找到方法，如果要从虚拟机拷贝文件到主机，参考下面【文件夹共享】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/7.png&quot; alt=&quot;7&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3，【Devices】 - 【Shared Folders】 - 【Shared Folders Settings…】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/5.png&quot; alt=&quot;5&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-1,添加一个共享目录，点击右边的【➕】按钮
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/8.png&quot; alt=&quot;8&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-2，选择本地的一个目录，勾选【Auto-mount】自动挂载 和【Make Permanent】固定分配，点击【ok】
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/9.png&quot; alt=&quot;9&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-3，保存共享文件夹配置，点击【ok】&lt;br /&gt;
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/10.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;3-4，这个时候重启虚拟机，可以在网络位置看到共享的文件夹（ps：如果没有，检查windows10是否已经开启了网络发现）
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/11.png&quot; alt=&quot;11&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;ps：
-如果遇到粘贴板不能正常使用，检查是否升级了virtualbox软件，如果是，那么需要将对应的增强插件也需要升级，
-卸载掉已经安装的增强插件，按照以上步骤重新安装增强插件即可&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="windows10" /><category term="文件夹共享" /><category term="共享剪贴板" /><category term="文件拖拽" /><summary type="html">为了方便同时操作虚拟机（guest）和主机（host），剪贴板、文件拖拽和文件夹共享是必不可少的。 首先启动虚拟机，按照下面的步骤，安装virtualbox增强插件即可解决这些问题。</summary></entry><entry><title type="html">ubuntu server下安装Virtualbox增强插件-实现文件夹共享</title><link href="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html" rel="alternate" type="text/html" title="ubuntu server下安装Virtualbox增强插件-实现文件夹共享" /><published>2018-11-05T00:00:00+08:00</published><updated>2018-11-05T00:00:00+08:00</updated><id>http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server</id><content type="html" xml:base="http://localhost:4000/mac/2018/11/05/install-virtualbox-additions-for-ubuntu-server.html">&lt;p&gt;由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。
-为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;启动ubuntu server虚拟机，按照以下步骤安装virtualbox增强插件&lt;/p&gt;
-
-&lt;h2 id=&quot;一安装virtualbox增强插件&quot;&gt;一，安装virtualbox增强插件&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;1，左上角找到【Devices】- 【Insert Guest Additions CD Image…】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/1.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;2，执行下面命令挂载CD
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount /dev/cdrom /media/cdrom
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;挂载成功，进入目录可以看到&lt;code class=&quot;highlighter-rouge&quot;&gt;VBoxLinuxAdditions.run&lt;/code&gt;安装脚本&lt;/p&gt;
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; /media/cdrom
-32Bit  AUTORUN.INF  cert  runasroot.sh  VBoxLinuxAdditions.run    VBoxWindowsAdditions-amd64.exe  VBoxWindowsAdditions-x86.exe
-64Bit  autorun.sh   OS2   TRANS.TBL     VBoxSolarisAdditions.pkg  VBoxWindowsAdditions.exe
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;3，安装VirtualBox guest additions所需要的依赖
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;build-essential linux-headers-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;uname&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;4，执行&lt;code class=&quot;highlighter-rouge&quot;&gt;VBoxLinuxAdditions.run&lt;/code&gt;脚本
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /media/cdrom/VBoxLinuxAdditions.run
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;二配置增强插件&quot;&gt;二，配置增强插件&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;5，配置共享文件夹，【Devices】 - 【Shared Folders】 - 【Shared Folders Settings…】
-&lt;img src=&quot;/assets/images/post/mac/development/installadditions/5.png&quot; alt=&quot;5&quot; /&gt;&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;5-1,添加一个共享目录，点击右边的【➕】按钮
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/5-1.png&quot; alt=&quot;8&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;5-2，选择本地的一个目录，【Folder Name】填写&lt;code class=&quot;highlighter-rouge&quot;&gt;wwwroot&lt;/code&gt;（或者其他名称），然后勾选【Make Permanent】固定分配，点击【ok】
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/5-2.png&quot; alt=&quot;9&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;5-3，保存共享文件夹配置，点击【ok】&lt;br /&gt;
-  &lt;img src=&quot;/assets/images/post/mac/development/installadditions/5-3.png&quot; alt=&quot;10&quot; /&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;5，重启vm
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;shutdown &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; now
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;6，待重启完毕，创建共享文件夹的挂载点
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ~/wwwroot
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;7，把共享文件夹挂载到上一步创建的目录
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; vboxsf &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000,gid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000 wwwroot ~/wwwroot
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;blockquote&gt;
-      &lt;p&gt;ps:uid和gid的值为当前用户的，这样就可以用当前登录的用户访问共享文件夹里的内容，不然挂载的文件默认用户是root，组也是root组。
-通过命令&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;查看当前用户对应的信息&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;8，现在可以在vm内访问主机共享的文件夹类容
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/wwwroot
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;/mac/2018/11/01/windows-to-mac-skills.html&quot;&gt;返回目录&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Reference:
-https://gist.github.com/estorgio/1d679f962e8209f8a9232f7593683265
-https://ubuntuforums.org/showthread.php?t=1398340&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="virtualbox" /><category term="ubuntu server" /><category term="文件夹共享" /><summary type="html">由于ubuntu server不是一个桌面系统，那么对于剪贴板，文件拖拽这些需求就没有那么强烈，不过文件的共享倒是一个基本的问题。 为了方便虚拟机和主机之间的文件共享，虚拟机提供了virtualbox增强插件解决这个问题。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>单思义</name><email>keith@thxopen.com</email></author><category term="ubuntu" /><category term="rabbitmq" /><category term="nginx" /><category term="redis" /><category term="jdk" /><category term="mysql" /><category term="jenkins" /><category term="gitlab" /><category term="mongodb" /><summary type="html">之前已经写过在Ubuntu上安装常用的和Java相关的工具, 这次要说的是如何在docker上安装这些工具。 何为Docker？ Docker是一个开放源代码软件项目，让应用程序部署在软件货柜下的工作可以自动化进行，借此在Linux操作系统上， 提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。 为什么要使用Docker？已经有现成的了，我就不再多说。 之所以写这个，就是觉得Docker给我带来极大的便利，我同样希望更多人能够享受到Docker带来的好处。 我一直有听说Docker，但一直没有揭开她神秘的面纱。终于我忍不住了，由于一次服务器故障，因为同事执行apt-get命令安装了新的软件， 导致系统环境变量发生了改变，导致ssh服务异常，大家都不能远程连上服务器。这个问题在服务器上一直存在，之前不知道什么原因把 让我下决心要去了解Docker。 /usr/local/lib/libssl.so.1.0.0 /usr/local/lib/libcrypto.so.1.0.0 Reference: https://zh.wikipedia.org/wiki/Docker</summary></entry></feed>

@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="单客欧朋">
 <meta property="og:title" content="在Ubuntu下安装Gitlab">
-<meta property="og:url" content="http://localhost:4000/linux/2018/02/27/install-gitlab-on-ubuntu.html">
+<meta property="og:url" content="http://www.thxopen.com/linux/2018/02/27/install-gitlab-on-ubuntu.html">
 
 
   <meta property="og:description" content="GitLab是由GitLab Inc.开发，使用MIT许可证的基于网络的Git仓库管理工具，且具有wiki和issue跟踪功能。安装Gitlab  1，安装必要的依赖sudo apt-get install -y curl openssh-server ca-certificates  ps: -y 参数代表默认同意安装，不需要再手动输入y继续安装接下来，为了发送提醒邮件，需要安装Postfix。如果你想使用其他方案发送邮件请跳过此步骤，在gitlab安装完成之后配置额外的smtp服务参考»sudo apt-get install -y postfix安装postfix的时候，会出现配置界面，如下所示：Package configuration┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐│ Please select the mail server configuration type that best meets your needs.  ││                                                                               ││  No configuration:                                                            ││   Should be chosen to leave the current configuration unchanged.              ││  Internet site:                                                               ││   Mail is sent and received directly using SMTP.                              ││  Internet with smarthost:                                                     ││   Mail is received directly using SMTP or by running a utility such           ││   as fetchmail. Outgoing mail is sent using a smarthost.                      ││  Satellite system:                                                            ││   All mail is sent to another machine, called a &#39;smarthost&#39;, for delivery.    ││  Local only:                                                                  ││   The only delivered mail is the mail for local users. There is no network.   ││                                                                               ││ General type of mail configuration:                                           ││                                                                               ││                            No configuration                                   ││                            Internet Site                                      ││                            Internet with smarthost                            ││                            Satellite system                                   ││                            Local only                                         ││                                                                               ││                                                                               ││                     &lt;Ok&gt;                         &lt;Cancel&gt;                     ││                                                                               │└───────────────────────────────────────────────────────────────────────────────┘选择【Internet Site】选项完成本页配置。下一步配置mail_name，如下图所示：Package configuration ┌────────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────────┐ │ The &quot;mail name&quot; is the domain name used to &quot;qualify&quot; _ALL_ mail addresses without a domain name. This includes  │ │ mail to and from &lt;root&gt;: please do not make your machine send out mail from root@example.org unless             │ │ root@example.org has told you to.                                                                               │ │                                                                                                                 │ │ This name will also be used by other programs. It should be the single, fully qualified domain name (FQDN).     │ │                                                                                                                 │ │ Thus, if a mail address on the local host is foo@example.org, the correct value for this option would be        │ │ example.org.                                                                                                    │ │                                                                                                                 │ │ System mail name:                                                                                               │ │                                                                                                                 │ │ localhost.localdomain                                                                                           │ │                                                                                                                 │ │                                &lt;Ok&gt;                                    &lt;Cancel&gt;                                 │ │                                                                                                                 │ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘实际使用中不需要用到邮件通知，所以这里使用默认的地址，回车完成postfix的安装配置。  2，配置软件源由于官网的资源安装会很慢，推荐使用国内的镜像去安装，网上推荐的使用清华大学的镜像信任 GitLab 的 GPG 公钥:curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null添加清华大学的镜像到/etc/apt/sources.listecho &#39;deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main&#39; | sudo tee /etc/apt/sources.list.d/gitlab.listps: 如果是Ubuntu 14.04就把xenial换成trusty，附一张对照表            系统版本      Codename      支持平台                  14.04      trusty      x86_64, i386, aarch64/arm64              16.04      xenial      x86_64, i386        3，安装 gitlab-ce ，虽然换了国内的镜像，但是软件大小有400M，还是需要安装一会儿    sudo apt-get updatesudo apt-get install gitlab-ce      安装完成后出现如下界面：       *.                  *.      ***                 ***     *****               *****    .******             *******    ********            ********   ,,,,,,,,,***********,,,,,,,,,  ,,,,,,,,,,,*********,,,,,,,,,,,  .,,,,,,,,,,,*******,,,,,,,,,,,,      ,,,,,,,,,*****,,,,,,,,,.         ,,,,,,,****,,,,,,            .,,,***,,,,                ,*,.     _______ __  __          __    / ____(_) /_/ /   ____ _/ /_   / / __/ / __/ /   / __ `/ __ \  / /_/ / / /_/ /___/ /_/ / /_/ /  \____/_/\__/_____/\__,_/_.___/Thank you for installing GitLab!GitLab was unable to detect a valid hostname for your instance.Please configure a URL for your GitLab instance by setting `external_url`configuration in /etc/gitlab/gitlab.rb file.Then, you can start your GitLab instance by running the following command:  sudo gitlab-ctl reconfigureFor a comprehensive list of configuration options please see the Omnibus GitLab readmehttps://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md配置Gitlab  4，配置gitlab实例访问路径编辑gitlab配置文件sudo vi /etc/gitlab/gitlab.rb## GitLab configuration settings##! This file is generated during initial installation and **is not** modified##! during upgrades.##! Check out the latest version of this file to know about the different##! settings that can be configured by this file, which may be found at:##! https://gitlab.com/gitlab-org/omnibus-gitlab/raw/master/files/gitlab-config-template/gitlab.rb.template## GitLab URL##! URL on which GitLab will be reachable.##! For more details on configuring external_url see:##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlabexternal_url &#39;http://111.111.111.111/gitlab&#39;把 gitlab.example.com 修改为自己主机的ip或者域名（如果是绑定了域名），由于gitlab默认使用的80端口，这里我们使用nginx代理转发一下在gitlab里配置nginx的监听端口，打开gitlab的配置文件sudo vi /etc/gitlab/gitlab.rb大概在文件中间部分，948行，有如下配置，去掉#注释，修改nil为8888 946 ##! **Override only if you use a reverse proxy** 947 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port 948 nginx[&#39;listen_port&#39;] = 8888 949配置Nginx代理保存文件退出。接下来配置nginx，打开nginx配置文件sudo vi /etc/nginx/conf.d/default.conf在文件里添加如下配置：upstream git {    server  localhost:8888;}server {    listen 80;    server_name 111.111.111.111;    location /gitlab {        # 设置最大允许上传单个的文件大小        client_max_body_size 1024m;        proxy_redirect off;        #以下确保 gitlab中项目的 url 是域名而不是 http://git，不可缺少        proxy_set_header Host $host;        proxy_set_header X-Real-IP $remote_addr;        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # 反向代理到 gitlab 内置的 nginx        proxy_pass http://git/gitlab;        index index.html index.htm;    }}保存退出，重新加载nginx配置sudo nginx -s reload重新加载gitlab配置并重启sudo gitlab-ctl reconfiguresudo gitlab-ctl restart打开必要的服务sudo service sshd startsudo service postfix start查看gitlab运行状态sudo gitlab-ctl statusrun: alertmanager: (pid 26373) 1361s; run: log: (pid 26390) 1361srun: gitaly: (pid 26289) 1362s; run: log: (pid 26306) 1362srun: gitlab-monitor: (pid 26314) 1362s; run: log: (pid 26337) 1361srun: gitlab-workhorse: (pid 32531) 125s; run: log: (pid 26280) 1362srun: logrotate: (pid 25729) 1411s; run: log: (pid 26282) 1362srun: nginx: (pid 32549) 125s; run: log: (pid 26281) 1362srun: node-exporter: (pid 25949) 1399s; run: log: (pid 26388) 1361srun: postgres-exporter: (pid 26397) 1360s; run: log: (pid 26487) 1360srun: postgresql: (pid 25351) 1462s; run: log: (pid 26333) 1362srun: prometheus: (pid 26346) 1361s; run: log: (pid 26366) 1361srun: redis: (pid 25267) 1468s; run: log: (pid 26255) 1363srun: redis-exporter: (pid 26034) 1391s; run: log: (pid 26338) 1361srun: sidekiq: (pid 32456) 137s; run: log: (pid 26258) 1363srun: unicorn: (pid 32631) 115s; run: log: (pid 26334) 1362s打开浏览器，访问 http://111.111.111.111/gitlab 开始使用  Reference      https://zh.wikipedia.org/wiki/Gitlab    https://about.gitlab.com/installation/#ubuntu    https://www.jianshu.com/p/a86a1529d253    https://docs.gitlab.com/omnibus/settings/smtp.html    https://www.jianshu.com/p/4a5877d1e14b    https://www.zybuluo.com/lovemiffy/note/418758  ">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/linux/2018/02/27/install-gitlab-on-ubuntu.html">
+<link rel="canonical" href="http://www.thxopen.com/linux/2018/02/27/install-gitlab-on-ubuntu.html">
 
 
 
@@ -53,7 +53,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "单思义",
-      "url": "http://localhost:4000",
+      "url": "http://www.thxopen.com",
       "sameAs": null
     }
   </script>
@@ -67,7 +67,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
+<link href="http://www.thxopen.com/feed.xml" type="application/atom+xml" rel="alternate" title="单客欧朋 Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -79,7 +79,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="http://www.thxopen.com/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -114,27 +114,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">单客欧朋</a>
+        <a class="site-title" href="http://www.thxopen.com/">单客欧朋</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/year-archive/" >按年份</a>
+              <a href="http://www.thxopen.com/year-archive/" >按年份</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tags/" >按标签</a>
+              <a href="http://www.thxopen.com/tags/" >按标签</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/categories/" >按分类</a>
+              <a href="http://www.thxopen.com/categories/" >按分类</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/about" >关于</a>
+              <a href="http://www.thxopen.com/about" >关于</a>
             </li>
           
         </ul>
@@ -175,7 +175,7 @@
       
         
         <a href="http://www.thxopen.com">
-          <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
+          <img src="http://www.thxopen.com/assets/images/bio-photo.jpg" alt="单思义" itemprop="image">
         </a>
       
     </div>
@@ -620,11 +620,11 @@ run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<spa
     
       
       
-      <a href="http://localhost:4000/tags/#gitlab" class="page__taxonomy-item" rel="tag">Gitlab</a><span class="sep">, </span>
+      <a href="http://www.thxopen.com/tags/#gitlab" class="page__taxonomy-item" rel="tag">Gitlab</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
+      <a href="http://www.thxopen.com/tags/#ubuntu" class="page__taxonomy-item" rel="tag">ubuntu</a>
     
     </span>
   </p>
@@ -645,7 +645,7 @@ run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<spa
     
       
       
-      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+      <a href="http://www.thxopen.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
     
     </span>
   </p>
@@ -661,30 +661,72 @@ run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<spa
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85Gitlab%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85Gitlab%20http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fwww.thxopen.com%2Flinux%2F2018%2F02%2F27%2Finstall-gitlab-on-ubuntu.html" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" class="pagination--pager" title="初探oss-事件通知（http endpoint）
+      <a href="http://www.thxopen.com/storage/2018/02/22/first-time-to-use-oss-events-httpendpoint.html" class="pagination--pager" title="初探oss-事件通知（http endpoint）
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html" class="pagination--pager" title="在Ubuntu上安装常用的和Java相关的工具
+      <a href="http://www.thxopen.com/linux/2018/02/27/install-java-ee-environment-on-ubuntu.html" class="pagination--pager" title="在Ubuntu上安装常用的和Java相关的工具
 ">向后</a>
     
   </nav>
 
     </div>
 
+    
+      <div class="page__comments">
+  
+  
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+      <section>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- myblog -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2101546703939638"
+             data-ad-slot="1759638498"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </section>
+      <section id="custom-comments">
+
+        <div id="gitalk-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script src="/assets/js/md5.js"></script>
+
+        <script>
+            const gitalk = new Gitalk({
+                clientID: '7bebf50c943165d34c25',
+                clientSecret: '1450558ddd30817d1ed9b26f8c0c3a4638022035',
+                repo: 'myblog',
+                owner: 'ssy341',
+                admin: ['ssy341'],
+                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+                distractionFreeMode: false  // Facebook-like distraction free mode
+            })
+
+            gitalk.render('gitalk-container')
+        </script>
+      </section>
+  
+</div>
     
   </article>
 
@@ -703,7 +745,76 @@ run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<spa
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
+        <a href="http://www.thxopen.com/datatables/2019/06/09/datatables-dom-option.html" rel="permalink">Datatables的4大特性-dom的介绍
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本节为Datatables入门第二期 ——《使用Datatables”武装”你的html表格》的第一节，主要讲dom。
+
+课程简介
+
+何为dom，它是一个磨人的小妖精，之所以把dom放在开篇，我个人觉得它是一个核心，也是一个进入Datatables大门的钥匙，理解了dom
+算是使用Datatables的入门选手了...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/tools/2019/06/08/record-screen-with-obs.html" rel="permalink">使用OBS录制屏幕
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">由于要制作Datatables入门第二期视频，需要用到屏幕录制，在网上搜索了很多软件，最后发现OBS非常好。
+
+
+  OBS Studio - Free and open source software for live streaming and screen recording
+
+
+
+  OBS Studio...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/20/how-does-ctrl-c-and-ctrl-v-work.html" rel="permalink">Ctrl+C 和 Ctrl+V 是如何工作的？ - How does Ctrl+c and Ctrl+v work?
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">本来忙着录视频，但运气不好跟公司发生了一点小矛盾，心情不美丽，所以就瞎逛，
+在 StackExchange 上看到有人提问“How does Ctrl+c and Ctrl+v work?”，
+一下就吸引了我的目光，这两个快捷键可是说我们天天都在用，但你要我说出来是如何工作的？我还真是不晓得，不多说，
+跟着提问者...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://www.thxopen.com/life/2019/05/14/stop-learning-frameworks.html" rel="permalink">请停止学习框架 - Stop Learning Frameworks
 </a>
       
     </h2>
@@ -717,87 +828,8 @@ run: unicorn: <span class="o">(</span>pid 32631<span class="o">)</span> 115s<spa
   </article>
 </div>
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/linux/2019/05/07/how-to-modify-or-replace-file-from-jar-on-linux.html" rel="permalink">在linux下从jar中替换、修改文件
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">修改文件内容
-
-vi命令在linux下再熟悉不过了，搭配unzip和zip还可以修改压缩包里的文件。
-
-
-  ps: 如果本机还没有安装zip,unzip，先执行安装命令
-  
-    sudo apt-get install unzip
-    sudo apt-get install zip
-  
-
-
-假设现...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/datatables/2019/05/02/how-to-make-your-table-stronger.html" rel="permalink">使用DataTables”武装”你的html表格——开刊
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">前言
-
-三年前，《致在使用DataTables的小伙伴》，看到努力的自己，我想感谢我自己。
-谢谢你，谢谢一直努力的你！
-
-我还想说，我很幸运，我选择了Datatables。我也很感谢那些正在使用以及即将要使用Datatables的小伙伴，因为没有你们，就没有现在的
-DataTables中文网，没有你们，Datat...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/java/exception/2019/04/28/apiinfo-class-not-found.html" rel="permalink">Caused by: java.lang.ClassNotFoundException: springfox.documentation.service.ApiInfo
-</a>
-      
-    </h2>
-    
-    <p class="archive__item-excerpt" itemprop="description">起因
-
-项目中需要使用swagger提供api文档，于是加上依赖：
-
-  &lt;dependency&gt;
-        &lt;groupId&gt;io.springfox&lt;/groupId&gt;
-        &lt;artifactId&gt;springfox-swagger2&lt;/...</p>
-  </article>
-</div>
-        
       </div>
     </div>
-  
   
 </div>
 
@@ -843,7 +875,7 @@ DataTables中文网，没有你们，Datat...</p>
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="http://www.thxopen.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -853,15 +885,15 @@ DataTables中文网，没有你们，Datat...</p>
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="http://www.thxopen.com/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
 
-<script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-<script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr.min.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-store.js"></script>
+<script src="http://www.thxopen.com/assets/js/lunr/lunr-en.js"></script>
 
 
 
