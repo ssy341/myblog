@@ -27,7 +27,7 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 ## 课程目的
 
-本次推出Datatables入门第二期——《使用Datatables"武装"你的html表格》，旨在给出一个系统的学习路径，解决如下问题：
+本次推出Datatables入门第二期 ——《使用Datatables"武装"你的html表格》，旨在给出一个系统的学习路径，解决如下问题：
 
 - 不知道怎么学习Datatables
 - 新老版本混用，不规范和不标准，阅读代码困难
@@ -39,8 +39,8 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 ## 课程内容
 
 - 开刊（即本节内容，已完成 2019年05月02日）
-- 第一章，Datatables的6大特性
-    - DOM属性的介绍
+- 第一章，Datatables的6大特性(已完成 2019年06月09日)
+    - [DOM属性的介绍]({{ site.baseurl }}{% post_url datatables/2019-06-09-datatables-dom-option %})
 - 第二章，对于各种数据源该怎么使用Datatables？
     - Dom数据源
     - javascript数据
@@ -62,6 +62,6 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 ## 课程视频
 
-由于服务器不支持视频播放，鼠标右键**_[点我]({{ site.baseurl }}/video/season_two/1.mp4)_**，另存为到本地即可
+由于服务器不支持视频播放，鼠标右键**_[点我]({{ site.baseurl }}/video/season_two/season2-01.mp4)_**，另存为到本地即可
 
 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言
