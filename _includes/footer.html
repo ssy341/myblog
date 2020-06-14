@@ -1,22 +1,39 @@
-  <footer>
-    <div>
-     <div class="span5 text-left">
-      &copy;单思义 2013-2014 with help from 
-      <a href="http://getbootstrap.com" target="_blank" title="bootstrap前端框架">Bootstrap</a>&<a href="http://jekyllrb.com/" target="_blank" title="Transform your plain text into static websites and blogs.">Jekyll</a> | 
-      <a href="http://www.miibeian.gov.cn/">湘ICP备14005495号</a>
-    </div>
-    <div class="text-right span7">
-      <ul class="list-inline">
-        <li>友情链接</li>
-        <li>
-          <a href="http://www.kinginf.com" target="_blanck" title="网络点点通">网络点点通</a>
-        </li>
-        <li>
-          <a href="http://www.zhubaoming.com" target="_blanck" title="Jewel_M's Blog">Jewel_M's Blog</a>
-        </li>
-        <li><a href="http://www.gbtags.com" target="_blanck" title="GBtags">极客标签</a> </li>
-		<li><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000392314'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000392314%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script></li>
-      </ul>
-    </div>
-  </div>
-</footer>
+<div class="page__footer-follow">
+    <ul class="social-icons">
+        {% if site.data.ui-text[site.locale].frendship_link %}
+        <li><strong>{{ site.data.ui-text[site.locale].frendship_link }}</strong></li>
+        {% endif %}
+
+        {% assign friendShipLink = site.data.friendshiplink['main'] %}
+        {% for link in friendShipLink %}
+        <li><a href="{{ link.url }}"><i class="fab fa-fw fa fa-link" aria-hidden="true"></i>{{ link.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    {% if site.data.ui-text[site.locale].follow_label %}
+      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
+    {% endif %}
+    {% if site.twitter.username %}
+      <li><a href="https://twitter.com/{{ site.twitter.username }}"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    {% endif %}
+    {% if site.facebook.username %}
+      <li><a href="https://www.facebook.com/{{ site.facebook.username }}"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    {% endif %}
+    {% if site.author.github %}
+      <li><a href="https://github.com/{{ site.author.github }}"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    {% endif %}
+    {% if site.author.gitlab %}
+      <li><a href="https://gitlab.com/{{ site.author.gitlab }}"><i class="fab fa-fw fa-gitlab" aria-hidden="true"></i> Gitlab</a></li>
+    {% endif %}
+    {% if site.author.bitbucket %}
+      <li><a href="https://bitbucket.org/{{ site.author.bitbucket }}"><i class="fab fa-fw fa-bitbucket" aria-hidden="true"></i> Bitbucket</a></li>
+    {% endif %}
+    <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | absolute_url }}{% endif %}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. {{ site.data.ui-text[site.locale].powered_by | default: "Powered by" }} <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
