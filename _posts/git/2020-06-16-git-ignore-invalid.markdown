@@ -45,25 +45,30 @@ date: 2020-06-16
 
 `git rm --cached "_site"`
 
-通过这个命令可以删除`_site`目录在本地的缓存，到达移除版本控制的目的
+通过这个命令可以删除`_site`目录在本地的缓存，源文件，已经推送后删除远程仓库的文件，到达移除版本控制的目的
 
-注意！！
+**注意！！**
 
 这个操作同时也会删除本地的文件和远程仓库的文件，如果文件还需要，那么我们需要添加两个参数
 
 `git rm -r -n --cached "_site"`
 
 > -r Allow recursive removal when a leading directory name is given.
+
 > -n Don’t actually remove any file(s). Instead, just show if they exist in the index and would otherwise be removed by the command.
+
 > --cached Use this option to unstage and remove paths only from the index. Working tree files, whether modified or not, will be left alone.
 
 `-n` 只从缓存里删除文件，本地和远程仓库保留
+
 `-r` 递归目录下所有目录
+
 `--cached` 删除所有缓存，或指定目标文件删除
 
 最后提交，并推送到远程仓库即可
 
 `git commit -m" remove _site folder all file out of git control"   `
+
 `git push origin master `
 
 
@@ -75,6 +80,7 @@ date: 2020-06-16
 参考：
 
 [在git中如何停止对文件版本记录并忽略改变][stackoverflow]
+
 [从仓库里移除文件历史记录][github]
 
 
