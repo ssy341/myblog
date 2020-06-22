@@ -12,7 +12,7 @@ toc: false
 | -------- | ----- | ---- |---- | ----| ---- | ---- |
 | 1日        | 2日      |3日    |4日 |5日    |6日    |7日|
 | 8日        | 9日      |10日《开班》 |11日[《学习总论》][one] |12日[《碎片化知识学习》][two] |13日[《如何在生活中学习运用知识》][three] |14日[《提高批判思维、质疑和反驳能力》][four] |
-|15日[《我说得都对-辩论赛》][five] |16日[《学习一门技能》][six] |17日 《与他人相处》 |18日 《阅读一本书》 |19日 《专业书学习》 |20日《欣赏艺术》 |21日《欣赏诗歌、散文》 |
+|15日[《我说得都对-辩论赛》][five] |16日[《学习一门技能》][six] |17日 [《与他人相处》][seven] |18日 [《阅读一本书》][eight] |19日 [《专业书学习》][night] |20日 [《欣赏艺术》][ten] |21日《欣赏诗歌、散文》 |
 |22日 《才艺show》  |23日《从听说读写思考学习一门语言》 |24日《English Speaking day》 |25日 《如何赏析电影》 |26日《演讲和写作》 |27日《悦纳自己》 |   
 |28日 《迷茫、艰难和低谷每个人都会有的》 |29日《勇敢表达自己》 |30日《新的扬帆：为自己做个总结和新的规划》 |31日《毕业》|       |       |       |       |
 
@@ -56,5 +56,8 @@ toc: false
 [four]: {{ site.baseurl }}{% post_url life/2020-03-14-21-days-of-four %}
 [five]: {{ site.baseurl }}{% post_url life/2020-03-15-21-days-of-five %}
 [six]: {{ site.baseurl }}{% post_url life/2020-03-16-21-days-of-six %}
-
+[seven]: {{ site.baseurl }}{% post_url life/2020-03-17-21-days-of-seven %}
+[eight]: {{ site.baseurl }}{% post_url life/2020-03-18-21-days-of-eight %}
+[night]: {{ site.baseurl }}{% post_url life/2020-03-19-21-days-of-night %}
+[ten]: {{ site.baseurl }}{% post_url life/2020-03-20-21-days-of-ten %}
 
