@@ -34,11 +34,11 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 - 滥用Datatables，小小需求就用插件导致项目臃肿
 - 不知道怎么把Datatables的强大功能套用到自己的项目中
 - 客户端模式和服务器模式什么区别，怎么使用
-- 等等
+- 等等……
 
 ## 课程内容
 
-- 开刊（即本节内容，已完成 2019年05月02日）
+- 开刊（即本节内容，Done √）
 - 第一章，Datatables的6大特性(已完成 2019年06月09日)
     - [DOM属性的介绍]({{ site.baseurl }}{% post_url datatables/2019-06-09-datatables-dom-option %})
 - 第二章，对于各种数据源该怎么使用Datatables？
@@ -62,6 +62,6 @@ DataTables中文网，没有你们，Datatables中文网也走不到今天。每
 
 ## 课程视频
 
-由于服务器不支持视频播放，鼠标右键**_[点我]({{ site.baseurl }}/video/season_two/season2-01.mp4)_**，另存为到本地即可
+由于源码托管在github上，不方便传大文件，观看视频请加群20779435，视频在群文件里可以查阅，或者查看我的Youtube频道[》》](https://www.youtube.com/playlist?list=PLfl1Raz12t6s43Fb--qDoIsBPKHEme7FO)
 
 最后，谢谢大家的支持，如有错误的地方还望指出，如果您还有其他的建议或要求，欢迎在下方留言
