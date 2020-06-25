@@ -61,7 +61,7 @@ toc: false
 [night]: {{ site.baseurl }}{% post_url life/2020-03-19-21-days-of-night %}
 [ten]: {{ site.baseurl }}{% post_url life/2020-03-20-21-days-of-ten %}
 [eleven]: {{ site.baseurl }}{% post_url life/2020-03-21-21-days-of-eleven %}
-[tweleve]: {{ site.baseurl }}{% post_url life/2020-03-22-21-days-of-tweleve %}
+[twelve]: {{ site.baseurl }}{% post_url life/2020-03-22-21-days-of-twelve %}
 [thirteen]: {{ site.baseurl }}{% post_url life/2020-03-23-21-days-of-thirteen %}
 [fourteen]: {{ site.baseurl }}{% post_url life/2020-03-24-21-days-of-fourteen %}
 [fifteen]: {{ site.baseurl }}{% post_url life/2020-03-25-21-days-of-fifteen %}
