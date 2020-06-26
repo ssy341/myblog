@@ -316,8 +316,8 @@ it-IT:
 # -----------------
 zh: &DEFAULT_ZH_HANS
   page                       : "页面"
-  pagination_previous        : "向前"
-  pagination_next            : "向后"
+  pagination_previous        : "上一篇文章"
+  pagination_next            : "下一篇文章"
   breadcrumb_home_label      : "首页"
   breadcrumb_separator       : "/"
   menu_label                 : "切换菜单"
