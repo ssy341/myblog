@@ -13,8 +13,8 @@ toc: false
 | 1日        | 2日      |3日    |4日 |5日    |6日    |7日|
 | 8日        | 9日      |10日《开班》 |11日[《学习总论》][one] |12日[《碎片化知识学习》][two] |13日[《如何在生活中学习运用知识》][three] |14日[《提高批判思维、质疑和反驳能力》][four] |
 |15日[《我说得都对-辩论赛》][five] |16日[《学习一门技能》][six] |17日 [《与他人相处》][seven] |18日 [《阅读一本书》][eight] |19日 [《专业书学习》][night] |20日 [《欣赏艺术》][ten] |21日[《欣赏诗歌、散文》][eleven] |
-|22日 [《才艺show》][twelve]  |23日[《从听说读写思考学习一门语言》][thirteen] |24日[《English Speaking day》][fourteen] |25日 [《如何赏析电影》][fifteen] |26日[《演讲和写作》][sixteen] |27日《悦纳自己》 |   
-|28日 《迷茫、艰难和低谷每个人都会有的》 |29日《勇敢表达自己》 |30日《新的扬帆：为自己做个总结和新的规划》 |31日《毕业》|       |       |       |       |
+|22日 [《才艺show》][twelve]  |23日[《从听说读写思考学习一门语言》][thirteen] |24日[《English Speaking day》][fourteen] |25日 [《如何赏析电影》][fifteen] |26日[《演讲和写作》][sixteen] |27日[《悦纳自己》][seventeen] |   
+|28日 [《迷茫、艰难和低谷每个人都会有的》][eighteen] |29日[《勇敢表达自己》][nineteen] |30日[《新的扬帆：为自己做个总结和新的规划》][twenty] |31日[《毕业》][twentyone]|       |       |       |       |
 
 
 船长：丹丹
@@ -58,7 +58,7 @@ toc: false
 [six]: {{ site.baseurl }}{% post_url life/2020-03-16-21-days-of-six %}
 [seven]: {{ site.baseurl }}{% post_url life/2020-03-17-21-days-of-seven %}
 [eight]: {{ site.baseurl }}{% post_url life/2020-03-18-21-days-of-eight %}
-[night]: {{ site.baseurl }}{% post_url life/2020-03-19-21-days-of-night %}
+[nine]: {{ site.baseurl }}{% post_url life/2020-03-19-21-days-of-nine %}
 [ten]: {{ site.baseurl }}{% post_url life/2020-03-20-21-days-of-ten %}
 [eleven]: {{ site.baseurl }}{% post_url life/2020-03-21-21-days-of-eleven %}
 [twelve]: {{ site.baseurl }}{% post_url life/2020-03-22-21-days-of-twelve %}
@@ -66,4 +66,9 @@ toc: false
 [fourteen]: {{ site.baseurl }}{% post_url life/2020-03-24-21-days-of-fourteen %}
 [fifteen]: {{ site.baseurl }}{% post_url life/2020-03-25-21-days-of-fifteen %}
 [sixteen]: {{ site.baseurl }}{% post_url life/2020-03-26-21-days-of-sixteen %}
+[seventeen]: {{ site.baseurl }}{% post_url life/2020-03-27-21-days-of-seventeen %}
+[eighteen]: {{ site.baseurl }}{% post_url life/2020-03-28-21-days-of-eighteen %}
+[nineteen]: {{ site.baseurl }}{% post_url life/2020-03-29-21-days-of-nineteen %}
+[twenty]: {{ site.baseurl }}{% post_url life/2020-03-30-21-days-of-twenty %}
+[twentyone]: {{ site.baseurl }}{% post_url life/2020-03-31-21-days-of-twentyone %}
 
