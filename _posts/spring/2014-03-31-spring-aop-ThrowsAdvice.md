@@ -1,5 +1,5 @@
 ---
-title: spring之aop（ThrowsAdvice）拦截指定方法的的异常
+title: spring之aop（ThrowsAdvice）拦截指定方法的异常
 categories: spring
 tags: [ThrowsAdvice,aop]
 ---
