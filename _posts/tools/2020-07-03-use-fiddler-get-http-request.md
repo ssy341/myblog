@@ -35,38 +35,38 @@ B -> A -> D -> C -> Fiddler -> C -> D -> E -> F 然后访问到 Internet
 
 ### 1，设置Fiddler允许远程设备连接
 
-    打开fiddler，按照操作路径 【Tools】 - 【Options】 - 【Connections】 可以看到如下图所示：
+打开fiddler，按照操作路径 【Tools】 - 【Options】 - 【Connections】 可以看到如下图所示：
 
-    ![options]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-options.jpg)
+![options]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-options.jpg)
 
-    勾选 【Allow remote computers to connect】，完成这步操作即可让其他设备通过Fiddler访问网络
+勾选 【Allow remote computers to connect】，完成这步操作即可让其他设备通过Fiddler访问网络
 
-    需要注意的是，Fiddler默认监听的是8888端口，确保该端口没有被其他应用占用或者设置了防火墙，也可以修改成其他端口，保险起见可以改为10000以上的端口，这样冲突的几率会大大降低。这里先暂时用默认的8888端口，记住这个端口，在下面设置会使用
+需要注意的是，Fiddler默认监听的是8888端口，确保该端口没有被其他应用占用或者设置了防火墙，也可以修改成其他端口，保险起见可以改为10000以上的端口，这样冲突的几率会大大降低。这里先暂时用默认的8888端口，记住这个端口，在下面设置会使用
 
 ### 2，查看本机IP地址
 
-    这个很简单，只需要通过ipconfig命令即可。效果如下图所示：
+这个很简单，只需要通过ipconfig命令即可。效果如下图所示：
 
-    ![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-ipconfig.jpg)
+![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-ipconfig.jpg)
 
-    从图中可以看出，本机的ip地址为：192.168.101.143，记住这个ip地址，在下面的设置需要使用。
+从图中可以看出，本机的ip地址为：192.168.101.143，记住这个ip地址，在下面的设置需要使用。
 
 ### 3，设置手机代理
 
-    打开手机的网络设置，在这里以ios手机为例，安卓的大小异同
+打开手机的网络设置，在这里以ios手机为例，安卓的大小异同
 
-    图一点击已连接网络的详情 -> 图二滑倒最底部，【配置代理】 -> 图三选择【手动】,在【服务器】和【端口】分别填写上192.168.101.143和8888 -> 点击右上角存储，保存更改，如下图所示：
-    
-    ![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-iphone.jpg)
+图一点击已连接网络的详情 -> 图二滑倒最底部，【配置代理】 -> 图三选择【手动】,在【服务器】和【端口】分别填写上192.168.101.143和8888 -> 点击右上角存储，保存更改，如下图所示：
 
-    需要注意的是，在不用测试后，需要回到这里把代理关闭，否则会影响手机正常上网。
+![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-iphone.jpg)
+
+需要注意的是，在不用测试后，需要回到这里把代理关闭，否则会影响手机正常上网。
 
 ### 4，对手机端进行抓包测试
 
-    这里以微信APP为例，当我手机打开微信后，查看朋友圈，我可以看到微信发出的http请求，如下图所示：
+这里以微信APP为例，当我手机打开微信后，查看朋友圈，我可以看到微信发出的http请求，如下图所示：
 
 
-    ![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-network.jpg)
+![ipconfig]({{site.baseurl}}/assets/images/post/tools/fiddler/fiddler-network.jpg)
 
 
 ## 总结
