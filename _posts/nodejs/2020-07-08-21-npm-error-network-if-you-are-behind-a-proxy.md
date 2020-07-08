@@ -94,7 +94,7 @@ thxopenwork@MacBook-Pro ~ % npm config rm proxy
 
 其实在最开始就已经暴露出问题，在日志中有这么个信息`npm ERR! network request to https://registry.npm.taobao.org/vue failed, reason: connect ETIMEDOUT 192.168.101.219:1080`，已经很明显表示连接出了问题，但我由于很久没有配置了，所以对这个没有在意这个信息，饶了一圈回来还是代理的问题。
 
-**一顿操作猛如虎，自细一看原地杵~~~**
+**一顿操作猛如虎，仔细一看原地杵~~~**
 
 总结，出现问题不要慌张，冷静认真对待每一行报错，抓住每个细节，你就能解决问题
 
