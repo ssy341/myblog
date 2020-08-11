@@ -5,3 +5,4 @@
 *.flv
 *.mp4
 Gemfile.lock
+.DS_Store
