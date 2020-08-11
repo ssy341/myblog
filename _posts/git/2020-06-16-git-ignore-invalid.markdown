@@ -50,16 +50,20 @@ date: 2020-06-16
 `git rm -r --cached "_site"`
 
 > -r Allow recursive removal when a leading directory name is given.
+>
 > `-r` 递归目录下所有目录
+>
 > -n Don’t actually remove any file(s). Instead, just show if they exist in the index and would otherwise be removed by the command.
+>
 > `-n` 列出你操作的文件列表，进行预览
+>
 > --cached Use this option to unstage and remove paths only from the index. Working tree files, whether modified or not, will be left alone.
+>
 > `--cached` 从版本管理移除文件，对本地文件不影响
 
 最后提交，并推送到远程仓库即可
 
-`git commit -m" remove _site folder all file out of git control"   `
-
+`git commit -m" remove _site folder all file out of git control"`
 `git push origin master `
 
 
