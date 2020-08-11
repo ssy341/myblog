@@ -6,3 +6,4 @@
 *.mp4
 Gemfile.lock
 .jekyll-cache
+.DS_Store

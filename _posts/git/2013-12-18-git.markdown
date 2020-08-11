@@ -20,6 +20,16 @@ git commit -m "注释"
 
 git push -u origin master(分支名称)
 
+---
+###切换ssh到https
+---
+查看当前的远程url
+`git remote -v`
+切换远程的url-ssh到https
+`git remote set-url origin https://github.com/USERNAME/REPOSITORY_2.git`
+切换远程的url-https到ssh
+`git remote set-url origin git@github.com:USERNAME/REPOSITORY2.git`
+
 
 
 ![git基本操作命令]({{ site.baseurl }}/assets/images/git.png)
