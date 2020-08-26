@@ -89,7 +89,7 @@ permalink: /resume/
 
 ### AI API平台
 
-2017-2019&nbsp;&nbsp;&nbsp;&nbsp;成都博智维讯信息技术股份有限公司&nbsp;&nbsp;&nbsp;&nbsp;Java后端开发工程师
+2017-2019&nbsp;&nbsp;&nbsp;&nbsp;成都博智维讯信息技术股份有限公司&nbsp;&nbsp;&nbsp;&nbsp;开发组长
 
 - **项目技术栈**：
 
